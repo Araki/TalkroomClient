@@ -70,6 +70,7 @@ function publicRoomWindow() {
 	tableView.addEventListener('click', function(e) {
 		Ti.API.info(e.row.id);
 		alert("ルームIDは" + e.row.id);
+		//tableViewRowClickHandler();
 	});
 
 	return self;
@@ -119,7 +120,19 @@ function getData(val ,tView) {
 
 	//HTTPClientで通信開始
 	httpClient.send();
-};
+}
+
+//=======================================================================================
+//TableViewの行がクリックされたら呼ばれる関数
+//=======================================================================================
+function tableViewRowClickHandler(){
+	
+	Ti.API.info("クリック");
+	var cWindow = require('chatWindow');
+	var chatWindow = new cWindow();
+	
+	tabGroup.activeTab.open(chatWindow);
+}
 
 
 module.exports = publicRoomWindow;
