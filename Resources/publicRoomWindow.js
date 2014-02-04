@@ -69,8 +69,8 @@ function publicRoomWindow() {
 
 	tableView.addEventListener('click', function(e) {
 		Ti.API.info(e.row.id);
-		alert("ルームIDは" + e.row.id);
-		//tableViewRowClickHandler();
+		//alert("ルームIDは" + e.row.id);
+		tableViewRowClickHandler();
 	});
 
 	return self;
