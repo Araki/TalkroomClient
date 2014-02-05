@@ -1,4 +1,9 @@
 function searchWindow() {
+	
+	var agePickerCustomItem = "";
+	var areaPickerCustomItem = "";
+	var purposePickerCustomItem = "";
+	
 
 	var self = Titanium.UI.createWindow({  
     	title:'探す',
@@ -55,15 +60,17 @@ function searchWindow() {
 
 	agePicker.add(ageData);
 
-	//ボタンをタップしたときの挙動
+	//Pickerの選択が変わった時の挙動
 	agePicker.addEventListener('change', function(e){
 		ageTextField.value = e.row.title;
+		agePickerCustomItem = e.row.custom_item;
+		//Ti.API.info("agePickerCustomItem:" + agePickerCustomItem);
 	});
-	
+	//Pickerのツールバーの完了ボタンが押された時の挙動
 	ageDoneButton.addEventListener('click', function(e){
 		pickerSlideOut(self, agePickerView);
 	});
-
+	//テキストフィールドがタップされたときの挙動
 	ageTextField.addEventListener('click', function(){		
 		pickerSlideIn(self, agePickerView);
 	});
@@ -118,15 +125,17 @@ function searchWindow() {
 	
 	areaPicker.add(areaData);
 	
-	//ボタンをタップしたときの挙動
+	//Pickerの選択が変わった時の挙動
 	areaPicker.addEventListener('change', function(e){
 		areaTextField.value = e.row.title;
+		areaPickerCustomItem = e.row.custom_item;
+		//Ti.API.info("areaPickerCustomItem:" + areaPickerCustomItem);
 	});
-	
+	//Pickerのツールバーの完了ボタンが押された時の挙動
 	areaDoneButton.addEventListener('click', function(e){
 		pickerSlideOut(self, areaPickerView);
 	});
-
+	//テキストフィールドがタップされたときの挙動
 	areaTextField.addEventListener('click', function(){		
 		pickerSlideIn(self, areaPickerView);
 	});
@@ -174,15 +183,17 @@ function searchWindow() {
 
 	purposePicker.add(purposeData);
 	
-	//ボタンをタップしたときの挙動
+	//Pickerの選択が変わった時の挙動
 	purposePicker.addEventListener('change', function(e){
 		purposeTextField.value = e.row.title;
+		purposePickerCustomItem = e.row.custom_item;
+		//Ti.API.info("purposePickerCustomItem:" + purposePickerCustomItem);
 	});
-	
+	//Pickerのツールバーの完了ボタンが押された時の挙動
 	purposeDoneButton.addEventListener('click', function(e){
 		pickerSlideOut(self, purposePickerView);
 	});
-
+	//テキストフィールドがタップされたときの挙動
 	purposeTextField.addEventListener('click', function(){		
 		pickerSlideIn(self, purposePickerView);
 	});
@@ -202,7 +213,23 @@ function searchWindow() {
 	});
 	
 	searchButton.addEventListener('click', function(){
-		Ti.API.info("クリックされたよ");
+		
+		var stWindow = require('searchTableWindow');
+		var searchTableWindow = new stWindow();
+		
+		var url = "http://localhost:3000/get_search_users.json?age=" + 
+					agePickerCustomItem +
+					"&area=" +
+					areaPickerCustomItem +
+					"&purpose=" +
+					purposePickerCustomItem;
+		
+		var methodGetData = require('commonMethods').getData;
+		methodGetData("searchWindow", url, searchTableWindow);
+		
+		tabGroup.activeTab.open(searchTableWindow);
+		
+		Ti.API.info("URL:" + url);
 	});
 
 	self.add(ageLabel);

@@ -63,75 +63,23 @@ function publicRoomWindow() {
 	});
 	
 	var url = "http://localhost:3000/get_recent_rooms.json";
-	getData(url, tableView);
+	var methodGetData = require('commonMethods').getData;
+	methodGetData("publicRoomWindow", url, tableView);
 
 	self.add(tableView);
 
 	tableView.addEventListener('click', function(e) {
 		Ti.API.info(e.row.id);
 		//alert("ルームIDは" + e.row.id);
-		tableViewRowClickHandler();
-	});
+		//tableViewRowClickHandler();
+		Ti.API.info("クリック");
+		var cWindow = require('chatWindow');
+		var chatWindow = new cWindow();
+	
+		tabGroup.activeTab.open(chatWindow);
+	});	
 
 	return self;
-}
-
-//=======================================================================================
-//APIからデータを取ってくるファンクション
-//=======================================================================================
-
-function getData(val ,tView) {
-	
-	var url = val;
-	var tableView = tView;
-	
-	//HTTPClientを生成する
-	var httpClient = Titanium.Network.createHTTPClient({
-		//通信が完了した場合の処理
-		onload: function(e){
-			//得られた情報をJSONへ変換する
-			var json;
-			try{
-				json = JSON.parse(this.responseText);
-				
-				//Ti.App.accountId = parseInt(json.account_id);
-				for (var i=0; i<json.length; i++){
-					tableView.data[0].rows[i].children[2].text = json[i].sendfrom_message;
-					tableView.data[0].rows[i].children[3].text = json[i].sendto_message;
-					tableView.data[0].rows[i].id = json[i].room_id;
-				}
-				
-			}catch (error){
-				Ti.API.info('JSONを受け取ったがエラー:' + error.message);
-			}
-		},
-	
-		//通信エラーが発生した場合の処理
-		onerror: function(e) {
-			Ti.API.info('ネットワークエラー:' + e.error);
-		},
-	
-		//タイムアウト（ミリ秒）
-		timeout: 5000
-	});
-
-	//HTTPClientを開く
-	httpClient.open("GET", url);
-
-	//HTTPClientで通信開始
-	httpClient.send();
-}
-
-//=======================================================================================
-//TableViewの行がクリックされたら呼ばれる関数
-//=======================================================================================
-function tableViewRowClickHandler(){
-	
-	Ti.API.info("クリック");
-	var cWindow = require('chatWindow');
-	var chatWindow = new cWindow();
-	
-	tabGroup.activeTab.open(chatWindow);
 }
 
 
