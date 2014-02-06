@@ -24,6 +24,7 @@ function searchWindow() {
 	
 	var ageTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+		value: "すべて",
 		top: 30,
 		right: 40,
 		left: 85,
@@ -45,7 +46,7 @@ function searchWindow() {
 	
 	//ピッカーにageデータを挿入
 	var ageData = [];
-	ageData[0] = Ti.UI.createPickerRow({title:'',custom_item:''});
+	ageData[0] = Ti.UI.createPickerRow({title:'すべて',custom_item:''});
 	ageData[1] = Ti.UI.createPickerRow({title:'18〜19歳',custom_item:'1'});
 	ageData[2] = Ti.UI.createPickerRow({title:'20代前半',custom_item:'2'});
 	ageData[3] = Ti.UI.createPickerRow({title:'20代半ば',custom_item:'3'});
@@ -89,6 +90,7 @@ function searchWindow() {
 	
 	var areaTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+		value: "すべて",
 		top: 90,
 		right: 40,
 		left: 85,
@@ -110,7 +112,7 @@ function searchWindow() {
 
 	//ピッカーにageデータを挿入
 	var areaData = [];
-	areaData[0] = Ti.UI.createPickerRow({title:'',custom_item:''});
+	areaData[0] = Ti.UI.createPickerRow({title:'すべて',custom_item:''});
 	areaData[1] = Ti.UI.createPickerRow({title:'北海道',custom_item:'1'});
 	areaData[2] = Ti.UI.createPickerRow({title:'青森県',custom_item:'2'});
 	areaData[3] = Ti.UI.createPickerRow({title:'岩手県',custom_item:'3'});
@@ -154,6 +156,7 @@ function searchWindow() {
 	
 	var purposeTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+		value: "すべて",
 		top: 150,
 		right: 40,
 		left: 85,
@@ -175,7 +178,7 @@ function searchWindow() {
 
 	//ピッカーにageデータを挿入
 	var purposeData = [];
-	purposeData[0] = Ti.UI.createPickerRow({title:'',custom_item:''});
+	purposeData[0] = Ti.UI.createPickerRow({title:'すべて',custom_item:''});
 	purposeData[1] = Ti.UI.createPickerRow({title:'メル友探し',custom_item:'1'});
 	purposeData[2] = Ti.UI.createPickerRow({title:'友達・遊び相手探し',custom_item:'2'});
 	purposeData[3] = Ti.UI.createPickerRow({title:'恋人探し',custom_item:'3'});
