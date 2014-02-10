@@ -1,4 +1,5 @@
-
+Ti.API.info("画面横幅：" + Titanium.Platform.displayCaps.platformWidth);
+Ti.API.info("画面縦幅：" + Titanium.Platform.displayCaps.platformHeight);
 
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
 Titanium.UI.setBackgroundColor('#000');

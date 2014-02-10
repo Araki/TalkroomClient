@@ -47,7 +47,42 @@ exports.getData = function(callWindow, val ,tView) {
 	  					//children[3]: エリア | 目的 | ログイン時間
 	  					table.children[0].data[0].rows[i].children[3].text = exchangeAreaFromNumber( json[i].area ) + " | " + exchangePurposeFromNumber( json[i].purpose ) + " | " + json[i].last_logined;
 						
+						//rowにidを付与し、クリックされた際にidを次のウィンドウに渡す
+						table.children[0].data[0].rows[i].id = json[i].id;
 					}
+				}
+				else if (winName == "searchTableWindow"){
+					
+					//Windowタイトルの設定
+					table.title = json.nickname;
+					//children[0]: profileImage1
+					table.children[0].image = "http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
+					//children[1]: profileImage2
+					table.children[1].image = "http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
+					//children[2]: profileImage3
+					table.children[2].image = "http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
+					//children[3]:ScrollView > children[0]:View > children[0]: ageLabel
+					table.children[3].children[0].children[0].text = "年代： " + exchangeAgeFromNumber(json.age);
+					//children[3]:ScrollView > children[0]:View > children[1]: areaLabel
+					table.children[3].children[0].children[1].text = "エリア： " + exchangeAreaFromNumber(json.area);
+					//children[3]:ScrollView > children[0]:View > children[2]: purposeLabel
+					table.children[3].children[0].children[2].text = "目的： " + exchangePurposeFromNumber(json.purpose);
+					//children[3]:ScrollView > children[0]:View > children[3]: profileLabel
+					table.children[3].children[0].children[3].text = "一言： " + json.profile;
+					//children[3]:ScrollView > children[0]:View > children[4]: tallLabel
+					table.children[3].children[0].children[4].text = "身長： " + json.tall;
+					//children[3]:ScrollView > children[0]:View > children[5]: bloodLabel
+					table.children[3].children[0].children[5].text = "血液型： " + json.blood;
+					//children[3]:ScrollView > children[0]:View > children[6]: styleLabel
+					table.children[3].children[0].children[6].text = "体型： " + json.style;
+					//children[3]:ScrollView > children[0]:View > children[7]: holidayLabel
+					table.children[3].children[0].children[7].text = "休日： " + json.holiday;
+					//children[3]:ScrollView > children[0]:View > children[8]: alcoholLabel
+					table.children[3].children[0].children[8].text = "お酒： " + json.alcohol;
+					//children[3]:ScrollView > children[0]:View > children[9]: cigaretteLabel
+					table.children[3].children[0].children[9].text = "タバコ： " + json.cigarette; 
+					//children[3]:ScrollView > children[0]:View > children[10]: salaryLabel
+					table.children[3].children[0].children[10].text = "給料： " + json.salary;
 				}
 				
 			}catch (error){

@@ -52,7 +52,6 @@ function searchTableWindow() {
 	    
 	    var row = Ti.UI.createTableViewRow({
 	        height:60,
-	        id: ''
 	    });
    	
 	   row.add(nickNameLabel);
@@ -66,6 +65,23 @@ function searchTableWindow() {
 	var tableView = Titanium.UI.createTableView({
 		data: tableViewRowData
 	});
+	
+	tableView.addEventListener('click', function(e) {
+		//alert("ルームIDは" + e.row.id);
+		Ti.API.info("ルームIDは" + e.row.id);
+		var userID = e.row.id;
+		//tableViewRowClickHandler();
+		Ti.API.info("クリック");
+		var upWindow = require('userProfileWindow');
+		var userProfileWindow = new upWindow();
+		
+		var url = "http://localhost:3000/get_detail_profile.json?user_id=" + e.row.id;
+		Ti.API.info("URL:" + url);
+		var methodGetData = require('commonMethods').getData;
+		methodGetData("searchTableWindow", url, userProfileWindow);
+	
+		tabGroup.activeTab.open(userProfileWindow);
+	});	
 
 	self.add(tableView);
 	return self;
