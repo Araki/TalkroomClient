@@ -1,7 +1,7 @@
-function publicRoomWindow() {
+function userTalkedRoomWindow() {
 
 	var self = Titanium.UI.createWindow({  
-	    title:'のぞく',
+	    title:'過去のトーク',
 	    backgroundColor:'#fff'
 	});
 
@@ -62,35 +62,39 @@ function publicRoomWindow() {
 	   row.add(sendToImage);
 	   row.add(labelSendFromMessage);
 	   row.add(labelSendToMessage);
-	   row.add(timeLabel);
+       row.add(timeLabel);
 
 	   tableViewRowData.push(row);
 	}
-
+	
 	var tableView = Titanium.UI.createTableView({
 		data: tableViewRowData
 	});
 	
-	var url = "http://localhost:3000/get_recent_rooms.json";
-	var methodGetData = require('commonMethods').getData;
-	methodGetData("publicRoomWindow", url, tableView);
-
-	self.add(tableView);
-
 	tableView.addEventListener('click', function(e) {
-		Ti.API.info(e.row.id);
+		/*
 		//alert("ルームIDは" + e.row.id);
+		Ti.API.info("ルームIDは" + e.row.id);
+		var userID = e.row.id;
 		//tableViewRowClickHandler();
 		Ti.API.info("クリック");
-		var cWindow = require('chatWindow');
-		var chatWindow = new cWindow();
+		var upWindow = require('userProfileWindow');
+		var userProfileWindow = new upWindow();
+		
+		var url = "http://localhost:3000/get_detail_profile.json?user_id=" + e.row.id;
+		Ti.API.info("URL:" + url);
+		var methodGetData = require('commonMethods').getData;
+		methodGetData("searchTableWindow", url, userProfileWindow);
 	
-		tabGroup.activeTab.open(chatWindow);
+		tabGroup.activeTab.open(userProfileWindow);
+		*/
 	});	
 
+	self.add(tableView);
+	
 	return self;
 }
 
 
-module.exports = publicRoomWindow;
+module.exports = userTalkedRoomWindow;
 

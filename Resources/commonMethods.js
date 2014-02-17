@@ -27,6 +27,7 @@ exports.getData = function(callWindow, val ,tView) {
 						//Ti.API.info("JSON:" + json[i].room_id);
 						table.data[0].rows[i].children[2].text = json[i].sendfrom_message;
 						table.data[0].rows[i].children[3].text = json[i].sendto_message;
+						table.data[0].rows[i].children[4].text = json[i].updated_at;
 						table.data[0].rows[i].id = json[i].room_id;
 					}
 				}
@@ -83,6 +84,20 @@ exports.getData = function(callWindow, val ,tView) {
 					table.children[3].children[0].children[9].text = "タバコ： " + json.cigarette; 
 					//children[3]:ScrollView > children[0]:View > children[10]: salaryLabel
 					table.children[3].children[0].children[10].text = "給料： " + json.salary;
+				}
+				else if (winName == "userProfileWindow"){
+					for (var i=0; i<json.length; i++){
+						//children[0]:sendFromImage
+						//table.children[0].data[0].rows[i].children[0].text = json[i].sendfrom_image;
+						//children[1]:sendToImage
+	   					//table.children[0].data[0].rows[i].children[1].text = json[i].sendto_image;
+	   					//children[2]:labelSendFromMessage
+	   					table.children[0].data[0].rows[i].children[2].text = json[i].sendfrom_message;
+	   					//children[3]:labelSendToMessage
+	   					table.children[0].data[0].rows[i].children[3].text = json[i].sendto_message;
+       					//children[4]:timeLabel
+	   					table.children[0].data[0].rows[i].children[4].text = json[i].updated_at;
+       				}
 				}
 				
 			}catch (error){

@@ -73,9 +73,9 @@ function searchTableWindow() {
 		//tableViewRowClickHandler();
 		Ti.API.info("クリック");
 		var upWindow = require('userProfileWindow');
-		var userProfileWindow = new upWindow();
+		var userProfileWindow = new upWindow(userID);
 		
-		var url = "http://localhost:3000/get_detail_profile.json?user_id=" + e.row.id;
+		var url = "http://localhost:3000/get_detail_profile.json?user_id=" + userID;
 		Ti.API.info("URL:" + url);
 		var methodGetData = require('commonMethods').getData;
 		methodGetData("searchTableWindow", url, userProfileWindow);

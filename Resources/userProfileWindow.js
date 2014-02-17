@@ -171,6 +171,24 @@ function userProfileWindow(id) {
 		height: 50
 	});
 	
+	readPastTalkButton.addEventListener('click', function() {
+		var utWindow = require('userTalkedRoomWindow');
+		var userTalkedRoomWindow = new utWindow();
+		
+		var url = "http://localhost:3000/get_user_rooms.json?user_id=" + userID;
+		
+		var methodGetData = require('commonMethods').getData;
+		methodGetData("userProfileWindow", url, userTalkedRoomWindow);
+		
+		tabGroup.activeTab.open(userTalkedRoomWindow);
+		
+		Ti.API.info("URL:" + url);
+	});
+	
+	talkButton.addEventListener('click', function(e) {
+		
+	});
+	
 	self.add(profileImage1);
 	self.add(profileImage2);
 	self.add(profileImage3);
