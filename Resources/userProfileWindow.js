@@ -185,8 +185,17 @@ function userProfileWindow(id) {
 		Ti.API.info("URL:" + url);
 	});
 	
-	talkButton.addEventListener('click', function(e) {
-		
+	
+	talkButton.addEventListener('click', function() {
+		//Ti.API.info(e.row.id);
+		//alert("ルームIDは" + e.row.id);
+		//tableViewRowClickHandler();
+		//Ti.API.info("クリック");
+		var cWindow = require('chatWindow');
+		//ルームIDの1234567890はダミー
+		var chatWindow = new cWindow(1234567890, true);
+	
+		tabGroup.activeTab.open(chatWindow);
 	});
 	
 	self.add(profileImage1);

@@ -40,7 +40,7 @@ exports.getData = function(callWindow, val ,tView) {
 						table.children[0].data[0].rows[i].children[0].text = json[i].nickname + "（" + exchangeAgeFromNumber( json[i].age ) + "）";
 						
 						//children[1]: プロフィールイメージ
-						table.children[0].data[0].rows[i].children[1].text = json[i].profile_image1;
+						table.children[0].data[0].rows[i].children[1].image = 'http://static4.wikia.nocookie.net/__cb20120615021732/spongebob/images/6/6e/50px-5143827.png',//json[i].profile_image1;
 						
 	  					//children[2]: プロフィールメッセージ
 	  					table.children[0].data[0].rows[i].children[2].text = json[i].profile;
@@ -88,15 +88,18 @@ exports.getData = function(callWindow, val ,tView) {
 				else if (winName == "userProfileWindow"){
 					for (var i=0; i<json.length; i++){
 						//children[0]:sendFromImage
-						//table.children[0].data[0].rows[i].children[0].text = json[i].sendfrom_image;
+						table.children[0].data[0].rows[i].children[0].image = 'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',//json[i].sendfrom_image;
 						//children[1]:sendToImage
-	   					//table.children[0].data[0].rows[i].children[1].text = json[i].sendto_image;
+	   					table.children[0].data[0].rows[i].children[1].image = 'http://static4.wikia.nocookie.net/__cb20120615021732/spongebob/images/6/6e/50px-5143827.png',//json[i].sendto_image;
 	   					//children[2]:labelSendFromMessage
 	   					table.children[0].data[0].rows[i].children[2].text = json[i].sendfrom_message;
 	   					//children[3]:labelSendToMessage
 	   					table.children[0].data[0].rows[i].children[3].text = json[i].sendto_message;
        					//children[4]:timeLabel
 	   					table.children[0].data[0].rows[i].children[4].text = json[i].updated_at;
+	   					//ルームIDの追加
+	   					table.children[0].data[0].rows[i].id = json[i].room_id;
+						
        				}
 				}
 				

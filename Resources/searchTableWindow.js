@@ -21,7 +21,7 @@ function searchTableWindow() {
 	    });
 	    
 	    var profileImage = Titanium.UI.createImageView({
-	    	image: 'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',
+	    	//image: 'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',
 	    	top: 5,
 	    	left: 5,
 	    	width: 50,
@@ -68,7 +68,7 @@ function searchTableWindow() {
 	
 	tableView.addEventListener('click', function(e) {
 		//alert("ルームIDは" + e.row.id);
-		Ti.API.info("ルームIDは" + e.row.id);
+		Ti.API.info("ユーザーIDは" + e.row.id);
 		var userID = e.row.id;
 		//tableViewRowClickHandler();
 		Ti.API.info("クリック");

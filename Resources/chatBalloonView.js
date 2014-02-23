@@ -44,7 +44,7 @@ function chatBalloonView(whichSide, whatMessage, whatImageURL, chatViewHeight ) 
 	}
 	
 	var self = Titanium.UI.createView({
-		bottom: chatViewHeight,
+		top: viewHeight,
 		//backgroundColor: "blue"
 	});
 	

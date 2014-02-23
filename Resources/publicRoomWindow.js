@@ -83,7 +83,7 @@ function publicRoomWindow() {
 		//tableViewRowClickHandler();
 		Ti.API.info("クリック");
 		var cWindow = require('chatWindow');
-		var chatWindow = new cWindow();
+		var chatWindow = new cWindow(e.row.id, false);
 	
 		tabGroup.activeTab.open(chatWindow);
 	});	
