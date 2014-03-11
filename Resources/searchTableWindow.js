@@ -21,7 +21,7 @@ function searchTableWindow() {
 	    });
 	    
 	    var profileImage = Titanium.UI.createImageView({
-	    	//image: 'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',
+	    	image: '',//'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',
 	    	top: 5,
 	    	left: 5,
 	    	width: 50,
@@ -75,7 +75,7 @@ function searchTableWindow() {
 		var upWindow = require('userProfileWindow');
 		var userProfileWindow = new upWindow(userID);
 		
-		var url = "http://localhost:3000/get_detail_profile.json?user_id=" + userID;
+		var url = Ti.App.domain + "get_detail_profile.json?user_id=" + userID;
 		Ti.API.info("URL:" + url);
 		var methodGetData = require('commonMethods').getData;
 		methodGetData("searchTableWindow", url, userProfileWindow);

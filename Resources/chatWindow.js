@@ -147,8 +147,10 @@ function chatWindow(id, textField) {
 			
 			var xhr = Titanium.Network.createHTTPClient();
 			xhr.timeout = 10000;
-	
-			xhr.open('POST',"http://localhost:3000/messages.json");
+			
+			url = Ti.App.domain + "messages.json";
+			
+			xhr.open('POST', url);
 			
 			xhr.onload = function(){
 				var json = JSON.parse(this.responseText);

@@ -1,6 +1,12 @@
 Ti.API.info("画面横幅：" + Titanium.Platform.displayCaps.platformWidth);
 Ti.API.info("画面縦幅：" + Titanium.Platform.displayCaps.platformHeight);
 
+//Ti.App.domain = "http://talkrooms.herokuapp.com/";
+Ti.App.domain = "http://localhost:3000/";
+
+//ログインユーザーのID
+Ti.App.userID = 1;
+
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
 Titanium.UI.setBackgroundColor('#000');
 

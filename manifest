@@ -1,9 +1,9 @@
-#appname: talkroom
-#appid: jp.shiftage.talkroom
-#type: mobile
-#guid: b00fe23d-51aa-439f-8535-26fb3a5a85af
-#version: 1.0
-#publisher: not specified
-#url: not specified
-#image: appicon.png
-#desc: not specified
+#appname:talkroom
+#appid:jp.shiftage.talkroom
+#type:mobile
+#guid:b00fe23d-51aa-439f-8535-26fb3a5a85af
+#version:1.0
+#publisher:araki-k
+#url:http://
+#image:appicon.png
+#desc:not specified

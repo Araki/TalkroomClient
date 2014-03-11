@@ -25,6 +25,8 @@ exports.getData = function(callWindow, val ,tView) {
 				if (winName == "publicRoomWindow"){
 					for (var i=0; i<json.length; i++){
 						//Ti.API.info("JSON:" + json[i].room_id);
+						table.data[0].rows[i].children[0].image = json[i].sendfrom_image;
+						table.data[0].rows[i].children[1].image = json[i].sendto_image;
 						table.data[0].rows[i].children[2].text = json[i].sendfrom_message;
 						table.data[0].rows[i].children[3].text = json[i].sendto_message;
 						table.data[0].rows[i].children[4].text = json[i].updated_at;
@@ -40,7 +42,7 @@ exports.getData = function(callWindow, val ,tView) {
 						table.children[0].data[0].rows[i].children[0].text = json[i].nickname + "（" + exchangeAgeFromNumber( json[i].age ) + "）";
 						
 						//children[1]: プロフィールイメージ
-						table.children[0].data[0].rows[i].children[1].image = 'http://static4.wikia.nocookie.net/__cb20120615021732/spongebob/images/6/6e/50px-5143827.png',//json[i].profile_image1;
+						table.children[0].data[0].rows[i].children[1].image = json[i].profile_image1;//'http://static4.wikia.nocookie.net/__cb20120615021732/spongebob/images/6/6e/50px-5143827.png',//json[i].profile_image1;
 						
 	  					//children[2]: プロフィールメッセージ
 	  					table.children[0].data[0].rows[i].children[2].text = json[i].profile;
@@ -57,11 +59,11 @@ exports.getData = function(callWindow, val ,tView) {
 					//Windowタイトルの設定
 					table.title = json.nickname;
 					//children[0]: profileImage1
-					table.children[0].image = "http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
+					table.children[0].image = json.profile_image1;//"http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
 					//children[1]: profileImage2
-					table.children[1].image = "http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
+					table.children[1].image = json.profile_image2;//"http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
 					//children[2]: profileImage3
-					table.children[2].image = "http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
+					table.children[2].image = json.profile_image3;//"http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
 					//children[3]:ScrollView > children[0]:View > children[0]: ageLabel
 					table.children[3].children[0].children[0].text = "年代： " + exchangeAgeFromNumber(json.age);
 					//children[3]:ScrollView > children[0]:View > children[1]: areaLabel
@@ -101,6 +103,22 @@ exports.getData = function(callWindow, val ,tView) {
 	   					table.children[0].data[0].rows[i].id = json[i].room_id;
 						
        				}
+				}
+				else if (winName == "attackTableView"){
+					Ti.API.info("アタック中テーブル");
+					for (var i=0; i<json.length; i++){
+						Ti.API.info("profile_image" + json[i].profile_image);
+						table.data[0].rows[i].children[0].image = json[i].profile_image;
+						table.data[0].rows[i].children[1].text = json[i].profile;
+						table.data[0].rows[i].children[2].text = exchangeAreaFromNumber( json[i].room_updated );
+						/*
+						row.add(sendFromImage);
+					    row.add(sendToImage);
+					    row.add(labelSendFromMessage);
+					    row.add(labelSendToMessage);
+					    row.add(timeLabel);
+					    */
+					}
 				}
 				
 			}catch (error){

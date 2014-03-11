@@ -175,7 +175,7 @@ function userProfileWindow(id) {
 		var utWindow = require('userTalkedRoomWindow');
 		var userTalkedRoomWindow = new utWindow();
 		
-		var url = "http://localhost:3000/get_user_rooms.json?user_id=" + userID;
+		var url = Ti.App.domain + "get_user_rooms.json?user_id=" + userID;
 		
 		var methodGetData = require('commonMethods').getData;
 		methodGetData("userProfileWindow", url, userTalkedRoomWindow);
