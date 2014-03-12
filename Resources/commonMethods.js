@@ -90,9 +90,9 @@ exports.getData = function(callWindow, val ,tView) {
 				else if (winName == "userProfileWindow"){
 					for (var i=0; i<json.length; i++){
 						//children[0]:sendFromImage
-						table.children[0].data[0].rows[i].children[0].image = 'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',//json[i].sendfrom_image;
+						table.children[0].data[0].rows[i].children[0].image = json[i].sendfrom_image;
 						//children[1]:sendToImage
-	   					table.children[0].data[0].rows[i].children[1].image = 'http://static4.wikia.nocookie.net/__cb20120615021732/spongebob/images/6/6e/50px-5143827.png',//json[i].sendto_image;
+	   					table.children[0].data[0].rows[i].children[1].image = json[i].sendto_image;
 	   					//children[2]:labelSendFromMessage
 	   					table.children[0].data[0].rows[i].children[2].text = json[i].sendfrom_message;
 	   					//children[3]:labelSendToMessage

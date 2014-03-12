@@ -30,7 +30,6 @@ function userTalkedRoomWindow() {
 	    });
     
 	    var sendFromImage = Titanium.UI.createImageView({
-	    	//image: 'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',
 	    	top: 5,
 	    	left: 5,
 	    	width: 50,
@@ -38,7 +37,6 @@ function userTalkedRoomWindow() {
 	    });
    
 	   var sendToImage = Titanium.UI.createImageView({
-	    	//image: 'http://static4.wikia.nocookie.net/__cb20120615021732/spongebob/images/6/6e/50px-5143827.png',
 	    	top: 5,
 	    	left: 60,
 	    	width: 50,
