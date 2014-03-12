@@ -110,14 +110,30 @@ exports.getData = function(callWindow, val ,tView) {
 						Ti.API.info("profile_image" + json[i].profile_image);
 						table.data[0].rows[i].children[0].image = json[i].profile_image;
 						table.data[0].rows[i].children[1].text = json[i].profile;
-						table.data[0].rows[i].children[2].text = exchangeAreaFromNumber( json[i].room_updated );
-						/*
-						row.add(sendFromImage);
-					    row.add(sendToImage);
-					    row.add(labelSendFromMessage);
-					    row.add(labelSendToMessage);
-					    row.add(timeLabel);
-					    */
+						table.data[0].rows[i].children[2].text = json[i].room_updated;
+						table.data[0].rows[i].children[3].text = json[i].nickname;
+						Ti.API.info("PUBLIC: " + json[i].room_public);
+						if (json[i].room_public == "0" ){ 
+							table.data[0].rows[i].children[4].text = "非公開";
+						}else if ( json[i].room_public == "1" ){
+							table.data[0].rows[i].children[4].text = "公開";
+						}
+					}
+				}
+				else if (winName == "talkTableView"){
+					Ti.API.info("アタック中テーブル");
+					for (var i=0; i<json.length; i++){
+						Ti.API.info("profile_image" + json[i].profile_image);
+						table.data[0].rows[i].children[0].image = json[i].profile_image;
+						table.data[0].rows[i].children[1].text = json[i].profile;
+						table.data[0].rows[i].children[2].text = json[i].room_updated;
+						table.data[0].rows[i].children[3].text = json[i].nickname;
+						Ti.API.info("PUBLIC: " + json[i].room_public);
+						if (json[i].room_public == "0" ){ 
+							table.data[0].rows[i].children[4].text = "非公開";
+						}else if ( json[i].room_public == "1" ){
+							table.data[0].rows[i].children[4].text = "公開";
+						}
 					}
 				}
 				
