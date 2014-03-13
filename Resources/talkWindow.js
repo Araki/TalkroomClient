@@ -117,6 +117,7 @@ function createAttackTableView() {
 	    });
 	    
 	   var row = Ti.UI.createTableViewRow({
+	   		hasChild: true,
 	        height:60,
 	        id: ''
 	   });
@@ -188,6 +189,7 @@ function createTalkTableView() {
 	    });
 	    
 	   var row = Ti.UI.createTableViewRow({
+	   		hasChild: true,
 	        height:60,
 	        id: ''
 	   });

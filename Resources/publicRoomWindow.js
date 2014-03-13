@@ -15,7 +15,7 @@ function publicRoomWindow() {
         	color:'#000',
         	top:0, 
         	right:30, 
-        	width:170, 
+        	left:115, 
 	        height:30
 	    });
     
@@ -25,7 +25,7 @@ function publicRoomWindow() {
 	        color:'#000',
 	        top:30, 
 	        right:30, 
-	        width:170, 
+	        left:115, 
 	        height:30
 	    });
     
@@ -54,6 +54,7 @@ function publicRoomWindow() {
 	    });
 	    
 	   var row = Ti.UI.createTableViewRow({
+	        hasChild: true,
 	        height:60,
 	        id: ''
 	   });

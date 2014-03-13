@@ -61,7 +61,7 @@ var win4 = new settingWindow();
 
 var tab4 = Titanium.UI.createTab({  
     icon:'KS_nav_ui.png',
-    title:'設定',
+    title:'その他',
     window:win4
 });
 

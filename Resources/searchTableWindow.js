@@ -51,6 +51,7 @@ function searchTableWindow() {
 	    });
 	    
 	    var row = Ti.UI.createTableViewRow({
+	    	hasChild: true,
 	        height:60,
 	    });
    	
