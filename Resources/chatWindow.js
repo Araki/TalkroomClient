@@ -130,19 +130,13 @@ function chatWindow(id, textField) {
 		  	}).show();
 		  	
 		}else{
-			
-			var messageObj = {sendfrom_list_id: 999,
-							  sendto_list_id: 1000,
-							  room_id: roomID, 
-							  body: textField.value
-			};
-			
+
 			var message = {
-				//"utf8": "✓",
-				'message': JSON.stringify(messageObj),
-				//"commit": "Create Message"
+				sendfrom_list_id: 999,
+				sendto_list_id: 1000,
+				room_id: roomID, 
+				body: textField.value
 			};
-			
 			
 			
 			var xhr = Titanium.Network.createHTTPClient();
