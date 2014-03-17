@@ -1,6 +1,9 @@
 Ti.API.info("画面横幅：" + Titanium.Platform.displayCaps.platformWidth);
 Ti.API.info("画面縦幅：" + Titanium.Platform.displayCaps.platformHeight);
 
+Ti.App.displayWidth = Titanium.Platform.displayCaps.platformWidth;
+Ti.App.displayWidth = Titanium.Platform.displayCaps.platformHeight;
+
 //Ti.App.domain = "http://talkrooms.herokuapp.com/";
 Ti.App.domain = "http://localhost:3000/";
 
