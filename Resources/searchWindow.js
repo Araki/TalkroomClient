@@ -1,6 +1,5 @@
 function searchWindow() {
 	
-	
 	var ageData = [];
 	ageData[0] = Ti.UI.createPickerRow({title:'すべて',custom_item:''});
 	ageData[1] = Ti.UI.createPickerRow({title:'18〜19歳',custom_item:'1'});
@@ -170,8 +169,6 @@ function searchWindow() {
 	});
 	
 	searchButton.addEventListener('click', function(){
-		var stWindow = require('searchTableWindow');
-		var searchTableWindow = new stWindow();
 		
 		var url = Ti.App.domain + "get_search_users.json?age=" + 
 				  ageTextField.customItem +
@@ -182,11 +179,16 @@ function searchWindow() {
 		
 		var commonMethods = require('commonMethods');
 		var methodGetData = commonMethods.getData;
-		//methodGetData("searchWindow", url, searchTableWindow);
+	
 		methodGetData(url, function( data ){
+			
 			if (data.success) {
 				// 通信に成功したら行う処理
 				var json = data.data;
+				
+				var stWindow = require('searchTableWindow');
+				var searchTableWindow = new stWindow(json.length);
+				
 				for (var i=0; i<json.length; i++){
 					Ti.API.info("JSON:" + json[i].id);
 					searchTableWindow.children[0].data[0].rows[i].children[0].text = json[i].nickname + "（" + commonMethods.exchangeAgeFromNumber( json[i].age ) + "）";
@@ -195,14 +197,13 @@ function searchWindow() {
 					searchTableWindow.children[0].data[0].rows[i].children[3].text = commonMethods.exchangeAreaFromNumber( json[i].area ) + " | " + commonMethods.exchangePurposeFromNumber( json[i].purpose ) + " | " + json[i].last_logined;
 					searchTableWindow.children[0].data[0].rows[i].id = json[i].id;
 				}
+				
+				tabGroup.activeTab.open(　searchTableWindow　);
+				
 			} else{
 				// 通信に失敗したら行う処理
 			}
-		});
-		
-		tabGroup.activeTab.open(searchTableWindow);
-		
-		Ti.API.info("URL:" + url);
+		});		
 	});
 
 	self.add(ageLabel);

@@ -1,7 +1,7 @@
 //id:　ユーザーID
-function userProfileWindow(id) {
+function userProfileWindow() {
 	
-	var userID = id;
+	//var userID = id;
 	
 	var self = Titanium.UI.createWindow({  
     	//title:'[ユーザーの名前]',
@@ -175,7 +175,8 @@ function userProfileWindow(id) {
 		var utWindow = require('userTalkedRoomWindow');
 		var userTalkedRoomWindow = new utWindow();
 		
-		var url = Ti.App.domain + "get_user_rooms.json?user_id=" + userID;
+		var url = Ti.App.domain + "get_user_rooms.json?user_id=" + self.id;
+		Ti.API.info("+++ID:" + self.id);
 		
 		var methodGetData = require('commonMethods').getData;
 		//methodGetData("userProfileWindow", url, userTalkedRoomWindow);

@@ -13,32 +13,31 @@ Ti.App.userID = 1;
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
 Titanium.UI.setBackgroundColor('#000');
 
-//==================================================================
-// 「のぞく」ウィンドウ
-//==================================================================
-var publicRoomWindow = require('publicRoomWindow');
-var win1 = new publicRoomWindow();
-
-var tab1 = Titanium.UI.createTab({  
-    icon:'KS_nav_views.png',
-    title:'のぞく',
-    window:win1
-});
-
-
 
 //==================================================================
 // 「探す」ウィンドウ
 //==================================================================
 var searchWindow = require('searchWindow');
-var win2 = new searchWindow();
+var win1 = new searchWindow();
 
-var tab2 = Titanium.UI.createTab({  
+var tab1 = Titanium.UI.createTab({  
     icon:'KS_nav_ui.png',
     title:'探す',
-    window:win2
+    window:win1
 });
 
+
+//==================================================================
+// 「のぞく」ウィンドウ
+//==================================================================
+var publicRoomWindow = require('publicRoomWindow');
+var win2 = new publicRoomWindow();
+
+var tab2 = Titanium.UI.createTab({  
+    icon:'KS_nav_views.png',
+    title:'のぞく',
+    window:win2
+});
 
 
 //==================================================================

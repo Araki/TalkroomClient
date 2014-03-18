@@ -1,4 +1,4 @@
-function searchTableWindow() {
+function searchTableWindow( numberOfRow ) {
 
 	var self = Titanium.UI.createWindow({  
 	    title:'検索結果',
@@ -7,7 +7,7 @@ function searchTableWindow() {
 
 	var tableViewRowData = [];
 	
-	for (var i=0; i<10; i++){
+	for (var i=0; i<numberOfRow; i++){
     
     	var nickNameLabel = Titanium.UI.createLabel({
         	font:{fontSize:12}, 
@@ -68,13 +68,9 @@ function searchTableWindow() {
 	});
 	
 	tableView.addEventListener('click', function(e) {
-		//alert("ルームIDは" + e.row.id);
+		
 		Ti.API.info("ユーザーIDは" + e.row.id);
 		var userID = e.row.id;
-		//tableViewRowClickHandler();
-		Ti.API.info("クリック");
-		var upWindow = require('userProfileWindow');
-		var userProfileWindow = new upWindow(userID);
 		
 		var url = Ti.App.domain + "get_detail_profile.json?user_id=" + userID;
 		Ti.API.info("URL:" + url);
@@ -84,9 +80,15 @@ function searchTableWindow() {
 		//methodGetData("searchTableWindow", url, userProfileWindow);
 		
 		methodGetData(url, function( data ){
+			
 			if (data.success) {
 				// 通信に成功したら行う処理
 				var json = data.data;
+				
+				var upWindow = require('userProfileWindow');
+				var userProfileWindow = new upWindow();
+				
+				userProfileWindow.id = userID;
 				userProfileWindow.title = json.nickname;
 				userProfileWindow.children[0].image = json.profile_image1;
 				userProfileWindow.children[1].image = json.profile_image2;
@@ -102,12 +104,13 @@ function searchTableWindow() {
 				userProfileWindow.children[3].children[0].children[8].text = "お酒： " + json.alcohol;
 				userProfileWindow.children[3].children[0].children[9].text = "タバコ： " + json.cigarette; 
 				userProfileWindow.children[3].children[0].children[10].text = "給料： " + json.salary;
+				
+				tabGroup.activeTab.open( userProfileWindow );
+				
 			} else{
 				// 通信に失敗したら行う処理
 			}
 		});
-	
-		tabGroup.activeTab.open(userProfileWindow);
 	});	
 
 	self.add(tableView);
