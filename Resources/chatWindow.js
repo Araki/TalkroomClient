@@ -130,7 +130,55 @@ function chatWindow(id, textField) {
 		  	}).show();
 		  	
 		}else{
-
+			
+			var message = {
+				sendfrom_list_id: Ti.App.userID,
+				sendto_list_id: 2,
+				room_id: roomID, 
+				body: textField.value
+			};
+			
+			url = Ti.App.domain + "messages.json";
+			
+			var methodSendData = require('commonMethods').sendData;
+			methodSendData( url, message, function( data ){
+				if (data.success){
+					//通信に成功したら行う処理
+					Ti.API.info("戻り値:" + data.data);
+					
+					var json = JSON.parse(data.data);
+					var sendMessage = json.body;
+					
+					var cbView = require('chatBalloonView');
+					var chatView = new cbView("right", sendMessage, "http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg", scrollViewHeight);
+					scrollView.add(chatView);
+					
+					//Ti.API.info("scrollViewHeight:" + scrollView.toImage().height);
+					Ti.API.info("scrollViewHeight:" + scrollViewHeight);
+					
+					scrollViewHeight = scrollViewHeight + chatView.height;
+					bottomPosition = bottomPosition + chatView.height;
+					//scrollView.scrollTo(0,scrollViewHeight);
+					scrollView.setContentOffset({x:0, y:bottomPosition}, {animated:true});
+					textField.value ="";
+					
+					Ti.UI.createAlertDialog({
+						title: 'データ送信成功',
+					  	message: sendMessage
+					}).show();
+					
+				} else{
+					//通信に失敗したら行う処理
+					Ti.UI.createAlertDialog({
+						title: 'エラー',
+					  	message: data.data
+					}).show();
+					
+				}
+			});	
+			
+			
+			/*
 			var message = {
 				sendfrom_list_id: 999,
 				sendto_list_id: 1000,
@@ -171,6 +219,7 @@ function chatWindow(id, textField) {
 			};
 	
 			xhr.send(message);
+			*/
 		}
 		
 	});

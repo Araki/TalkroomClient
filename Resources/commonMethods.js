@@ -5,6 +5,7 @@
 //callWindow: 呼び出したウィンドウ名
 //val: URLを指定
 //tView: TableViewを指定
+/*
 exports.getData = function(callWindow, val ,tView) {
 	
 	var winName = callWindow;
@@ -156,6 +157,69 @@ exports.getData = function(callWindow, val ,tView) {
 
 	//HTTPClientで通信開始
 	httpClient.send();
+};
+*/
+
+
+exports.getData = function(val ,callback) {
+	
+	var url = val;
+		
+	//HTTPClientを生成する
+	var xhr = Ti.Network.httpClient();
+	
+	//HTTPClientを開く
+	xhr.open("GET", url);
+	
+	//通信が完了した場合の処理
+	xhr.onload = function(){
+		callback({
+			success: true,
+			data: JSON.parse(this.responseText)
+		});
+	};
+	
+	//エラー発生時の処理
+	xhr.onerror = function(e){
+		callback({
+			success: false,
+			data: e
+		});
+	};
+
+	//HTTPClientで通信開始
+	xhr.send();
+};
+
+
+
+
+exports.sendData = function( val, data, callback ){
+	
+	var url = val;
+	var sendData = data;
+	
+	var xhr = Titanium.Network.createHTTPClient();
+	xhr.timeout = 10000;
+		
+	xhr.open('POST', url);
+		
+	xhr.onload = function(){
+		Ti.API.info("返って来たデータ:" + this.responseText);
+		callback({
+			success: true,
+			data: this.responseText
+		});
+	};
+	
+	xhr.onerror = function(e){
+		callback({
+			success: false,
+			data: e
+		});
+	};
+	
+	xhr.send( sendData );
 };
 
 

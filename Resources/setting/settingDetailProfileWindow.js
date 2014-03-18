@@ -9,7 +9,8 @@ function settingDetailProfileWindow() {
 	
 	//プロフィール写真Row作成
     var imageRow = Ti.UI.createTableViewRow({
-        height:100
+        height:100,
+    	selectionStyle : Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE
    	});
     
 	var profileImage1 = Titanium.UI.createImageView({
@@ -100,7 +101,8 @@ module.exports = settingDetailProfileWindow;
 function createRow( labelText ) {
 	
 	var row = Ti.UI.createTableViewRow({
-        height: 50
+        height: 50,
+        selectionStyle : Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE
    	});
    	
    	var label = Titanium.UI.createLabel({

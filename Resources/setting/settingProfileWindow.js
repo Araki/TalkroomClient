@@ -10,31 +10,33 @@ function settingProfileWindow() {
 	
 	
 	saveButton.addEventListener('click', function(){
-					
-		var xhr = Titanium.Network.createHTTPClient();
-		xhr.timeout = 10000;
-			
-		url = Ti.App.domain + "update_profile.json";
-		xhr.open('POST', url);
-			
-		xhr.onload = function(){
-			Ti.API.info("返って来たデータ:" + this.responseText);
-			var profile = this.responseText;
-				
-			Ti.UI.createAlertDialog({
-				title: 'データ送信成功',
-			  	message: profile
-			}).show();
-		  		
-			//textArea.value = profile;
-		};
 		
+		var url = Ti.App.domain + "update_profile.json";
 		var message = {
 				user_id: Ti.App.userID,
 				profile: textArea.value
-			};
+		};
 		
-		xhr.send(message);
+		var methodSendData = require('commonMethods').sendData;
+		methodSendData( url, message, function( data ){
+			if (data.success){
+				//通信に成功したら行う処理
+				Ti.API.info("戻り値:" + data.data);
+				
+				Ti.UI.createAlertDialog({
+					title: 'データ送信成功',
+				  	message: data.data
+				}).show();
+				
+			} else{
+				//通信に失敗したら行う処理
+				Ti.UI.createAlertDialog({
+					title: 'エラー',
+				  	message: data.data
+				}).show();
+				
+			}
+		});		
 	});
 		
 	
