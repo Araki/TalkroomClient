@@ -78,8 +78,34 @@ function searchTableWindow() {
 		
 		var url = Ti.App.domain + "get_detail_profile.json?user_id=" + userID;
 		Ti.API.info("URL:" + url);
-		var methodGetData = require('commonMethods').getData;
-		methodGetData("searchTableWindow", url, userProfileWindow);
+		
+		var commonMethods = require('commonMethods');
+		var methodGetData = commonMethods.getData;
+		//methodGetData("searchTableWindow", url, userProfileWindow);
+		
+		methodGetData(url, function( data ){
+			if (data.success) {
+				// 通信に成功したら行う処理
+				var json = data.data;
+				userProfileWindow.title = json.nickname;
+				userProfileWindow.children[0].image = json.profile_image1;
+				userProfileWindow.children[1].image = json.profile_image2;
+				userProfileWindow.children[2].image = json.profile_image3;
+				userProfileWindow.children[3].children[0].children[0].text = "年代： " + commonMethods.exchangeAgeFromNumber(json.age);
+				userProfileWindow.children[3].children[0].children[1].text = "エリア： " + commonMethods.exchangeAreaFromNumber(json.area);
+				userProfileWindow.children[3].children[0].children[2].text = "目的： " + commonMethods.exchangePurposeFromNumber(json.purpose);
+				userProfileWindow.children[3].children[0].children[3].text = "一言： " + json.profile;
+				userProfileWindow.children[3].children[0].children[4].text = "身長： " + json.tall;
+				userProfileWindow.children[3].children[0].children[5].text = "血液型： " + json.blood;
+				userProfileWindow.children[3].children[0].children[6].text = "体型： " + json.style;
+				userProfileWindow.children[3].children[0].children[7].text = "休日： " + json.holiday;
+				userProfileWindow.children[3].children[0].children[8].text = "お酒： " + json.alcohol;
+				userProfileWindow.children[3].children[0].children[9].text = "タバコ： " + json.cigarette; 
+				userProfileWindow.children[3].children[0].children[10].text = "給料： " + json.salary;
+			} else{
+				// 通信に失敗したら行う処理
+			}
+		});
 	
 		tabGroup.activeTab.open(userProfileWindow);
 	});	

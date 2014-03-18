@@ -74,7 +74,23 @@ function publicRoomWindow() {
 	
 	var url = Ti.App.domain + "get_recent_rooms.json";
 	var methodGetData = require('commonMethods').getData;
-	methodGetData("publicRoomWindow", url, tableView);
+	methodGetData(url, function( data ){
+		if (data.success) {
+			// 通信に成功したら行う処理
+			var json = data.data;
+			for (var i=0; i<json.length; i++){
+				Ti.API.info("JSONデータ:::::" + json[i].sendfrom_image);
+				tableView.data[0].rows[i].children[0].image = json[i].sendfrom_image;
+				tableView.data[0].rows[i].children[1].image = json[i].sendto_image;
+				tableView.data[0].rows[i].children[2].text = json[i].sendfrom_message;
+				tableView.data[0].rows[i].children[3].text = json[i].sendto_message;
+				tableView.data[0].rows[i].children[4].text = json[i].updated_at;
+				row.id = json[i].room_id;
+			}
+		} else{
+			// 通信に失敗したら行う処理
+		}
+	});
 
 	self.add(tableView);
 

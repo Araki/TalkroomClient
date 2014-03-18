@@ -1,172 +1,17 @@
 //=======================================================================================
-//APIからデータを取ってくるファンクション
+//サーバーからデータを取ってくるファンクション
 //=======================================================================================
 
-//callWindow: 呼び出したウィンドウ名
 //val: URLを指定
-//tView: TableViewを指定
-/*
-exports.getData = function(callWindow, val ,tView) {
-	
-	var winName = callWindow;
-	var url = val;
-	var table = tView;
-	
-	//HTTPClientを生成する
-	var httpClient = Titanium.Network.createHTTPClient({
-		//通信が完了した場合の処理
-		onload: function(e){
-			//得られた情報をJSONへ変換する
-			var json;
-			try{
-				json = JSON.parse(this.responseText);
-				//Ti.API.info("JSON:" + json);
-				
-				//Ti.App.accountId = parseInt(json.account_id);
-				if (winName == "publicRoomWindow"){
-					for (var i=0; i<json.length; i++){
-						//Ti.API.info("JSON:" + json[i].room_id);
-						table.data[0].rows[i].children[0].image = json[i].sendfrom_image;
-						table.data[0].rows[i].children[1].image = json[i].sendto_image;
-						table.data[0].rows[i].children[2].text = json[i].sendfrom_message;
-						table.data[0].rows[i].children[3].text = json[i].sendto_message;
-						table.data[0].rows[i].children[4].text = json[i].updated_at;
-						table.data[0].rows[i].id = json[i].room_id;
-					}
-				}
-				else if (winName == "searchWindow"){
-					for (var i=0; i<json.length; i++){
-						Ti.API.info("JSON:" + json[i].id);
-						//searchWindowの場合tableに入ってるのはWindow
-						
-						//children[0]: ニックネーム (年齢)
-						table.children[0].data[0].rows[i].children[0].text = json[i].nickname + "（" + exchangeAgeFromNumber( json[i].age ) + "）";
-						
-						//children[1]: プロフィールイメージ
-						table.children[0].data[0].rows[i].children[1].image = json[i].profile_image1;//'http://static4.wikia.nocookie.net/__cb20120615021732/spongebob/images/6/6e/50px-5143827.png',//json[i].profile_image1;
-						
-	  					//children[2]: プロフィールメッセージ
-	  					table.children[0].data[0].rows[i].children[2].text = json[i].profile;
-	  					
-	  					//children[3]: エリア | 目的 | ログイン時間
-	  					table.children[0].data[0].rows[i].children[3].text = exchangeAreaFromNumber( json[i].area ) + " | " + exchangePurposeFromNumber( json[i].purpose ) + " | " + json[i].last_logined;
-						
-						//rowにidを付与し、クリックされた際にidを次のウィンドウに渡す
-						table.children[0].data[0].rows[i].id = json[i].id;
-					}
-				}
-				else if (winName == "searchTableWindow"){
-					
-					//Windowタイトルの設定
-					table.title = json.nickname;
-					//children[0]: profileImage1
-					table.children[0].image = json.profile_image1;//"http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
-					//children[1]: profileImage2
-					table.children[1].image = json.profile_image2;//"http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
-					//children[2]: profileImage3
-					table.children[2].image = json.profile_image3;//"http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg";
-					//children[3]:ScrollView > children[0]:View > children[0]: ageLabel
-					table.children[3].children[0].children[0].text = "年代： " + exchangeAgeFromNumber(json.age);
-					//children[3]:ScrollView > children[0]:View > children[1]: areaLabel
-					table.children[3].children[0].children[1].text = "エリア： " + exchangeAreaFromNumber(json.area);
-					//children[3]:ScrollView > children[0]:View > children[2]: purposeLabel
-					table.children[3].children[0].children[2].text = "目的： " + exchangePurposeFromNumber(json.purpose);
-					//children[3]:ScrollView > children[0]:View > children[3]: profileLabel
-					table.children[3].children[0].children[3].text = "一言： " + json.profile;
-					//children[3]:ScrollView > children[0]:View > children[4]: tallLabel
-					table.children[3].children[0].children[4].text = "身長： " + json.tall;
-					//children[3]:ScrollView > children[0]:View > children[5]: bloodLabel
-					table.children[3].children[0].children[5].text = "血液型： " + json.blood;
-					//children[3]:ScrollView > children[0]:View > children[6]: styleLabel
-					table.children[3].children[0].children[6].text = "体型： " + json.style;
-					//children[3]:ScrollView > children[0]:View > children[7]: holidayLabel
-					table.children[3].children[0].children[7].text = "休日： " + json.holiday;
-					//children[3]:ScrollView > children[0]:View > children[8]: alcoholLabel
-					table.children[3].children[0].children[8].text = "お酒： " + json.alcohol;
-					//children[3]:ScrollView > children[0]:View > children[9]: cigaretteLabel
-					table.children[3].children[0].children[9].text = "タバコ： " + json.cigarette; 
-					//children[3]:ScrollView > children[0]:View > children[10]: salaryLabel
-					table.children[3].children[0].children[10].text = "給料： " + json.salary;
-				}
-				else if (winName == "userProfileWindow"){
-					for (var i=0; i<json.length; i++){
-						//children[0]:sendFromImage
-						table.children[0].data[0].rows[i].children[0].image = json[i].sendfrom_image;
-						//children[1]:sendToImage
-	   					table.children[0].data[0].rows[i].children[1].image = json[i].sendto_image;
-	   					//children[2]:labelSendFromMessage
-	   					table.children[0].data[0].rows[i].children[2].text = json[i].sendfrom_message;
-	   					//children[3]:labelSendToMessage
-	   					table.children[0].data[0].rows[i].children[3].text = json[i].sendto_message;
-       					//children[4]:timeLabel
-	   					table.children[0].data[0].rows[i].children[4].text = json[i].updated_at;
-	   					//ルームIDの追加
-	   					table.children[0].data[0].rows[i].id = json[i].room_id;
-						
-       				}
-				}
-				else if (winName == "attackTableView"){
-					Ti.API.info("アタック中テーブル");
-					for (var i=0; i<json.length; i++){
-						Ti.API.info("profile_image" + json[i].profile_image);
-						table.data[0].rows[i].children[0].image = json[i].profile_image;
-						table.data[0].rows[i].children[1].text = json[i].profile;
-						table.data[0].rows[i].children[2].text = json[i].room_updated;
-						table.data[0].rows[i].children[3].text = json[i].nickname;
-						Ti.API.info("PUBLIC: " + json[i].room_public);
-						if (json[i].room_public == "0" ){ 
-							table.data[0].rows[i].children[4].text = "非公開";
-						}else if ( json[i].room_public == "1" ){
-							table.data[0].rows[i].children[4].text = "公開";
-						}
-					}
-				}
-				else if (winName == "talkTableView"){
-					Ti.API.info("アタック中テーブル");
-					for (var i=0; i<json.length; i++){
-						Ti.API.info("profile_image" + json[i].profile_image);
-						table.data[0].rows[i].children[0].image = json[i].profile_image;
-						table.data[0].rows[i].children[1].text = json[i].profile;
-						table.data[0].rows[i].children[2].text = json[i].room_updated;
-						table.data[0].rows[i].children[3].text = json[i].nickname;
-						Ti.API.info("PUBLIC: " + json[i].room_public);
-						if (json[i].room_public == "0" ){ 
-							table.data[0].rows[i].children[4].text = "非公開";
-						}else if ( json[i].room_public == "1" ){
-							table.data[0].rows[i].children[4].text = "公開";
-						}
-					}
-				}
-				
-			}catch (error){
-				Ti.API.info('JSONを受け取ったがエラー:' + error.message);
-			}
-		},
-	
-		//通信エラーが発生した場合の処理
-		onerror: function(e) {
-			Ti.API.info('ネットワークエラー:' + e.error);
-		},
-	
-		//タイムアウト（ミリ秒）
-		timeout: 5000
-	});
-
-	//HTTPClientを開く
-	httpClient.open("GET", url);
-
-	//HTTPClientで通信開始
-	httpClient.send();
-};
-*/
-
+//callback: 呼び出し側で指定するcallback関数
 
 exports.getData = function(val ,callback) {
 	
 	var url = val;
 		
 	//HTTPClientを生成する
-	var xhr = Ti.Network.httpClient();
+	var xhr = Titanium.Network.createHTTPClient();
+	xhr.timeout = 10000;
 	
 	//HTTPClientを開く
 	xhr.open("GET", url);
@@ -193,6 +38,13 @@ exports.getData = function(val ,callback) {
 
 
 
+//=======================================================================================
+//サーバーにデータを送るファンクション
+//=======================================================================================
+
+//val: URLを指定
+//data: 送信するデータ
+//callback: 呼び出し側で指定するcallback関数
 
 exports.sendData = function( val, data, callback ){
 	
@@ -229,7 +81,7 @@ exports.sendData = function( val, data, callback ){
 //=======================================================================================
 
 //number: 年齢番号
-function exchangeAgeFromNumber( number ) {
+exports.exchangeAgeFromNumber = function( number ) {
 	
 	var num = number;
 	var age;
@@ -251,7 +103,7 @@ function exchangeAgeFromNumber( number ) {
 	
 	return age;
 	
-}
+};
 
 
 //=======================================================================================
@@ -259,7 +111,7 @@ function exchangeAgeFromNumber( number ) {
 //=======================================================================================
 
 //number: 都道府県番号
-function exchangeAreaFromNumber( number ) {
+exports.exchangeAreaFromNumber = function( number ) {
 	
 	var num = number;
 	var area;
@@ -316,7 +168,7 @@ function exchangeAreaFromNumber( number ) {
 	
 	return area;
 	
-}
+};
 
 
 //=======================================================================================
@@ -324,7 +176,7 @@ function exchangeAreaFromNumber( number ) {
 //=======================================================================================
 
 //number: 目的番号
-function exchangePurposeFromNumber( number ) {
+exports.exchangePurposeFromNumber = function ( number ) {
 	
 	var num = number;
 	var purpose;
@@ -339,4 +191,4 @@ function exchangePurposeFromNumber( number ) {
 	
 	return purpose;
 	
-}
+};

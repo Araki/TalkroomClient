@@ -178,7 +178,23 @@ function userProfileWindow(id) {
 		var url = Ti.App.domain + "get_user_rooms.json?user_id=" + userID;
 		
 		var methodGetData = require('commonMethods').getData;
-		methodGetData("userProfileWindow", url, userTalkedRoomWindow);
+		//methodGetData("userProfileWindow", url, userTalkedRoomWindow);
+		methodGetData(url, function( data ){
+			if (data.success) {
+				// 通信に成功したら行う処理
+				var json = data.data;
+				for (var i=0; i<json.length; i++){
+					userTalkedRoomWindow.children[0].data[0].rows[i].children[0].image = json[i].sendfrom_image;
+					userTalkedRoomWindow.children[0].data[0].rows[i].children[1].image = json[i].sendto_image;
+					userTalkedRoomWindow.children[0].data[0].rows[i].children[2].text = json[i].sendfrom_message;
+					userTalkedRoomWindow.children[0].data[0].rows[i].children[3].text = json[i].sendto_message;
+					userTalkedRoomWindow.children[0].data[0].rows[i].children[4].text = json[i].updated_at;
+					userTalkedRoomWindow.children[0].data[0].rows[i].id = json[i].room_id;
+				}
+			} else{
+				// 通信に失敗したら行う処理
+			}
+		});
 		
 		tabGroup.activeTab.open(userTalkedRoomWindow);
 		
