@@ -33,9 +33,34 @@ function settingWindow() {
 		switch (e.row.id) {
 			
 	  		case "profile":
-	  			var spWindow = require('setting/settingProfileWindow');
-				var settingProfileWindow = new spWindow();
-				tabGroup.activeTab.open(settingProfileWindow);
+	  					
+				var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.userID;
+				
+				var commonMethods = require('commonMethods');
+				var methodGetData = commonMethods.getData;
+			
+				methodGetData(url, function( data ){
+					
+					if (data.success) {
+						// 通信に成功したら行う処理
+						var json = data.data;
+						
+						Ti.API.info("++++++++++++" + json[0]);
+						Ti.API.info("+++PROFILE+++" + json[0].profile);
+						
+						var spWindow = require('setting/settingProfileWindow');
+						var settingProfileWindow = new spWindow();
+						
+						settingProfileWindow.children[0].value = json[0].profile;
+						
+						tabGroup.activeTab.open(settingProfileWindow);
+						
+					} else{
+						// 通信に失敗したら行う処理
+					}
+				});
+				
+		
 	  			break;
 	  			
 	  		case "detail_profile": 

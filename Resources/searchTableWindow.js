@@ -89,21 +89,21 @@ function searchTableWindow( numberOfRow ) {
 				var userProfileWindow = new upWindow();
 				
 				userProfileWindow.id = userID;
-				userProfileWindow.title = json.nickname;
-				userProfileWindow.children[0].image = json.profile_image1;
-				userProfileWindow.children[1].image = json.profile_image2;
-				userProfileWindow.children[2].image = json.profile_image3;
-				userProfileWindow.children[3].children[0].children[0].text = "年代： " + commonMethods.exchangeAgeFromNumber(json.age);
-				userProfileWindow.children[3].children[0].children[1].text = "エリア： " + commonMethods.exchangeAreaFromNumber(json.area);
-				userProfileWindow.children[3].children[0].children[2].text = "目的： " + commonMethods.exchangePurposeFromNumber(json.purpose);
-				userProfileWindow.children[3].children[0].children[3].text = "一言： " + json.profile;
-				userProfileWindow.children[3].children[0].children[4].text = "身長： " + json.tall;
-				userProfileWindow.children[3].children[0].children[5].text = "血液型： " + json.blood;
-				userProfileWindow.children[3].children[0].children[6].text = "体型： " + json.style;
-				userProfileWindow.children[3].children[0].children[7].text = "休日： " + json.holiday;
-				userProfileWindow.children[3].children[0].children[8].text = "お酒： " + json.alcohol;
-				userProfileWindow.children[3].children[0].children[9].text = "タバコ： " + json.cigarette; 
-				userProfileWindow.children[3].children[0].children[10].text = "給料： " + json.salary;
+				userProfileWindow.title = json[0].nickname;
+				userProfileWindow.children[0].image = json[0].profile_image1;
+				userProfileWindow.children[1].image = json[0].profile_image2;
+				userProfileWindow.children[2].image = json[0].profile_image3;
+				userProfileWindow.children[3].children[0].children[0].text = "年代： " + commonMethods.exchangeAgeFromNumber(json[0].age);
+				userProfileWindow.children[3].children[0].children[1].text = "エリア： " + commonMethods.exchangeAreaFromNumber(json[0].area);
+				userProfileWindow.children[3].children[0].children[2].text = "目的： " + commonMethods.exchangePurposeFromNumber(json[0].purpose);
+				userProfileWindow.children[3].children[0].children[3].text = "一言： " + json[0].profile;
+				userProfileWindow.children[3].children[0].children[4].text = "身長： " + json[0].tall;
+				userProfileWindow.children[3].children[0].children[5].text = "血液型： " + json[0].blood;
+				userProfileWindow.children[3].children[0].children[6].text = "体型： " + json[0].style;
+				userProfileWindow.children[3].children[0].children[7].text = "休日： " + json[0].holiday;
+				userProfileWindow.children[3].children[0].children[8].text = "お酒： " + json[0].alcohol;
+				userProfileWindow.children[3].children[0].children[9].text = "タバコ： " + json[0].cigarette; 
+				userProfileWindow.children[3].children[0].children[10].text = "給料： " + json[0].salary;
 				
 				tabGroup.activeTab.open( userProfileWindow );
 				

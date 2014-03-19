@@ -18,6 +18,8 @@ exports.getData = function(val ,callback) {
 	
 	//通信が完了した場合の処理
 	xhr.onload = function(){
+		Ti.API.info("パース前：" + this.responseText);
+		Ti.API.info("パース後：" + JSON.parse(this.responseText));
 		callback({
 			success: true,
 			data: JSON.parse(this.responseText)
