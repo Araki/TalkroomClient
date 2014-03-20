@@ -43,11 +43,12 @@ function settingDetailProfileWindow() {
    	tableViewRowData.push(imageRow);
    	
    	
-   	//定型Rowを作成 	
+   	//定型Rowを作成
    	var nameRow = createRow("ニックネーム");
-   	tableViewRowData.push(nameRow);   	
-
+   	tableViewRowData.push(nameRow);   
+   	
    	var ageRow = createRow("年代");
+   	setPickerView(ageRow, 'age');
 	tableViewRowData.push(ageRow);
 	
    	var purposeRow = createRow("目的");
@@ -86,6 +87,66 @@ function settingDetailProfileWindow() {
 	self.add(tableView);
 	
 	return self;
+	
+	
+	
+	
+	
+	
+	function setPickerView( row, rowName ){
+		row.children[1].enabled = false;
+		row.children[1].keyboardToolbar = false;
+		row.children[1].addEventListener('click', function(){
+			var array = [];
+			var data = [];
+			var commonMethods = require('commonMethods');
+			switch( rowName ){
+				
+				case "age":
+					array = commonMethods.returnArray("age");
+					break;
+					
+				case "purpose":
+					array = commonMethods.returnArray("purpose");
+					break;
+					
+				case "area":
+					array = commonMethods.returnArray("area");
+					break;
+					
+				case "tall":
+					array = commonMethods.returnArray("tall");
+					break;
+					
+				case "":
+					array = commonMethods.returnArray("");
+					break;
+					
+				case "":
+					array = commonMethods.returnArray("");
+					break;
+			}
+			
+			for (var i=0; i<array.length; i++){
+				if(i == 0){
+					data[i] = Ti.UI.createPickerRow({title: array[i],custom_item:''});
+				}else{
+					data[i] = Ti.UI.createPickerRow({title: array[i],custom_item:i});
+				}
+			}
+			
+			switch (Titanium.Platform.osname){
+				case 'iphone':
+					var pickerView = commonMethods.createPickerView( data, row.children[1] );
+					commonMethods.pickerSlideIn( self, pickerView );
+	    			break;
+	    			
+	    		case 'android':
+	    			break;
+			}
+			
+		});
+	}
 }
 
 module.exports = settingDetailProfileWindow;
@@ -124,10 +185,12 @@ function createRow( labelText ) {
 		top: 10, 
     	bottom: 10,
     	right: 20, 
-    	width: 180
+    	width: 180,
 	});
+	
 	row.add(textField);
 	
 	return row;
 
 }
+

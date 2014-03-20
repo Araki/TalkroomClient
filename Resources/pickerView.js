@@ -39,8 +39,6 @@ function pickerView(data, tf) {
 	picker.addEventListener('change', function(e){
 		textField.value = e.row.title;
 		textField.customItem = e.row.custom_item;
-		//Ti.API.info("CUSTOM ITEM:" + customItem);
-		//Ti.API.info("agePickerCustomItem:" + agePickerCustomItem);
 	});
 
 	self.add(toolbar);
