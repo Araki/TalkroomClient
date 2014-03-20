@@ -8,7 +8,6 @@ function settingProfileWindow() {
 	var saveButton = Titanium.UI.createButton({title:'保存'});
 	self.rightNavButton = saveButton;
 	
-	
 	saveButton.addEventListener('click', function(){
 		
 		var url = Ti.App.domain + "update_profile.json";

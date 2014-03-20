@@ -5,6 +5,71 @@ function settingDetailProfileWindow() {
     	backgroundColor:'#fff'
 	});
 	
+	var saveButton = Titanium.UI.createButton({title:'保存'});
+	self.rightNavButton = saveButton;
+	
+	saveButton.addEventListener('click', function(){
+		var alertMessage = "";
+		if( ageRow.children[1].customItem == ''){
+			alertMessage = alertMessage + "年代を入力してください。\n";
+		}
+		if( purposeRow.children[1].customItem == ''){
+			alertMessage = alertMessage + "目的を入力してください。\n";
+		}
+		if( areaRow.children[1].customItem == ''){
+			alertMessage = alertMessage + "エリアを入力してください。\n";
+		}
+		
+		if( alertMessage != "" ){
+			Ti.UI.createAlertDialog({
+				title: 'エラー',
+			  	message: alertMessage
+			}).show();
+		}
+		
+		Ti.UI.createAlertDialog({
+			title: 'customItem',
+		  	message: "年代：" + ageRow.children[1].customItem +
+		  	         "\n目的：" + purposeRow.children[1].customItem +
+		  	         "\nエリア：" + areaRow.children[1].customItem +
+		  	         "\n身長：" + tallRow.children[1].customItem +
+		  	         "\n血液型：" + bloodRow.children[1].customItem +
+		  	         "\nスタイル：" + styleRow.children[1].customItem +
+		  	         "\n休日：" + holidayRow.children[1].customItem +
+		  	         "\nお酒：" + alcoholRow.children[1].customItem +
+		  	         "\nタバコ：" + cigaretteRow.children[1].customItem +
+		  	         "\n年収：" + salaryRow.children[1].customItem
+		}).show();
+		/*
+		var url = Ti.App.domain + "update_profile.json";
+		var message = {
+				user_id: Ti.App.userID,
+				profile: textArea.value
+		};
+		
+		var methodSendData = require('commonMethods').sendData;
+		methodSendData( url, message, function( data ){
+			if (data.success){
+				//通信に成功したら行う処理
+				Ti.API.info("戻り値:" + data.data);
+				
+				Ti.UI.createAlertDialog({
+					title: 'データ送信成功',
+				  	message: data.data
+				}).show();
+				
+			} else{
+				//通信に失敗したら行う処理
+				Ti.UI.createAlertDialog({
+					title: 'エラー',
+				  	message: data.data
+				}).show();
+				
+			}
+		});	
+		*/	
+	});
+	
 	var tableViewRowData = [];
 	
 	//プロフィール写真Row作成
@@ -52,30 +117,39 @@ function settingDetailProfileWindow() {
 	tableViewRowData.push(ageRow);
 	
    	var purposeRow = createRow("目的");
+   	setPickerView(purposeRow, 'purpose');
    	tableViewRowData.push(purposeRow);
  	
    	var areaRow = createRow("エリア");
+   	setPickerView(areaRow, 'area');
    	tableViewRowData.push(areaRow);
  	
    	var tallRow = createRow("身長");
+   	setPickerView(tallRow, 'tall');
    	tableViewRowData.push(tallRow);
 	
    	var bloodRow = createRow("血液型");
+   	setPickerView(bloodRow, 'blood');
    	tableViewRowData.push(bloodRow);
 	
    	var styleRow = createRow("スタイル");
+   	setPickerView(styleRow, 'style');
    	tableViewRowData.push(styleRow);
 	
    	var holidayRow = createRow("休日");
+   	setPickerView(holidayRow, 'holiday');
    	tableViewRowData.push(holidayRow);
 		
    	var alcoholRow = createRow("お酒");
+   	setPickerView(alcoholRow, 'alcohol');
    	tableViewRowData.push(alcoholRow);
  	
    	var cigaretteRow = createRow("タバコ");
+   	setPickerView(cigaretteRow, 'cigarette');
    	tableViewRowData.push(cigaretteRow);
 	
    	var salaryRow = createRow("年収");
+   	setPickerView(salaryRow, 'salary');
    	tableViewRowData.push(salaryRow);
 	
 	
@@ -97,39 +171,13 @@ function settingDetailProfileWindow() {
 		row.children[1].enabled = false;
 		row.children[1].keyboardToolbar = false;
 		row.children[1].addEventListener('click', function(){
-			var array = [];
 			var data = [];
 			var commonMethods = require('commonMethods');
-			switch( rowName ){
-				
-				case "age":
-					array = commonMethods.returnArray("age");
-					break;
-					
-				case "purpose":
-					array = commonMethods.returnArray("purpose");
-					break;
-					
-				case "area":
-					array = commonMethods.returnArray("area");
-					break;
-					
-				case "tall":
-					array = commonMethods.returnArray("tall");
-					break;
-					
-				case "":
-					array = commonMethods.returnArray("");
-					break;
-					
-				case "":
-					array = commonMethods.returnArray("");
-					break;
-			}
+			var array = commonMethods.returnArray(rowName);
 			
 			for (var i=0; i<array.length; i++){
 				if(i == 0){
-					data[i] = Ti.UI.createPickerRow({title: array[i],custom_item:''});
+					data[i] = Ti.UI.createPickerRow({title: '',custom_item:''});
 				}else{
 					data[i] = Ti.UI.createPickerRow({title: array[i],custom_item:i});
 				}

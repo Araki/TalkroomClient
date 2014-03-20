@@ -32,8 +32,6 @@ function settingWindow() {
 		
 		switch (e.row.id) {
 			
-			
-			
 	  		case "profile":		
 				var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.userID;
 				
@@ -85,15 +83,25 @@ function settingWindow() {
 						
 						settingDetailProfileWindow.children[0].data[0].rows[1].children[1].value = json[0].nickname;
 						settingDetailProfileWindow.children[0].data[0].rows[2].children[1].value = commonMethods.exchangeFromNumber( json[0].age, "age" );
+						settingDetailProfileWindow.children[0].data[0].rows[2].children[1].customItem = json[0].age;
 						settingDetailProfileWindow.children[0].data[0].rows[3].children[1].value = commonMethods.exchangeFromNumber( json[0].purpose, "purpose" );
+						settingDetailProfileWindow.children[0].data[0].rows[3].children[1].customItem = json[0].purpose;
 						settingDetailProfileWindow.children[0].data[0].rows[4].children[1].value = commonMethods.exchangeFromNumber( json[0].area, "area" );
+						settingDetailProfileWindow.children[0].data[0].rows[4].children[1].customItem = json[0].area;
 						settingDetailProfileWindow.children[0].data[0].rows[5].children[1].value = commonMethods.exchangeFromNumber( json[0].tall, "tall" );
+						settingDetailProfileWindow.children[0].data[0].rows[5].children[1].customItem = json[0].tall;
 						settingDetailProfileWindow.children[0].data[0].rows[6].children[1].value = commonMethods.exchangeFromNumber( json[0].blood, "blood" );
+						settingDetailProfileWindow.children[0].data[0].rows[6].children[1].customItem = json[0].blood;
 						settingDetailProfileWindow.children[0].data[0].rows[7].children[1].value = commonMethods.exchangeFromNumber( json[0].style, "style" );
+						settingDetailProfileWindow.children[0].data[0].rows[7].children[1].customItem = json[0].style;
 						settingDetailProfileWindow.children[0].data[0].rows[8].children[1].value = commonMethods.exchangeFromNumber( json[0].holiday, "holiday" );
+						settingDetailProfileWindow.children[0].data[0].rows[8].children[1].customItem = json[0].holiday;
 						settingDetailProfileWindow.children[0].data[0].rows[9].children[1].value = commonMethods.exchangeFromNumber( json[0].alcohol, "alcohol" );
+						settingDetailProfileWindow.children[0].data[0].rows[9].children[1].customItem = json[0].alcohol;
 						settingDetailProfileWindow.children[0].data[0].rows[10].children[1].value = commonMethods.exchangeFromNumber( json[0].cigarette, "cigarette" );
+						settingDetailProfileWindow.children[0].data[0].rows[10].children[1].customItem = json[0].cigarette;
 						settingDetailProfileWindow.children[0].data[0].rows[11].children[1].value = commonMethods.exchangeFromNumber( json[0].salary, "salary" );
+						settingDetailProfileWindow.children[0].data[0].rows[11].children[1].customItem = json[0].salary;
 						
 						tabGroup.activeTab.open(settingDetailProfileWindow);
 						
