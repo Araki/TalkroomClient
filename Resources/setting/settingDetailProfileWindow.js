@@ -10,6 +10,9 @@ function settingDetailProfileWindow() {
 	
 	saveButton.addEventListener('click', function(){
 		var alertMessage = "";
+		if( nicknameRow.children[1].value == ''){
+			alertMessage = alertMessage + "ニックネームを入力してください。\n";
+		}
 		if( ageRow.children[1].customItem == ''){
 			alertMessage = alertMessage + "年代を入力してください。\n";
 		}
@@ -29,7 +32,8 @@ function settingDetailProfileWindow() {
 		
 		Ti.UI.createAlertDialog({
 			title: 'customItem',
-		  	message: "年代：" + ageRow.children[1].customItem +
+		  	message: "ニックネーム：" + nicknameRow.children[1].value +
+		  			 "\n年代：" + ageRow.children[1].customItem +
 		  	         "\n目的：" + purposeRow.children[1].customItem +
 		  	         "\nエリア：" + areaRow.children[1].customItem +
 		  	         "\n身長：" + tallRow.children[1].customItem +
@@ -40,11 +44,21 @@ function settingDetailProfileWindow() {
 		  	         "\nタバコ：" + cigaretteRow.children[1].customItem +
 		  	         "\n年収：" + salaryRow.children[1].customItem
 		}).show();
-		/*
-		var url = Ti.App.domain + "update_profile.json";
+		
+		var url = Ti.App.domain + "update_detail_profile.json";
 		var message = {
 				user_id: Ti.App.userID,
-				profile: textArea.value
+				nickname: nicknameRow.children[1].value,
+			    age: ageRow.children[1].customItem,
+			    purpose: purposeRow.children[1].customItem,
+			    area: areaRow.children[1].customItem,
+			    tall: tallRow.children[1].customItem,
+			    blood: bloodRow.children[1].customItem,
+			    style: styleRow.children[1].customItem,
+			    holiday: holidayRow.children[1].customItem,
+			    alcohol: alcoholRow.children[1].customItem,
+			    cigarette: cigaretteRow.children[1].customItem,
+			    salary: salaryRow.children[1].customItem
 		};
 		
 		var methodSendData = require('commonMethods').sendData;
@@ -67,7 +81,6 @@ function settingDetailProfileWindow() {
 				
 			}
 		});	
-		*/	
 	});
 	
 	var tableViewRowData = [];
@@ -109,8 +122,8 @@ function settingDetailProfileWindow() {
    	
    	
    	//定型Rowを作成
-   	var nameRow = createRow("ニックネーム");
-   	tableViewRowData.push(nameRow);   
+   	var nicknameRow = createRow("ニックネーム");
+   	tableViewRowData.push(nicknameRow);   
    	
    	var ageRow = createRow("年代");
    	setPickerView(ageRow, 'age');
