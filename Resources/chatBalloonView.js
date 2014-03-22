@@ -3,16 +3,17 @@
 //imageURL = イメージのパス
 //chatViewHeight = このビューを設置する高さの位置
 
-function chatBalloonView(whichSide, whatMessage, whatImageURL, chatViewHeight ) {
+function chatBalloonView(whichSide, whatMessage, whatImageURL, whatTime, chatViewHeight ) {
 	
 	var side = whichSide;
 	var message = whatMessage;
 	var imageURL = whatImageURL;
+	var time = whatTime;
 	var viewHeight = chatViewHeight;
 	
 	var labelHeight;//テキストラベルの高さ
 	var limitLabelWidth = 200;//テキストラベルの横幅制限。このサイズを超える場合は複数行の処理。
-	
+	/*
 	//Jsonのつなぎ込みができたら時刻はそのまま表示するが、現在時刻を表示するで代用
 	function getTime(){
 		// 日付の取得
@@ -42,14 +43,14 @@ function chatBalloonView(whichSide, whatMessage, whatImageURL, chatViewHeight ) 
     	
     	return NowDate;
 	}
-	
+	*/
 	var self = Titanium.UI.createView({
 		top: viewHeight,
 		//backgroundColor: "blue"
 	});
 	
 	var labelNameTime = Titanium.UI.createLabel({
-		text: getTime(),
+		text: time,
 		font:{fontSize:10},
 		color:'#000'
 	});

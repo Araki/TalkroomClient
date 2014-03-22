@@ -1,9 +1,47 @@
-function chatWindow(id, textField) {
-	var roomID = id;
+
+
+function chatWindow(sendto, textField) {
+	//Ti.API.info("SEND FROM USER ID: " + sendfrom);
+	Ti.API.info("SEND TO USER ID: " + sendto);
+	
+	//var otherUserID = sendto;
+	var chatArray = new Array();
+	
+	var roomID;
 	var visibleTextField = textField;
 	var scrollViewHeight = 0;
 	
-	Ti.API.info("chatWindow.js ルームID:" + roomID);
+	var url = Ti.App.domain + "get_room_message.json?sendfrom=" + Ti.App.userID + "&sendto=" + sendto;
+	var methodGetData = require('commonMethods').getData;
+	methodGetData(url, function( data ){
+		if (data.success) {
+			
+			// 通信に成功したら行う処理
+			var json = data.data;
+			for (var i=0; i<json.length; i++){
+				chatArray[i] = new Array();
+				if(json[i].sendfrom_list_id == Ti.App.userID){
+					chatArray[i]["side"] = "right";
+				}else{
+					chatArray[i]["side"] = "left";
+				}
+				chatArray[i]["message"] = json[i].body;
+				chatArray[i]["image"] = json[i].sendfrom_image;
+				chatArray[i]["time"] = json[i].year + "/" + json[i].month + "/" + json[i].day + " " + json[i].hour + ":" + json[i].min;
+				
+				var cbView = require('chatBalloonView');
+				var chatView = new cbView(chatArray[i]["side"], chatArray[i]["message"], chatArray[i]["image"], chatArray[i]["time"], scrollViewHeight);
+				scrollView.add(chatView);
+				scrollViewHeight = scrollViewHeight + chatView.height;
+				
+				Ti.API.info("chatView.height:" + chatView.height);
+				Ti.API.info("scrollViewHeight:" + scrollViewHeight);
+			}
+			
+		} else{
+			// 通信に失敗したら行う処理
+		}
+	});
 		
 	//テストデータ始まり
 	testJsonData = new Array();
@@ -49,6 +87,7 @@ function chatWindow(id, textField) {
 	 	 };
 	//テストデータ終わり
 	
+	
 	var self = Titanium.UI.createWindow({  
 	    title:'チャット',
 	    backgroundColor:'#fff'
@@ -61,16 +100,6 @@ function chatWindow(id, textField) {
 		//bottom:35,
 		showVerticalScrollIndicator: true
 	});
-	
-	for(var i=0; i<testJsonData.length; i++){
-		var cbView = require('chatBalloonView');
-		var chatView = new cbView(testJsonData[i]["side"], testJsonData[i]["message"], testJsonData[i]["image"], scrollViewHeight);
-		scrollView.add(chatView);
-		scrollViewHeight = scrollViewHeight + chatView.height;
-		
-		Ti.API.info("chatView.height:" + chatView.height);
-		Ti.API.info("scrollViewHeight:" + scrollViewHeight);
-	}
 	
 	
 	/*
@@ -172,56 +201,10 @@ function chatWindow(id, textField) {
 					Ti.UI.createAlertDialog({
 						title: 'エラー',
 					  	message: data.data
-					}).show();
-					
+					}).show();	
 				}
 			});	
-			
-			
-			/*
-			var message = {
-				sendfrom_list_id: 999,
-				sendto_list_id: 1000,
-				room_id: roomID, 
-				body: textField.value
-			};
-			
-			
-			var xhr = Titanium.Network.createHTTPClient();
-			xhr.timeout = 10000;
-			
-			url = Ti.App.domain + "messages.json";
-			
-			xhr.open('POST', url);
-			
-			xhr.onload = function(){
-				var json = JSON.parse(this.responseText);
-				var sendMessage = json.body;
-				
-				Ti.UI.createAlertDialog({
-		  			title: 'Send Data',
-		  			message: sendMessage
-		  		}).show();
-		  		
-		  		var cbView = require('chatBalloonView');
-				var chatView = new cbView("right", sendMessage, "http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg", scrollViewHeight);
-				scrollView.add(chatView);
-				
-				//Ti.API.info("scrollViewHeight:" + scrollView.toImage().height);
-				Ti.API.info("scrollViewHeight:" + scrollViewHeight);
-				
-				scrollViewHeight = scrollViewHeight + chatView.height;
-				bottomPosition = bottomPosition + chatView.height;
-				//scrollView.scrollTo(0,scrollViewHeight);
-				scrollView.setContentOffset({x:0, y:bottomPosition}, {animated:true});
-				Ti.API.info("オンロード");
-				textField.value ="";
-			};
-	
-			xhr.send(message);
-			*/
 		}
-		
 	});
 	
 	var bottomPosition = scrollView.toImage().height - 455;

@@ -1,8 +1,6 @@
 //type: myProfileだった場合、「トークする」ボタンを非表示
 function userProfileWindow( type ) {
 	
-	//var userID = id;
-	
 	var self = Titanium.UI.createWindow({  
     	//title:'[ユーザーの名前]',
     	backgroundColor:'#fff'
@@ -227,14 +225,8 @@ function userProfileWindow( type ) {
 		self.add(talkButton);
 		
 		talkButton.addEventListener('click', function() {
-			//Ti.API.info(e.row.id);
-			//alert("ルームIDは" + e.row.id);
-			//tableViewRowClickHandler();
-			//Ti.API.info("クリック");
 			var cWindow = require('chatWindow');
-			//ルームIDの1234567890はダミー
-			var chatWindow = new cWindow(1234567890, true);
-		
+			var chatWindow = new cWindow(self.id, true);
 			tabGroup.activeTab.open(chatWindow);
 		});
 	}
