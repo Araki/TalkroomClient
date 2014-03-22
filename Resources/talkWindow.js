@@ -13,77 +13,17 @@ function talkWindow() {
 		Ti.API.info("押されたボタンID：" + e.index);
 		
 		switch (e.index){
-			
 			//アタック中ボタンが押されたときの処理
 	   		case 0:
-	   			//現在表示されているテーブルを初期化
-	   			tableView.data = createAttackTableView();
-	   			
-	   			var url = Ti.App.domain + "get_oneside_rooms.json?user_id=" + Ti.App.userID;
-				var methodGetData = require('commonMethods').getData;
-				//methodGetData("attackTableView", url, tableView);
-				methodGetData(url, function( data ){
-					if (data.success) {
-						// 通信に成功したら行う処理
-						var json = data.data;
-						Ti.API.info("アタック中テーブル");
-						for (var i=0; i<json.length; i++){
-							Ti.API.info("profile_image" + json[i].profile_image);
-							tableView.data[0].rows[i].children[0].image = json[i].profile_image;
-							tableView.data[0].rows[i].children[1].text = json[i].profile;
-							tableView.data[0].rows[i].children[2].text = json[i].room_updated;
-							tableView.data[0].rows[i].children[3].text = json[i].nickname;
-							Ti.API.info("PUBLIC: " + json[i].room_public);
-							if (json[i].room_public == "0" ){ 
-								tableView.data[0].rows[i].children[4].text = "非公開";
-							}else if ( json[i].room_public == "1" ){
-								tableView.data[0].rows[i].children[4].text = "公開";
-							}
-						}
-					} else{
-						// 通信に失敗したら行う処理
-					}
-				});
-				
+				loadAttackData( tableView );
 		    	break;
-		    	
 		    //トーク中ボタンが押されたときの処理
 		  	case 1:
-		    	//現在表示されているテーブルを初期化
-		    	tableView.data = createTalkTableView();
-		    	
-		    	var url = Ti.App.domain + "get_bothside_rooms.json?user_id=" + Ti.App.userID;
-				var methodGetData = require('commonMethods').getData;
-				//methodGetData("talkTableView", url, tableView);
-				methodGetData(url, function( data ){
-					if (data.success) {
-						// 通信に成功したら行う処理
-						var json = data.data;
-						Ti.API.info("トーク中テーブル");
-						for (var i=0; i<json.length; i++){
-							Ti.API.info("profile_image" + json[i].profile_image);
-							tableView.data[0].rows[i].children[0].image = json[i].profile_image;
-							tableView.data[0].rows[i].children[1].text = json[i].profile;
-							tableView.data[0].rows[i].children[2].text = json[i].room_updated;
-							tableView.data[0].rows[i].children[3].text = json[i].nickname;
-							Ti.API.info("PUBLIC: " + json[i].room_public);
-							if (json[i].room_public == "0" ){ 
-								tableView.data[0].rows[i].children[4].text = "非公開";
-							}else if ( json[i].room_public == "1" ){
-								tableView.data[0].rows[i].children[4].text = "公開";
-							}
-						}
-					} else{
-						// 通信に失敗したら行う処理
-					}
-				});
-				
+				loadTalkData( tableView );
 		    	break;
-		    	
 		    //足あとボタンが押されたときの処理
 		  	case 2:
-		    	//現在表示されているテーブルを初期化
-	   			tableView.data = createFootprintTableView();
+	   			loadFootprintData( tableView );
 		    	break;
 		}
 	});	
@@ -96,16 +36,72 @@ function talkWindow() {
 		data: createAttackTableView()
 	});
 	
+	//タブが選択されたときに初期画面を読み込む
+	self.addEventListener('focus', function(e){
+		loadAttackData( tableView );
+ 	});
+	
+	self.add(tableView);
+	return self;
+}
+
+module.exports = talkWindow;
+
+
+
+
+//===================
+//アタック中のデータをテーブルにロードするファンクション
+//===================
+
+function loadAttackData( tableView ){
+	//現在表示されているテーブルを初期化
+	tableView.data = createAttackTableView();
+	
 	var url = Ti.App.domain + "get_oneside_rooms.json?user_id=" + Ti.App.userID;
-	Ti.API.info("URL:" + url);
 	var methodGetData = require('commonMethods').getData;
-	//methodGetData("attackTableView", url, tableView);
 	methodGetData(url, function( data ){
 		if (data.success) {
 			// 通信に成功したら行う処理
-			//↓冗長なのでまとめる
 			var json = data.data;
 			Ti.API.info("アタック中テーブル");
+			for (var i=0; i<json.length; i++){
+				Ti.API.info("profile_image" + json[i].profile_image);
+				tableView.data[0].rows[i].children[0].image = json[i].profile_image;
+				tableView.data[0].rows[i].children[1].text = json[i].profile;
+				tableView.data[0].rows[i].children[2].text = json[i].room_updated;
+				tableView.data[0].rows[i].children[3].text = json[i].nickname;
+				
+				if (json[i].room_public == "0" ){ 
+					tableView.data[0].rows[i].children[4].text = "非公開";
+				}else if ( json[i].room_public == "1" ){
+					tableView.data[0].rows[i].children[4].text = "公開";
+				}
+			}
+		} else{
+			// 通信に失敗したら行う処理
+		}
+	});
+}
+
+
+
+//===================
+//トーク中のデータをテーブルにロードするファンクション
+//===================
+
+function loadTalkData( tableView ){
+	//現在表示されているテーブルを初期化
+	tableView.data = createTalkTableView();
+	
+	var url = Ti.App.domain + "get_bothside_rooms.json?user_id=" + Ti.App.userID;
+	var methodGetData = require('commonMethods').getData;
+	//methodGetData("talkTableView", url, tableView);
+	methodGetData(url, function( data ){
+		if (data.success) {
+			// 通信に成功したら行う処理
+			var json = data.data;
+			Ti.API.info("トーク中テーブル");
 			for (var i=0; i<json.length; i++){
 				Ti.API.info("profile_image" + json[i].profile_image);
 				tableView.data[0].rows[i].children[0].image = json[i].profile_image;
@@ -123,12 +119,22 @@ function talkWindow() {
 			// 通信に失敗したら行う処理
 		}
 	});
-	
-	self.add(tableView);
-	return self;
 }
 
-module.exports = talkWindow;
+
+
+//===================
+//足あとのデータをテーブルにロードするファンクション
+//===================
+
+function loadFootprintData( tableView ){
+	//現在表示されているテーブルを初期化
+	tableView.data = createFootprintTableView();
+}
+
+
+
+
 
 //===================
 //アタック中のテーブル生成ファンクション
