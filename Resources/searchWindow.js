@@ -166,7 +166,9 @@ function searchWindow() {
 		top: 220,
 		right: 40,
 		left: 40,
-		height: 40
+		height: 40,
+		borderColor:"#1E90FF",
+		borderRadius:5
 	});
 	
 	searchButton.addEventListener('click', function(){

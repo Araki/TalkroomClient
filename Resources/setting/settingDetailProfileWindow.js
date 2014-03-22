@@ -5,7 +5,7 @@ function settingDetailProfileWindow() {
     	backgroundColor:'#fff'
 	});
 	
-	var saveButton = Titanium.UI.createButton({title:'保存'});
+	var saveButton = Titanium.UI.createButton({title:'保存',borderColor:"#1E90FF",borderRadius:5});
 	self.rightNavButton = saveButton;
 	
 	saveButton.addEventListener('click', function(){

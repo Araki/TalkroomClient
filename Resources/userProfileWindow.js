@@ -1,5 +1,5 @@
-//id:　ユーザーID
-function userProfileWindow() {
+//type: myProfileだった場合、「トークする」ボタンを非表示
+function userProfileWindow( type ) {
 	
 	//var userID = id;
 	
@@ -160,15 +160,9 @@ function userProfileWindow() {
 		bottom: 80,
 		right: 20,
 		left: 20,
-		height: 50
-	});
-	
-	var talkButton = Ti.UI.createButton({
-		title: 'トークする',
-		bottom: 20,
-		right: 20,
-		left: 20,
-		height: 50
+		height: 50,
+		borderColor:"#1E90FF",
+		borderRadius:5
 	});
 	
 	readPastTalkButton.addEventListener('click', function() {
@@ -202,19 +196,6 @@ function userProfileWindow() {
 		Ti.API.info("URL:" + url);
 	});
 	
-	
-	talkButton.addEventListener('click', function() {
-		//Ti.API.info(e.row.id);
-		//alert("ルームIDは" + e.row.id);
-		//tableViewRowClickHandler();
-		//Ti.API.info("クリック");
-		var cWindow = require('chatWindow');
-		//ルームIDの1234567890はダミー
-		var chatWindow = new cWindow(1234567890, true);
-	
-		tabGroup.activeTab.open(chatWindow);
-	});
-	
 	self.add(profileImage1);
 	self.add(profileImage2);
 	self.add(profileImage3);
@@ -232,7 +213,31 @@ function userProfileWindow() {
 	detailView.add(cigaretteLabel);
 	detailView.add(salaryLabel);
 	self.add(readPastTalkButton);
-	self.add(talkButton);
+	
+	if( type != "myProfile"){
+		var talkButton = Ti.UI.createButton({
+			title: 'トークする',
+			bottom: 20,
+			right: 20,
+			left: 20,
+			height: 50,
+			borderColor:"#1E90FF",
+			borderRadius:5
+		});
+		self.add(talkButton);
+		
+		talkButton.addEventListener('click', function() {
+			//Ti.API.info(e.row.id);
+			//alert("ルームIDは" + e.row.id);
+			//tableViewRowClickHandler();
+			//Ti.API.info("クリック");
+			var cWindow = require('chatWindow');
+			//ルームIDの1234567890はダミー
+			var chatWindow = new cWindow(1234567890, true);
+		
+			tabGroup.activeTab.open(chatWindow);
+		});
+	}
 	
 	return self;
 

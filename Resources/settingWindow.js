@@ -111,11 +111,61 @@ function settingWindow() {
 				});	  			
 	  			break;
 	  			
-	  		case "my_profile": 
+	  			
+	  			
+	  			
+	  			
+	  			
+	  		case "my_profile":
+	  			/*
 	  			var smpWindow = require('setting/settingMyProfileWindow');
 				var settingMyProfileWindow = new smpWindow();
 				tabGroup.activeTab.open(settingMyProfileWindow);
+				*/
+				var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.userID;
+				Ti.API.info("URL:" + url);
+				
+				var commonMethods = require('commonMethods');
+				var methodGetData = commonMethods.getData;
+				
+				methodGetData(url, function( data ){
+					
+					if (data.success) {
+						// 通信に成功したら行う処理
+						var json = data.data;
+						
+						var upWindow = require('userProfileWindow');
+						var userProfileWindow = new upWindow("myProfile");
+						
+						userProfileWindow.id = Ti.App.userID;
+						userProfileWindow.title = json[0].nickname;
+						userProfileWindow.children[0].image = json[0].profile_image1;
+						userProfileWindow.children[1].image = json[0].profile_image2;
+						userProfileWindow.children[2].image = json[0].profile_image3;
+						userProfileWindow.children[3].children[0].children[0].text = "年代： " + commonMethods.exchangeFromNumber(json[0].age, "age");
+						userProfileWindow.children[3].children[0].children[1].text = "エリア： " + commonMethods.exchangeFromNumber(json[0].area, "area");
+						userProfileWindow.children[3].children[0].children[2].text = "目的： " + commonMethods.exchangeFromNumber(json[0].purpose, "purpose");
+						userProfileWindow.children[3].children[0].children[3].text = "一言： " + commonMethods.exchangeFromNumber(json[0].profile, "profile");
+						userProfileWindow.children[3].children[0].children[4].text = "身長： " + commonMethods.exchangeFromNumber(json[0].tall, "tall");
+						userProfileWindow.children[3].children[0].children[5].text = "血液型： " + commonMethods.exchangeFromNumber(json[0].blood, "blood");
+						userProfileWindow.children[3].children[0].children[6].text = "体型： " + commonMethods.exchangeFromNumber(json[0].style, "style");
+						userProfileWindow.children[3].children[0].children[7].text = "休日： " + commonMethods.exchangeFromNumber(json[0].holiday, "holiday");
+						userProfileWindow.children[3].children[0].children[8].text = "お酒： " + commonMethods.exchangeFromNumber(json[0].alcohol, "alcohol");
+						userProfileWindow.children[3].children[0].children[9].text = "タバコ： " + commonMethods.exchangeFromNumber(json[0].cigarette, "cigarette"); 
+						userProfileWindow.children[3].children[0].children[10].text = "給料： " + commonMethods.exchangeFromNumber(json[0].salary, "salary");
+						
+						tabGroup.activeTab.open( userProfileWindow );
+						
+					} else{
+						// 通信に失敗したら行う処理
+					}
+				});
 	  			break;
+	  			
+	  			
+	  			
+	  			
+	  			
 	  		case "buy_points": 
 	  			var sbpWindow = require('setting/settingBuyPointsWindow');
 				var settingBuyPointsWindow = new sbpWindow();
