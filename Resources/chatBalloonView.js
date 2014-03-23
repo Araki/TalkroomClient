@@ -13,37 +13,7 @@ function chatBalloonView(whichSide, whatMessage, whatImageURL, whatTime, chatVie
 	
 	var labelHeight;//テキストラベルの高さ
 	var limitLabelWidth = 200;//テキストラベルの横幅制限。このサイズを超える場合は複数行の処理。
-	/*
-	//Jsonのつなぎ込みができたら時刻はそのまま表示するが、現在時刻を表示するで代用
-	function getTime(){
-		// 日付の取得
-    	var date = new Date();
-    	//var year = date.getYear();
-    	var mon = date.getMonth() + 1;
-    	var day = date.getDate();
 
-    	// 西暦の処理とゼロパディング
-    	//year = (year < 2000) ? year+1900 : year;
-    	if (mon < 10) { mon = "0" + mon; }
-    	if (day < 10) { day = "0" + day; }
-
-    	// 時間の取得
-    	var time = new Date();
-    	var hour = time.getHours();
-    	var min = time.getMinutes();
-    	var sec = time.getSeconds();
-
-    	// ゼロパディング
-    	if (hour < 10) { hour = "0" + hour; }
-    	if (min < 10) { min = "0" + min; }
-    	if (sec < 10) { sec = "0" + sec; }
-
-    	// 書き出し
-    	NowDate = mon + "/" + day + " " + hour + ":" + min + ":" + sec;
-    	
-    	return NowDate;
-	}
-	*/
 	var self = Titanium.UI.createView({
 		top: viewHeight,
 		//backgroundColor: "blue"

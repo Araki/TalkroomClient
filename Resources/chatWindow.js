@@ -1,10 +1,7 @@
 
 
 function chatWindow(sendto, textField) {
-	//Ti.API.info("SEND FROM USER ID: " + sendfrom);
-	Ti.API.info("SEND TO USER ID: " + sendto);
 	
-	//var otherUserID = sendto;
 	var chatArray = new Array();
 	
 	var roomID;
@@ -33,13 +30,18 @@ function chatWindow(sendto, textField) {
 				var chatView = new cbView(chatArray[i]["side"], chatArray[i]["message"], chatArray[i]["image"], chatArray[i]["time"], scrollViewHeight);
 				scrollView.add(chatView);
 				scrollViewHeight = scrollViewHeight + chatView.height;
-				
-				Ti.API.info("chatView.height:" + chatView.height);
-				Ti.API.info("scrollViewHeight:" + scrollViewHeight);
-			}
-			
+				Ti.API.info("++++ScrollViewHeight:" + scrollViewHeight);
+			}		
 		} else{
 			// 通信に失敗したら行う処理
+		}
+		
+		//スクロールの初期表示位置を指定
+		//chatができるときは420
+		//chatができないときは455
+		//マルチデバイス対応するために420や455を変数としたい
+		if(scrollViewHeight > 420){
+			scrollView.setContentOffset({x:0, y:scrollViewHeight - 420}, {animated:false});
 		}
 	});
 		
@@ -55,27 +57,15 @@ function chatWindow(sendto, textField) {
 		contentWidth: "auto",
 		contentHeight: "auto",
 		top: 0,
-		//bottom:35,
 		showVerticalScrollIndicator: true
 	});
-	
-	/*
-	function scrollview_scroll_handler(e){
-    	// e.y contains the current top y position of the contents of the scrollview
-    	Ti.API.info('Scrollview contents y offset: '+e.y);
-	}
-	scrollView.addEventListener('scroll', scrollview_scroll_handler);
-	*/
-	//scrollView.scrollTo(0, 287);
-	
-	//scrollView.contentOffset.y = scrollView.toImage().height - 455;
 	
 	var baseView = Titanium.UI.createScrollView({
 		contentWidth: "auto",
 		contentHeight: "auto",
 		top: 0,
 		bottom:0,
-		//showVerticalScrollIndicator: true
+		showVerticalScrollIndicator: true
 	});
 	
 	var toolbarView = Titanium.UI.createView({
@@ -91,7 +81,6 @@ function chatWindow(sendto, textField) {
 		left:5,
 		right:77,
 		backgroundImage:'inputfield.png',
-		//width:200,
 		font:{fontSize:13},
 		color:'#777',
 		paddingLeft:10,
@@ -125,6 +114,7 @@ function chatWindow(sendto, textField) {
 			
 			url = Ti.App.domain + "creat_message.json";
 			
+			//入力されたチャットをサーバーに送信
 			var methodSendData = require('commonMethods').sendData;
 			methodSendData( url, message, function( data ){
 				if (data.success){
@@ -132,10 +122,14 @@ function chatWindow(sendto, textField) {
 					Ti.API.info("戻り値:" + data.data);
 					
 					var json = JSON.parse(data.data);
-					var sendMessage = json.body;
+					var time = json[0].year + "/" + json[0].month + "/" + json[0].day + " " + json[0].hour + ":" + json[0].min;
 					
 					var cbView = require('chatBalloonView');
-					var chatView = new cbView("right", sendMessage, json.sendfrom_image, scrollViewHeight);
+					Ti.API.info("json[0].body:" + json[0].body);
+					Ti.API.info("json[0].sendfrom_image:" + json[0].sendfrom_image);
+					Ti.API.info("％％％ScrollViewHeight:" + scrollViewHeight);
+					Ti.API.info("％％％Time:" + time);
+					var chatView = new cbView("right", json[0].body, json[0].sendfrom_image,　time, scrollViewHeight);
 					scrollView.add(chatView);
 					
 					//Ti.API.info("scrollViewHeight:" + scrollView.toImage().height);
@@ -143,8 +137,13 @@ function chatWindow(sendto, textField) {
 					
 					scrollViewHeight = scrollViewHeight + chatView.height;
 					bottomPosition = bottomPosition + chatView.height;
-					//scrollView.scrollTo(0,scrollViewHeight);
-					scrollView.setContentOffset({x:0, y:bottomPosition}, {animated:true});
+					
+					//スクロールして表示する
+					if(scrollViewHeight > 420){
+						scrollView.setContentOffset({x:0, y:scrollViewHeight - 420}, {animated:true});
+						Ti.API.info("++++ScrollViewHeight:" + scrollViewHeight);
+					}
+					//scrollView.setContentOffset({x:0, y:bottomPosition}, {animated:true});
 					textField.value ="";
 					
 					Ti.UI.createAlertDialog({
@@ -164,20 +163,19 @@ function chatWindow(sendto, textField) {
 	});
 	
 	var bottomPosition = scrollView.toImage().height - 455;
-	
 	scrollView.addEventListener("scroll",function(e){
-                Ti.API.info("scroll y=" + e.y);
+               // Ti.API.info("scroll y=" + e.y);
     });
+    
 	//visibleTextFieldがTRUEならテキストフィールドを表示
 	if(visibleTextField){
 		scrollView.bottom = 35;
-		Ti.API.info("bottomPosition:" + bottomPosition);
+		//Ti.API.info("bottomPosition:" + bottomPosition);
 		bottomPosition = bottomPosition + 35;
-		Ti.API.info("bottomPosition:" + bottomPosition);
+		//Ti.API.info("bottomPosition:" + bottomPosition);
 		toolbarView.add(textField);
 		toolbarView.add(sendButton);
 		baseView.add(toolbarView);
-		Ti.API.info("テキストフィールドあるよ");
 	}else{
 		scrollView.bottom = 0;
 	}
@@ -185,7 +183,6 @@ function chatWindow(sendto, textField) {
 	baseView.add(scrollView);
 	self.add(baseView);
 	
-	scrollView.setContentOffset({x:0, y:bottomPosition}, {animated:false});
 	return self;
 }
 
