@@ -15,7 +15,7 @@ function chatWindow(sendto, textField) {
 			
 			// 通信に成功したら行う処理
 			var json = data.data;
-			for (var i=0; i<json.length; i++){
+			for (var i=json.length-1; i>=0; i--){
 				chatArray[i] = new Array();
 				if(json[i].sendfrom_list_id == Ti.App.userID){
 					chatArray[i]["side"] = "right";
