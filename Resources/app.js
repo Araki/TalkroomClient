@@ -1,8 +1,6 @@
-Ti.API.info("画面横幅：" + Titanium.Platform.displayCaps.platformWidth);
-Ti.API.info("画面縦幅：" + Titanium.Platform.displayCaps.platformHeight);
-
-Ti.App.displayWidth = Titanium.Platform.displayCaps.platformWidth;
-Ti.App.displayWidth = Titanium.Platform.displayCaps.platformHeight;
+//=============================================================
+//グローバル変数の定義
+//=============================================================
 
 //Ti.App.domain = "http://talkrooms.herokuapp.com/";
 Ti.App.domain = "http://localhost:3000/";
@@ -10,86 +8,35 @@ Ti.App.domain = "http://localhost:3000/";
 //ログインユーザーのID
 Ti.App.userID = 1;
 
-// this sets the background color of the master UIView (when there are no windows/tab groups on it)
+//画面サイズの取得
+Ti.App.displayWidth = Titanium.Platform.displayCaps.platformWidth;
+Ti.App.displayWidth = Titanium.Platform.displayCaps.platformHeight;
+
+
+
+
+
+//=============================================================
+//ソース
+//=============================================================
+
+// バックグラウンドカラーの設定
 Titanium.UI.setBackgroundColor('#000');
 
-
-//==================================================================
-// 「探す」ウィンドウ
-//==================================================================
-var searchWindow = require('searchWindow');
-var win1 = new searchWindow();
-
-var tab1 = Titanium.UI.createTab({  
-    icon:'KS_nav_ui.png',
-    title:'探す',
-    window:win1
-});
-
-
-
-
-//==================================================================
-// 「のぞく」ウィンドウ
-//==================================================================
-var publicRoomWindow = require('publicRoomWindow');
-var win2 = new publicRoomWindow();
-
-var tab2 = Titanium.UI.createTab({  
-    icon:'KS_nav_views.png',
-    title:'のぞく',
-    window:win2
-});
-
-
-//==================================================================
-// 「トーク」ウィンドウ
-//==================================================================
-
-var talkWindow = require('talkWindow');
-var win3 = new talkWindow();
-
-var tab3 = Titanium.UI.createTab({  
-    icon:'KS_nav_ui.png',
-    title:'トーク',
-    window:win3
-});
-
-
-
-//==================================================================
-// 「設定」ウィンドウ
-//==================================================================
-
-var settingWindow = require('settingWindow');
-var win4 = new settingWindow();
-
-var tab4 = Titanium.UI.createTab({  
-    icon:'KS_nav_ui.png',
-    title:'その他',
-    window:win4
-});
-
-//==================================================================
-//  add tabs
-//==================================================================
-
-// create tab group
-var tabGroup = Titanium.UI.createTabGroup();
-
-tabGroup.addTab(tab1);  
-tabGroup.addTab(tab2);  
-tabGroup.addTab(tab3);
-tabGroup.addTab(tab4);
-
 /*
-tabGroup.addEventListener('open', function () {
-	var cuWindow = require('choiceUserWindow');
-	var choiceUserWindow = new cuWindow();
-	choiceUserWindow.open();
-});
+var tGroup = require('tabGroup');
+var tabGroup = new tGroup();
+tabGroup.open();
 */
 
-// open tab group
-tabGroup.open();
+var fbWindow = require('facebookWindow');
+var facebookWindow = new fbWindow();
+facebookWindow.open();
 
+
+var tabGroup;
+function createTabGroup(){
+	var tGroup = require('tabGroup');
+	tabGroup = new tGroup();
+	tabGroup.open();
+}

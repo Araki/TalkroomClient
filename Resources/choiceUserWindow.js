@@ -1,7 +1,7 @@
 function choiceUserWindow(){
 	
 	var self = Titanium.UI.createWindow({  
-	   	title:'トップ',
+	   	title:'ログインユーザー選択',
 	   	backgroundColor:'#fff'
 	});
 	
