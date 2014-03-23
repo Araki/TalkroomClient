@@ -145,7 +145,7 @@ function settingWindow() {
 						userProfileWindow.children[3].children[0].children[0].text = "年代： " + commonMethods.exchangeFromNumber(json[0].age, "age");
 						userProfileWindow.children[3].children[0].children[1].text = "エリア： " + commonMethods.exchangeFromNumber(json[0].area, "area");
 						userProfileWindow.children[3].children[0].children[2].text = "目的： " + commonMethods.exchangeFromNumber(json[0].purpose, "purpose");
-						userProfileWindow.children[3].children[0].children[3].text = "一言： " + commonMethods.exchangeFromNumber(json[0].profile, "profile");
+						userProfileWindow.children[3].children[0].children[3].text = "一言： " + json[0].profile;
 						userProfileWindow.children[3].children[0].children[4].text = "身長： " + commonMethods.exchangeFromNumber(json[0].tall, "tall");
 						userProfileWindow.children[3].children[0].children[5].text = "血液型： " + commonMethods.exchangeFromNumber(json[0].blood, "blood");
 						userProfileWindow.children[3].children[0].children[6].text = "体型： " + commonMethods.exchangeFromNumber(json[0].style, "style");
@@ -197,9 +197,14 @@ function settingWindow() {
 				tabGroup.activeTab.open(settingTOSWindow);
 	  			break;
 	  		case "inquiry": 
+	  			/*
 	  			var siWindow = require('setting/settingInquiryWindow');
 				var settingInquiryWindow = new siWindow();
 				tabGroup.activeTab.open(settingInquiryWindow);
+				*/
+				var cuWindow = require('choiceUserWindow');
+				var choiceUserWindow = new cuWindow();
+				choiceUserWindow.open();
 	  			break;
 		}
 	});	

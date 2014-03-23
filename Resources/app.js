@@ -82,11 +82,13 @@ tabGroup.addTab(tab2);
 tabGroup.addTab(tab3);
 tabGroup.addTab(tab4);
 
+/*
 tabGroup.addEventListener('open', function () {
-	var tWindow = require('topWindow');
-	var topWindow = new tWindow();
-	topWindow.open();
+	var cuWindow = require('choiceUserWindow');
+	var choiceUserWindow = new cuWindow();
+	choiceUserWindow.open();
 });
+*/
 
 // open tab group
 tabGroup.open();

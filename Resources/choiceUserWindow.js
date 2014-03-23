@@ -1,4 +1,4 @@
-function topWindow(){
+function choiceUserWindow(){
 	
 	var self = Titanium.UI.createWindow({  
 	   	title:'トップ',
@@ -117,4 +117,4 @@ function topWindow(){
 	return self;
 }
 
-module.exports = topWindow;
+module.exports = choiceUserWindow;

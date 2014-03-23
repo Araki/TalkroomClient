@@ -96,6 +96,8 @@ function chatWindow(sendto, textField) {
 	});
 	
 	sendButton.addEventListener('click', function(){
+		//２回押されないようにsendButtonを一旦無効に
+		sendButton.enabled = false;
 		
 		if(textField.value == "" || textField.value == null){
 			
@@ -103,6 +105,9 @@ function chatWindow(sendto, textField) {
 			Ti.UI.createAlertDialog({
 		  		message: "メッセージが入力されていません"
 		  	}).show();
+		  	
+		  	//sendButtonを有効に
+		  	sendButton.enabled = true;
 		  	
 		}else{
 			
@@ -151,12 +156,19 @@ function chatWindow(sendto, textField) {
 					  	message: data.data
 					}).show();
 					
+					//sendButtonを有効に
+					sendButton.enabled = true;
+					
 				} else{
 					//通信に失敗したら行う処理
 					Ti.UI.createAlertDialog({
 						title: 'エラー',
 					  	message: data.data
 					}).show();	
+					
+					//sendButtonを有効に
+					sendButton.enabled = true;
+					
 				}
 			});	
 		}
