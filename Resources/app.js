@@ -2,8 +2,8 @@
 //グローバル変数の定義
 //=============================================================
 
-//Ti.App.domain = "http://talkrooms.herokuapp.com/";
-Ti.App.domain = "http://localhost:3000/";
+Ti.App.domain = "http://talkrooms.herokuapp.com/";
+//Ti.App.domain = "http://localhost:3000/";
 
 //ログインユーザーのID
 Ti.App.userID = 1;
@@ -40,3 +40,5 @@ function createTabGroup(){
 	tabGroup = new tGroup();
 	tabGroup.open();
 }
+
+
