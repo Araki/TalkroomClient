@@ -77,7 +77,7 @@ function userTalkedRoomWindow() {
 		//tableViewRowClickHandler();
 		Ti.API.info("クリック");
 		var cWindow = require('chatWindow');
-		var chatWindow = new cWindow(e.row.id);
+		var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, false);
 	
 		tabGroup.activeTab.open(chatWindow);
 		

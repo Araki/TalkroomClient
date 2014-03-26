@@ -1,6 +1,6 @@
 
 
-function chatWindow(sendto, textField) {
+function chatWindow(sendfrom, sendto, textField) {
 	
 	var chatArray = new Array();
 	
@@ -8,7 +8,7 @@ function chatWindow(sendto, textField) {
 	var visibleTextField = textField;
 	var scrollViewHeight = 0;
 	
-	var url = Ti.App.domain + "get_room_message.json?sendfrom=" + Ti.App.userID + "&sendto=" + sendto;
+	var url = Ti.App.domain + "get_room_message.json?sendfrom=" + sendfrom + "&sendto=" + sendto;
 	var methodGetData = require('commonMethods').getData;
 	methodGetData(url, function( data ){
 		if (data.success) {

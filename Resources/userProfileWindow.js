@@ -171,7 +171,6 @@ function userProfileWindow( type ) {
 		Ti.API.info("+++ID:" + self.id);
 		
 		var methodGetData = require('commonMethods').getData;
-		//methodGetData("userProfileWindow", url, userTalkedRoomWindow);
 		methodGetData(url, function( data ){
 			if (data.success) {
 				// 通信に成功したら行う処理
@@ -183,6 +182,8 @@ function userProfileWindow( type ) {
 					userTalkedRoomWindow.children[0].data[0].rows[i].children[3].text = json[i].sendto_message;
 					userTalkedRoomWindow.children[0].data[0].rows[i].children[4].text = json[i].updated_at;
 					userTalkedRoomWindow.children[0].data[0].rows[i].id = json[i].room_id;
+					userTalkedRoomWindow.children[0].data[0].rows[i].sendto = self.id;
+					userTalkedRoomWindow.children[0].data[0].rows[i].sendfrom = json[i].sendfrom_id;
 				}
 			} else{
 				// 通信に失敗したら行う処理
@@ -226,7 +227,7 @@ function userProfileWindow( type ) {
 		
 		talkButton.addEventListener('click', function() {
 			var cWindow = require('chatWindow');
-			var chatWindow = new cWindow(self.id, true);
+			var chatWindow = new cWindow(Ti.App.userID, self.id, true);
 			tabGroup.activeTab.open(chatWindow);
 		});
 	}

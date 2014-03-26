@@ -80,7 +80,7 @@ function publicRoomWindow() {
 		//tableViewRowClickHandler();
 		Ti.API.info("クリック");
 		var cWindow = require('chatWindow');
-		var chatWindow = new cWindow(e.row.id, false);
+		var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, false);
 	
 		tabGroup.activeTab.open(chatWindow);
 	});	
@@ -100,7 +100,9 @@ function publicRoomWindow() {
 					tableView.data[0].rows[i].children[2].text = json[i].sendfrom_message;
 					tableView.data[0].rows[i].children[3].text = json[i].sendto_message;
 					tableView.data[0].rows[i].children[4].text = json[i].updated_at;
-					row.id = json[i].room_id;
+					tableView.data[0].rows[i].sendfrom = json[i].sendfrom_id;
+					tableView.data[0].rows[i].sendto = json[i].sendto_id;
+					//row.id = json[i].room_id;
 				}
 			} else{
 				// 通信に失敗したら行う処理
