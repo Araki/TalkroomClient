@@ -2,8 +2,8 @@
 //グローバル変数の定義
 //=============================================================
 
-Ti.App.domain = "http://talkrooms.herokuapp.com/";
-//Ti.App.domain = "http://localhost:3000/";
+//Ti.App.domain = "http://talkrooms.herokuapp.com/";
+Ti.App.domain = "http://localhost:3000/";
 
 //ログインユーザーのID
 Ti.App.userID = 1;
@@ -12,8 +12,10 @@ Ti.App.userID = 1;
 Ti.App.displayWidth = Titanium.Platform.displayCaps.platformWidth;
 Ti.App.displayWidth = Titanium.Platform.displayCaps.platformHeight;
 
-
-
+//=============================================================
+//REQUIRE
+//=============================================================
+var fb = require('facebook');
 
 
 //=============================================================

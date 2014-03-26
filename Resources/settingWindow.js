@@ -21,7 +21,11 @@ function settingWindow() {
 		{ header:'その他',
 			hasChild:true, title:'使い方', id:'how_to'},
 		  { hasChild:true, title:'利用規約', id:'tos'},
-		  { hasChild:true, title:'お問い合わせ', id:'inquiry'}
+		  { hasChild:true, title:'お問い合わせ', id:'inquiry'},
+		  
+		{header:'',
+			hasChild:true, title:'ログアウト', id:'logout'}
+		  
 	];
 	
 	var tableView = Titanium.UI.createTableView();
@@ -206,6 +210,28 @@ function settingWindow() {
 				var choiceUserWindow = new cuWindow();
 				choiceUserWindow.open();
 	  			break;
+	  		case "logout":
+	  			
+				var logout_alert = Ti.UI.createAlertDialog({
+					title: 'ログアウトしますか？',
+					//message: 'Are you sure?',//ダイアログの本文
+					buttonNames: ['ログアウト', 'キャンセル'],
+					cancel: 1
+				}); 
+				
+				// アラートダイアログのボタンイベント処理
+				logout_alert.addEventListener('click', function(e){
+					switch (e.index){
+						case 0:
+							fb.logout();
+							alert('Logged out');
+						    var fbWindow = require('facebookWindow');
+							var facebookWindow = new fbWindow();
+							facebookWindow.open();
+					}
+				});
+				
+				logout_alert.show();
 		}
 	});	
 	

@@ -117,7 +117,7 @@ function chatWindow(sendto, textField) {
 				body: textField.value
 			};
 			
-			url = Ti.App.domain + "creat_message.json";
+			url = Ti.App.domain + "create_message.json";
 			
 			//入力されたチャットをサーバーに送信
 			var methodSendData = require('commonMethods').sendData;

@@ -8,6 +8,9 @@ function facebookWindow() {
 	var uid;
 	var birthday;
 	var ageNum;
+	var ageText;
+	//Facebook Friendsを取得し知り合いが検索に出ないようにする機能は必要になったときに実装し初期バージョンでは実装しない
+	//var friends_list;
 	
 	var registWindow = require('registrationWindow');
 	var registrationWindow = new registWindow();
@@ -17,7 +20,6 @@ function facebookWindow() {
 	   	backgroundColor:'#fff'
 	});
 	
-	var fb = require('facebook');
 	fb.appid = '349815825157641';
 	fb.permissions = ['email', 'user_birthday', 'read_friendlists'];
 	fb.forceDialogAuth = true;
@@ -27,7 +29,7 @@ function facebookWindow() {
 	        alert('Logged in');
 	        
 	        getUserDataList();
-	        getFbFriendsList();
+	        
 			
 	    } else if (e.error) {
 	    	alert( e.error );
@@ -35,6 +37,12 @@ function facebookWindow() {
 	    	alert( e.cancelled );
 	    }
 	});
+
+	// Add the button.  Note that it doesn't need a click event listener.
+	self.add(fb.createLoginButton({
+	    top : 50,
+	    style : fb.BUTTON_STYLE_WIDE
+	}));
 	
 	
 	//FacebookGraph APIからユーザーのデータを取得するFunction
@@ -46,13 +54,6 @@ function facebookWindow() {
 		    function(e) {
 		         if (e.success) {
 		            var obj = JSON.parse(e.result);
-		            
-		            for (key in obj) {
-				　  		Ti.API.info(key + " : " + obj[key]);
-				　  	}
-					for (key in obj.location){
-						Ti.API.info(key + " : " + obj.location[key]);
-					}
 					
 					//次の登録画面に遷移するまでの処理
 					uid = obj.id;
@@ -63,31 +64,79 @@ function facebookWindow() {
 					email = obj.email;
 					birthday = obj.birthday;
 					
-					//first_nameとlast_nameの最初の文字を取得し連結する
-					last_name_initial = last_name.substring(0,1);
-					first_name_initial = first_name.substring(0,1);
-					var name = first_name_initial + "." + last_name_initial + ".";
+					var url = Ti.App.domain + "check_login.json";
+					var message = {fb_uid: uid};
 					
-					//誕生日から年齢を計算
-					var birth = birthday.split("/");					
-					var current = new Date();
-					calculateAge(current.getFullYear(),
-								 current.getMonth() + 1,
-								 current.getDate(),
-								 birth[2],
-								 birth[0],
-								 birth[1]);
-					
-					//registrationWindowの各要素にデータを格納
-					registrationWindow.children[1].value = name;
-					registrationWindow.children[3].value = ageNum;
-					
-					registrationWindow.open();
+					var methodSendData = require('commonMethods').sendData;
+					methodSendData( url, message, function( data ){
+						if (data.success){
+							//通信に成功したら行う処理
+							if(data.data == "true"){//既に登録済みのユーザーの処理
+								
+								Ti.UI.createAlertDialog({
+									title: '既にログイン済みのユーザー',
+								  	message: data.data
+								}).show();
+								
+								//tabGroupを開く
+								createTabGroup();
+								//このウィンドウを閉じる
+								self.close();
+								
+							}else{//まだ未登録のユーザーの処理
+								
+								Ti.UI.createAlertDialog({
+									title: 'まだ未登録のユーザー',
+								  	message: data.data
+								}).show();
+								
+								/*Facebook Friendsを取得し知り合いが検索に出ないようにする機能は必要になったときに実装し初期バージョンでは実装しない
+								//Facebook Friendsを全件取得
+								getFbFriendsList();
+								*/
+								
+								//first_nameとlast_nameの最初の文字を取得し連結する
+								last_name_initial = last_name.substring(0,1);
+								first_name_initial = first_name.substring(0,1);
+								var name = first_name_initial + "." + last_name_initial + ".";
+								
+								//誕生日から年齢を計算
+								var birth = birthday.split("/");					
+								var current = new Date();
+								calculateAge(current.getFullYear(),
+											 current.getMonth() + 1,
+											 current.getDate(),
+											 birth[2],
+											 birth[0],
+											 birth[1]);
+								
+								//registrationWindowの各要素にデータを格納
+								registrationWindow.children[1].value = name;
+								registrationWindow.children[3].value = ageText;
+								registrationWindow.children[3].customItem = ageNum;
+								registrationWindow.children[5].customItem = 0;
+								registrationWindow.children[7].customItem = 0;
+								registrationWindow.uid = uid;
+								registrationWindow.gender = gender;
+								registrationWindow.email = email;
+								
+								registrationWindow.open();
+								self.close();
+							}
+						} else{
+							//通信に失敗したら行う処理
+							Ti.UI.createAlertDialog({
+								title: 'エラー',
+							  	message: data.data
+							}).show();
+						}
+					});
 		        }
 		    }
 		);
 	}
 	
+	/*Facebook Friendsを取得し知り合いが検索に出ないようにする機能は必要になったときに実装し初期バージョンでは実装しない
 	//FacebookのGraphAPIからフレンドリストを取得するFunction
 	function getFbFriendsList(){
 		fb.requestWithGraphPath(
@@ -96,29 +145,14 @@ function facebookWindow() {
 		    "GET",
 		    function(e) {
 		         if (e.success) {
-		            var obj = JSON.parse(e.result);
-		            for (i in obj.data){
-		            	for (j in obj.data[i]) {
-					　  		//Ti.API.info(j + " ::: " + obj.data[i][j]);
-					　  	}
-						//Ti.API.info("=============");
-		            }
+		            friends_list = e.result;
+		            registrationWindow.friends_list = friends_list;
+					Ti.API.info("####FRIENDS LIST: " + friends_list);
 		        }
 		    }
 		);
 	}
-	
-	fb.addEventListener('logout', function(e) {
-	    alert('Logged out');
-	});
-	
-	// Add the button.  Note that it doesn't need a click event listener.
-	self.add(fb.createLoginButton({
-	    top : 50,
-	    style : fb.BUTTON_STYLE_WIDE
-	}));
-	
-	
+	*/
 	
 	//年齢を計算し、年齢番号を割り出すFunction
 	function calculateAge(cY, cM, cD, bY, bM, bD){
@@ -182,28 +216,12 @@ function facebookWindow() {
 			}else if(50 <= age){
 				ageNum = 11;
 			}
+			//ageNumをテキストに変換
+			var commonMethods = require('commonMethods');
+			ageText = commonMethods.exchangeFromNumber( ageNum, "age" );
 		}
 		
 	}
-	
-	
-	var closeButton = Ti.UI.createButton({
-		title: 'TabGroupへ',
-		bottom: 50,
-		right: 20,
-		left: 20,
-		height: 50,
-		borderColor:"#1E90FF",
-		borderRadius:5
-	});
-	self.add( closeButton );
-	
-	closeButton.addEventListener('click', function() {
-		//tabGroupを開く
-		createTabGroup();
-		//このウィンドウを閉じる
-		self.close();
-	});
 
 	return self;
 }

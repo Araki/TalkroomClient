@@ -1,0 +1,83 @@
+/*-----------------------------------------------------------------------------
+iPhone/Android向けのリセットcss:試作ver1.0
+-----------------------------------------------------------------------------*/
+
+
+/*-----------------------------------------------------------------------------
+html5用タグのブロック化とリセット
+-----------------------------------------------------------------------------*/
+header, hgroup, section, srticle, aside, footer, figure, figcaption, article, details, nav{
+	display:block;
+	margin:0;
+	padding:0;
+	font-size:100%;
+}
+
+/*-----------------------------------------------------------------------------
+タグのリセット
+-----------------------------------------------------------------------------*/
+html, body, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p{
+	margin:0;
+	padding:0;
+	font-size:100%;
+}
+
+
+/*-----------------------------------------------------------------------------
+2,iOSにおいて画面の向きが変わった際のテキストサイズ調整を防ぐ
+3,windowsPhoneにおいて画面の向きが変わった際のテキストサイズ調整を防ぐ（たぶん）
+-----------------------------------------------------------------------------*/
+body{
+	line-height:1.0;
+    -webkit-text-size-adjust: 100%; /* 2 */
+    -ms-text-size-adjust: 100%; /* 3 */
+	font-family: "メイリオ", "Meiryo", "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "ＭＳ Ｐゴシック", "MS P Gothic", sans-serif;
+}
+	
+img{
+	border:0;
+	virtical-align:bottom;
+}
+		
+ul, ol{
+	list-style:none;
+}
+	
+		
+
+
+#showcase {
+  width: 320px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+#showcase .flipsnap {
+  width: 1600px;/*----- 320px * 5 -----*/
+}
+#showcase .item {
+  width: 320px;
+  height:180px;
+  float: left;
+}
+
+
+#showcase .item img{
+  width: 320px;
+  height:180px;
+}
+
+
+#showcase .pointer {
+  text-align: center;
+}
+
+#showcase .pointer span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 8px;
+  border: 1px solid #000;
+}
+#showcase .pointer span.current {
+  background: #FC0;
+}
