@@ -26,7 +26,7 @@ function talkWindow() {
 	   			loadFootprintData( tableView );
 		    	break;
 		}
-	});	
+	});
 	
 	// Navbarの中央に配置
 	self.setTitleControl(statusButtonBar);
@@ -35,6 +35,15 @@ function talkWindow() {
 	var tableView = Titanium.UI.createTableView({
 		data: createAttackTableView()
 	});
+	
+	tableView.addEventListener('click', function(e) {
+		Ti.API.info(e.row.id);
+		Ti.API.info("クリック");
+		var cWindow = require('chatWindow');
+		var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, true);
+	
+		tabGroup.activeTab.open(chatWindow);
+	});	
 	
 	//タブが選択されたときに初期画面を読み込む
 	self.addEventListener('focus', function(e){
@@ -67,6 +76,8 @@ function loadAttackData( tableView ){
 			Ti.API.info("アタック中テーブル");
 			for (var i=0; i<json.length; i++){
 				Ti.API.info("profile_image" + json[i].profile_image);
+				tableView.data[0].rows[i].sendto = json[i].sendto_id;
+				tableView.data[0].rows[i].sendfrom = Ti.App.userID;
 				tableView.data[0].rows[i].children[0].image = json[i].profile_image;
 				tableView.data[0].rows[i].children[1].text = json[i].profile;
 				tableView.data[0].rows[i].children[2].text = json[i].room_updated;
@@ -104,6 +115,8 @@ function loadTalkData( tableView ){
 			Ti.API.info("トーク中テーブル");
 			for (var i=0; i<json.length; i++){
 				Ti.API.info("profile_image" + json[i].profile_image);
+				tableView.data[0].rows[i].sendto = json[i].sendto_id;
+				tableView.data[0].rows[i].sendfrom = Ti.App.userID;
 				tableView.data[0].rows[i].children[0].image = json[i].profile_image;
 				tableView.data[0].rows[i].children[1].text = json[i].profile;
 				tableView.data[0].rows[i].children[2].text = json[i].room_updated;
