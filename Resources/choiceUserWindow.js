@@ -15,12 +15,13 @@ function choiceUserWindow(){
 		left: 20,
 		height: 50,
 		borderColor:"#1E90FF",
-		borderRadius:5
+		borderRadius:5,
+		id:0
 	});
 	self.add(button1);
 	
-	button1.addEventListener('click', function() {
-		Ti.App.userID = 1;
+	button1.addEventListener('click', function(e) {
+		Ti.App.userID = button1.id;
 		self.close();
 	});
 	
@@ -38,7 +39,7 @@ function choiceUserWindow(){
 	self.add(button2);
 	
 	button2.addEventListener('click', function() {
-		Ti.App.userID = 2;
+		Ti.App.userID = button2.id;;
 		self.close();
 	});
 	
@@ -56,7 +57,7 @@ function choiceUserWindow(){
 	self.add(button3);
 	
 	button3.addEventListener('click', function() {
-		Ti.App.userID = 3;
+		Ti.App.userID = button3.id;;
 		self.close();
 	});
 	
@@ -74,7 +75,7 @@ function choiceUserWindow(){
 	self.add(button4);
 	
 	button4.addEventListener('click', function() {
-		Ti.App.userID = 4;
+		Ti.App.userID = button4.id;;
 		self.close();
 	});
 	
@@ -92,7 +93,7 @@ function choiceUserWindow(){
 	self.add(button5);
 	
 	button5.addEventListener('click', function() {
-		Ti.App.userID = 5;
+		Ti.App.userID = button5.id;;
 		self.close();
 	});
 	
@@ -110,7 +111,25 @@ function choiceUserWindow(){
 	self.add(button6);
 	
 	button6.addEventListener('click', function() {
-		Ti.App.userID = 6;
+		Ti.App.userID = button6.id;;
+		self.close();
+	});
+	
+//==================================================
+	
+	var button7 = Ti.UI.createButton({
+		title: 'UserID 7',
+		top: 470,
+		right: 20,
+		left: 20,
+		height: 50,
+		borderColor:"#1E90FF",
+		borderRadius:5
+	});
+	self.add(button7);
+	
+	button7.addEventListener('click', function() {
+		Ti.App.userID = button7.id;;
 		self.close();
 	});
 	

@@ -206,9 +206,40 @@ function settingWindow() {
 				var settingInquiryWindow = new siWindow();
 				tabGroup.activeTab.open(settingInquiryWindow);
 				*/
+				
+				var url = Ti.App.domain + "get_all_users.json";
+				
+				var commonMethods = require('commonMethods');
+				var methodGetData = commonMethods.getData;
+			
+				methodGetData(url, function( data ){
+					
+					if (data.success) {
+						// 通信に成功したら行う処理
+						var json = data.data;
+						
+						var cuWindow = require('choiceUserWindow');
+						var choiceUserWindow = new cuWindow();
+						
+						for (var i=0; i<json.length; i++){
+							choiceUserWindow.children[i].title = json[i].nickname;
+							choiceUserWindow.children[i].id = json[i].id;
+						}
+						
+						choiceUserWindow.open();
+						
+					} else{
+						// 通信に失敗したら行う処理
+					}
+				});
+				
+				
+				//================
+				/*
 				var cuWindow = require('choiceUserWindow');
 				var choiceUserWindow = new cuWindow();
 				choiceUserWindow.open();
+				*/
 	  			break;
 	  		case "logout":
 	  			

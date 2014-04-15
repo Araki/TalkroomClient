@@ -17,10 +17,18 @@ function chatWindow(sendfrom, sendto, textField) {
 			var json = data.data;
 			for (var i=json.length-1; i>=0; i--){
 				chatArray[i] = new Array();
-				if(json[i].sendfrom_list_id == Ti.App.userID){
-					chatArray[i]["side"] = "right";
+				if(json[i].sendfrom_list_id != Ti.App.userID && json[i].sendto_list_id != Ti.App.userID){
+					if(json[i].sendfrom_list_id == sendto){
+						chatArray[i]["side"] = "right";
+					}else{
+						chatArray[i]["side"] = "left";
+					}
 				}else{
-					chatArray[i]["side"] = "left";
+					if(json[i].sendfrom_list_id == Ti.App.userID){
+						chatArray[i]["side"] = "right";
+					}else{
+						chatArray[i]["side"] = "left";
+					}
 				}
 				chatArray[i]["message"] = json[i].body;
 				chatArray[i]["image"] = json[i].sendfrom_image;
