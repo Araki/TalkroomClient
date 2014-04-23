@@ -45,10 +45,11 @@ function talkWindow() {
 		tabGroup.activeTab.open(chatWindow);
 	});	
 	
+	loadAttackData( tableView );
 	//タブが選択されたときに初期画面を読み込む
-	self.addEventListener('focus', function(e){
-		loadAttackData( tableView );
- 	});
+	//self.addEventListener('focus', function(e){
+	//	loadAttackData( tableView );
+ 	//});
 	
 	self.add(tableView);
 	return self;

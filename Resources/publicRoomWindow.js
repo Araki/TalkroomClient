@@ -1,5 +1,7 @@
 function publicRoomWindow() {
-
+	
+	var dataList;
+	
 	var self = Titanium.UI.createWindow({  
 	    title:'のぞく',
 	    backgroundColor:'#fff'
@@ -87,6 +89,60 @@ function publicRoomWindow() {
 	
 	//タブが選択されたときに初期画面を読み込む
 	self.addEventListener('focus', function(e){
+		//直近のルーム100件取得
+		//その後、次に要素を取得し表示する関数を実行
+		//次の10件を読み込むで更に要素を取得し表示する関数を実行
+		
+		//100件のルームIDとアップデート日時を取得
+		var url = Ti.App.domain + "get_recent_rooms.json";
+		var methodGetData = require('commonMethods').getData;
+		methodGetData(url, function( data ){
+			if (data.success) {
+				// 通信に成功したら行う処理
+				dataList = data.data;
+				Ti.API.info(dataList[0]);
+				
+				var url = Ti.App.domain + "get_room_summary_data.json?room_ids=";
+				for (var i=0; i<dataList.length; i++){
+					if (i == 0){
+						url = url + dataList[i].room_id;
+						Ti.API.info("ROOM_ID:" + dataList[i]["room_id"]);
+						Ti.API.info("URL:" + url);
+					}else{
+						url = url + "," + dataList[i].room_id;
+						Ti.API.info("ROOM_ID:" + dataList[i].room_id);
+						Ti.API.info("URL:" + url);
+					}
+				}
+				
+				methodGetData(url, function( data ){
+					if (data.success) {
+						// 通信に成功したら行う処理
+						var json = data.data;
+						for (var i=0; i<json.length; i++){
+							Ti.API.info("###ROOM_ID:" + json[i].room_id);
+							Ti.API.info("JSONデータ:::::" + json[i].sendfrom_image);
+							tableView.data[0].rows[i].children[0].image = json[i].sendfrom_image;
+							tableView.data[0].rows[i].children[1].image = json[i].sendto_image;
+							tableView.data[0].rows[i].children[2].text = json[i].sendfrom_message;
+							tableView.data[0].rows[i].children[3].text = json[i].sendto_message;
+							tableView.data[0].rows[i].children[4].text = json[i].updated_at;
+							tableView.data[0].rows[i].sendfrom = json[i].sendfrom_id;
+							tableView.data[0].rows[i].sendto = json[i].sendto_id;
+							//row.id = json[i].room_id;
+						}
+					} else{
+						// 通信に失敗したら行う処理
+					}
+				});
+				
+			} else{
+				// 通信に失敗したら行う処理
+			}
+		});
+		
+		
+		/*
 		var url = Ti.App.domain + "get_recent_rooms.json";
 		var methodGetData = require('commonMethods').getData;
 		methodGetData(url, function( data ){
@@ -108,6 +164,7 @@ function publicRoomWindow() {
 				// 通信に失敗したら行う処理
 			}
 		});
+		*/
  	});
 
 	return self;

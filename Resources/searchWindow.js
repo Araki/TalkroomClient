@@ -178,7 +178,9 @@ function searchWindow() {
 				  "&area=" +
 				  areaTextField.customItem +
 				  "&purpose=" +
-				  purposeTextField.customItem;
+				  purposeTextField.customItem +
+				  "&user_id=" +
+				  Ti.App.userID;
 		
 		var commonMethods = require('commonMethods');
 		var methodGetData = commonMethods.getData;
