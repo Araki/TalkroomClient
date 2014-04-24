@@ -182,7 +182,7 @@ function userProfileWindow( type ) {
 					userTalkedRoomWindow.children[0].data[0].rows[i].children[3].text = json[i].sendto_message;
 					userTalkedRoomWindow.children[0].data[0].rows[i].children[4].text = json[i].updated_at;
 					userTalkedRoomWindow.children[0].data[0].rows[i].id = json[i].room_id;
-					userTalkedRoomWindow.children[0].data[0].rows[i].sendto = self.id;
+					userTalkedRoomWindow.children[0].data[0].rows[i].sendto = json[i].sendto_id;//self.id;
 					userTalkedRoomWindow.children[0].data[0].rows[i].sendfrom = json[i].sendfrom_id;
 				}
 			} else{
