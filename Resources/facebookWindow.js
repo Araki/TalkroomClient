@@ -22,7 +22,7 @@ function facebookWindow() {
 	
 	fb.appid = '349815825157641';
 	fb.permissions = ['email', 'user_birthday', 'read_friendlists'];
-	fb.forceDialogAuth = true;
+	fb.forceDialogAuth = false;
 	
 	fb.addEventListener('login', function(e) {
 	    if (e.success) {
