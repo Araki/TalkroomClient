@@ -65,18 +65,23 @@ function facebookWindow() {
 					birthday = obj.birthday;
 					
 					var url = Ti.App.domain + "check_login.json";
-					var message = {fb_uid: uid};
+					var message = {fb_uid: uid, access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(uid))};
 					
 					var methodSendData = require('commonMethods').sendData;
 					methodSendData( url, message, function( data ){
 						if (data.success){
 							//通信に成功したら行う処理
-							if(data.data == "true"){//既に登録済みのユーザーの処理
+              var obj = JSON.parse(data.data);
+              Ti.API.info(obj);
+							if(obj.result == "true"){//既に登録済みのユーザーの処理
 								
 								Ti.UI.createAlertDialog({
 									title: '既にログイン済みのユーザー',
 								  	message: data.data
 								}).show();
+                
+                // app_token を保存する
+                Ti.App.Properties.setString('app_token', obj.app_token);
 								
 								//tabGroupを開く
 								createTabGroup();

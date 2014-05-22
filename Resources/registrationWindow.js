@@ -237,7 +237,8 @@ function registrationWindow(){
 				area: areaTextField.customItem,
 				profile_image1: "http://graph.facebook.com/" + self.uid + "/picture",
 				profile: profileTextField.value,
-				point: 0//,
+				point: 0,
+        access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(self.uid))
 				//Facebook Friendsを取得し知り合いが検索に出ないようにする機能は必要になったときに実装し初期バージョンでは実装しない
 				//friends_list: self.friends_list
 			};
@@ -253,6 +254,11 @@ function registrationWindow(){
 					  	message: data.data
 					}).show();
 					
+          
+          // app_token を保存する
+          var obj = JSON.parse(data.data);
+          Ti.App.Properties.setString('app_token', obj.app_token);
+          
 					//イントロダクションウィンドウを開く
 					introductionWindow.open();
 					//登録に成功したらウィンドウを閉じる
