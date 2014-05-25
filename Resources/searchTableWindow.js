@@ -69,6 +69,9 @@ function searchTableWindow( numberOfRow ) {
 	
 	tableView.addEventListener('click', function(e) {
 		
+		//アクティビティインジケーターを表示
+		actInd.show();
+		
 		Ti.API.info("ユーザーIDは" + e.row.id);
 		var userID = e.row.id;
 		
@@ -105,6 +108,9 @@ function searchTableWindow( numberOfRow ) {
 				userProfileWindow.children[3].children[0].children[9].text = "タバコ： " + commonMethods.exchangeFromNumber(json[0].cigarette, "cigarette"); 
 				userProfileWindow.children[3].children[0].children[10].text = "給料： " + commonMethods.exchangeFromNumber(json[0].salary, "salary");
 				
+				//アクティビティインジケーターを非表示
+				actInd.hide();
+				
 				tabGroup.activeTab.open( userProfileWindow );
 				
 			} else{
@@ -114,6 +120,7 @@ function searchTableWindow( numberOfRow ) {
 	});	
 
 	self.add(tableView);
+	self.add(actInd);
 	return self;
 }
 

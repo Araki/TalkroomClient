@@ -41,7 +41,6 @@
         <theme>default</theme>
     </mobileweb>
     <modules>
-        <module platform="iphone">ti.smsview</module>
         <module platform="android">facebook</module>
         <module platform="iphone">facebook</module>
     </modules>

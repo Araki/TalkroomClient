@@ -173,6 +173,9 @@ function searchWindow() {
 	
 	searchButton.addEventListener('click', function(){
 		
+		//アクティビティインジケーターを表示
+		actInd.show();
+		
 		var url = Ti.App.domain + "get_search_users.json?age=" + 
 				  ageTextField.customItem +
 				  "&area=" +
@@ -203,6 +206,9 @@ function searchWindow() {
 					searchTableWindow.children[0].data[0].rows[i].id = json[i].id;
 				}
 				
+				//アクティビティインジケーターを非表示
+				actInd.hide();
+				
 				tabGroup.activeTab.open(　searchTableWindow　);
 				
 			} else{
@@ -210,7 +216,7 @@ function searchWindow() {
 			}
 		});		
 	});
-
+	
 	self.add(ageLabel);
 	self.add(areaLabel);
 	self.add(purposeLabel);
@@ -218,6 +224,7 @@ function searchWindow() {
 	self.add(areaTextField);
 	self.add(purposeTextField);
 	self.add(searchButton);
+	self.add(actInd);
 	return self;
 }
 
