@@ -210,6 +210,31 @@ function searchWindow() {
 			}
 		});		
 	});
+  
+  // app_token による認証付き API の例
+  var example_button = Ti.UI.createButton({
+    title: '認証API(example_token)のテスト',
+    top: 280,
+    right: 40,
+    left: 40,
+    height: 40,
+    borderColor:"#1E90FF",
+    borderRadius:5
+  });
+  example_button.addEventListener('click', function(){
+    var app_token = Ti.App.Properties.getString('app_token');
+    var url = Ti.App.domain + "example_token.json";
+    var message = {
+      app_token: app_token,
+    };
+
+    var methodSendData = require('commonMethods').sendData;
+    methodSendData( url, message, function( data ){
+      // 成功していれば OK が返却される
+      alert(data.data);
+    });
+  });
+  
 
 	self.add(ageLabel);
 	self.add(areaLabel);
@@ -218,6 +243,7 @@ function searchWindow() {
 	self.add(areaTextField);
 	self.add(purposeTextField);
 	self.add(searchButton);
+	self.add(example_button);
 	return self;
 }
 
