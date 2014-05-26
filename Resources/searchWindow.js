@@ -216,9 +216,6 @@ function searchWindow() {
 			}
 		});		
 	});
-<<<<<<< HEAD
-	
-=======
   
   // app_token による認証付き API の例
   var example_button = Ti.UI.createButton({
@@ -244,8 +241,6 @@ function searchWindow() {
     });
   });
   
-
->>>>>>> a336b5ea3b9a172aed4a5ceb2406a92bfb346ab9
 	self.add(ageLabel);
 	self.add(areaLabel);
 	self.add(purposeLabel);
@@ -253,11 +248,8 @@ function searchWindow() {
 	self.add(areaTextField);
 	self.add(purposeTextField);
 	self.add(searchButton);
-<<<<<<< HEAD
 	self.add(actInd);
-=======
 	self.add(example_button);
->>>>>>> a336b5ea3b9a172aed4a5ceb2406a92bfb346ab9
 	return self;
 }
 
