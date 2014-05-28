@@ -94,7 +94,7 @@ function publicRoomWindow() {
 		//次の10件を読み込むで更に要素を取得し表示する関数を実行
 		
 		//100件のルームIDとアップデート日時を取得
-		var url = Ti.App.domain + "get_recent_rooms.json";
+		var url = Ti.App.domain + "get_recent_rooms.json?app_token=" + Ti.App.Properties.getString('app_token');
 		var methodGetData = require('commonMethods').getData;
 		methodGetData(url, function( data ){
 			if (data.success) {
@@ -102,7 +102,7 @@ function publicRoomWindow() {
 				dataList = data.data;
 				Ti.API.info(dataList[0]);
 				
-				var url = Ti.App.domain + "get_room_summary_data.json?room_ids=";
+				var url = Ti.App.domain + "get_room_summary_data.json?app_token=" + Ti.App.Properties.getString('app_token') + "&room_ids=";
 				for (var i=0; i<dataList.length; i++){
 					if (i == 0){
 						url = url + dataList[i].room_id;

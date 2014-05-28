@@ -37,7 +37,7 @@ function settingWindow() {
 		switch (e.row.id) {
 			
 	  		case "profile":		
-				var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.userID;
+				var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.Properties.getString('my_id') +"&app_token=" + Ti.App.Properties.getString('app_token');
 				
 				var commonMethods = require('commonMethods');
 				var methodGetData = commonMethods.getData;
@@ -64,7 +64,7 @@ function settingWindow() {
 	  			
 	  			
 	  		case "detail_profile": 
-				var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.userID;
+				var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.Properties.getString('my_id') +"&app_token=" + Ti.App.Properties.getString('app_token');
 				
 				var commonMethods = require('commonMethods');
 				var methodGetData = commonMethods.getData;
@@ -126,7 +126,7 @@ function settingWindow() {
 				var settingMyProfileWindow = new smpWindow();
 				tabGroup.activeTab.open(settingMyProfileWindow);
 				*/
-				var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.userID;
+				var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.Properties.getString('my_id') +"&app_token=" + Ti.App.Properties.getString('app_token');
 				Ti.API.info("URL:" + url);
 				
 				var commonMethods = require('commonMethods');
@@ -141,7 +141,7 @@ function settingWindow() {
 						var upWindow = require('userProfileWindow');
 						var userProfileWindow = new upWindow("myProfile");
 						
-						userProfileWindow.id = Ti.App.userID;
+						userProfileWindow.id = Ti.App.Properties.getString('my_id');
 						userProfileWindow.title = json[0].nickname;
 						userProfileWindow.children[0].image = json[0].profile_image1;
 						userProfileWindow.children[1].image = json[0].profile_image2;
@@ -207,7 +207,7 @@ function settingWindow() {
 				tabGroup.activeTab.open(settingInquiryWindow);
 				*/
 				
-				var url = Ti.App.domain + "get_all_users.json";
+				var url = Ti.App.domain + "get_all_users.json?app_token=" + Ti.App.Properties.getString('app_token');
 				
 				var commonMethods = require('commonMethods');
 				var methodGetData = commonMethods.getData;

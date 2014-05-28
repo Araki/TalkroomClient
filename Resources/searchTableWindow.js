@@ -75,7 +75,7 @@ function searchTableWindow( numberOfRow ) {
 		Ti.API.info("ユーザーIDは" + e.row.id);
 		var userID = e.row.id;
 		
-		var url = Ti.App.domain + "get_detail_profile.json?user_id=" + userID;
+		var url = Ti.App.domain + "get_detail_profile.json?app_token=" + Ti.App.Properties.getString('app_token') + "&user_id=" + userID;
 		Ti.API.info("URL:" + url);
 		
 		var commonMethods = require('commonMethods');

@@ -167,7 +167,7 @@ function userProfileWindow( type ) {
 		var utWindow = require('userTalkedRoomWindow');
 		var userTalkedRoomWindow = new utWindow();
 		
-		var url = Ti.App.domain + "get_user_rooms.json?user_id=" + self.id + "&login_user_id=" + Ti.App.userID;
+		var url = Ti.App.domain + "get_user_rooms.json?user_id=" + self.id + "&app_token=" + Ti.App.Properties.getString('app_token');
 		Ti.API.info("+++ID:" + self.id);
 		
 		var methodGetData = require('commonMethods').getData;
@@ -227,7 +227,7 @@ function userProfileWindow( type ) {
 		
 		talkButton.addEventListener('click', function() {
 			var cWindow = require('chatWindow');
-			var chatWindow = new cWindow(Ti.App.userID, self.id, true);
+			var chatWindow = new cWindow(Ti.App.Properties.getString('my_id'), self.id, true);
 			tabGroup.activeTab.open(chatWindow);
 		});
 	}

@@ -2,8 +2,8 @@
 //グローバル変数の定義
 //=============================================================
 
-Ti.App.domain = "http://talkrooms.herokuapp.com/";
-//Ti.App.domain = "http://localhost:3000/";
+//Ti.App.domain = "http://talkrooms.herokuapp.com/";
+Ti.App.domain = "http://localhost:3000/";
 
 //ログインユーザーのID
 Ti.App.userID = 1;
@@ -12,6 +12,8 @@ Ti.App.userID = 1;
 Ti.App.displayWidth = Titanium.Platform.displayCaps.platformWidth;
 Ti.App.displayWidth = Titanium.Platform.displayCaps.platformHeight;
 
+Ti.API.info("==================app_token:::::::::" + Ti.App.Properties.getString('app_token'));
+Ti.API.info("==================my_id:::::::::" + Ti.App.Properties.getString('my_id'));
 //=============================================================
 //REQUIRE
 //=============================================================

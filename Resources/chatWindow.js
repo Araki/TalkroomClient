@@ -8,7 +8,7 @@ function chatWindow(sendfrom, sendto, textField) {
 	var visibleTextField = textField;
 	var scrollViewHeight = 0;
 	
-	var url = Ti.App.domain + "get_room_message.json?sendfrom=" + sendfrom + "&sendto=" + sendto;
+	var url = Ti.App.domain + "get_room_message.json?sendfrom=" + sendfrom + "&sendto=" + sendto + "&app_token=" + Ti.App.Properties.getString('app_token');
 	var methodGetData = require('commonMethods').getData;
 	methodGetData(url, function( data ){
 		if (data.success) {
@@ -17,14 +17,14 @@ function chatWindow(sendfrom, sendto, textField) {
 			var json = data.data;
 			for (var i=json.length-1; i>=0; i--){
 				chatArray[i] = new Array();
-				if(json[i].sendfrom_list_id != Ti.App.userID && json[i].sendto_list_id != Ti.App.userID){
+				if(json[i].sendfrom_list_id != Ti.App.Properties.getString('my_id') && json[i].sendto_list_id != Ti.App.Properties.getString('my_id')){
 					if(json[i].sendfrom_list_id == sendto){
 						chatArray[i]["side"] = "right";
 					}else{
 						chatArray[i]["side"] = "left";
 					}
 				}else{
-					if(json[i].sendfrom_list_id == Ti.App.userID){
+					if(json[i].sendfrom_list_id == Ti.App.Properties.getString('my_id')){
 						chatArray[i]["side"] = "right";
 					}else{
 						chatArray[i]["side"] = "left";
@@ -120,7 +120,8 @@ function chatWindow(sendfrom, sendto, textField) {
 		}else{
 			
 			var message = {
-				sendfrom_list_id: Ti.App.userID,
+				//sendfrom_list_id: Ti.App.Properties.getString('my_id'),
+				app_token: Ti.App.Properties.getString('app_token'),
 				sendto_list_id: sendto,
 				body: textField.value
 			};

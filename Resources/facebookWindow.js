@@ -71,8 +71,8 @@ function facebookWindow() {
 					methodSendData( url, message, function( data ){
 						if (data.success){
 							//通信に成功したら行う処理
-              var obj = JSON.parse(data.data);
-              Ti.API.info(obj);
+				            var obj = JSON.parse(data.data);
+				            Ti.API.info(obj);
 							if(obj.result == "true"){//既に登録済みのユーザーの処理
 								
 								Ti.UI.createAlertDialog({
@@ -80,8 +80,9 @@ function facebookWindow() {
 								  	message: data.data
 								}).show();
                 
-                // app_token を保存する
-                Ti.App.Properties.setString('app_token', obj.app_token);
+				                // app_token を保存する
+				                Ti.App.Properties.setString('app_token', obj.app_token);
+								Ti.App.Properties.setString('my_id', obj.user_id);
 								
 								//tabGroupを開く
 								createTabGroup();

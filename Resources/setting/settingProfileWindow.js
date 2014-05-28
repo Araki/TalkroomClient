@@ -12,7 +12,8 @@ function settingProfileWindow() {
 		
 		var url = Ti.App.domain + "update_profile.json";
 		var message = {
-				user_id: Ti.App.userID,
+				//user_id: Ti.App.Properties.getString('my_id'),
+				app_token: Ti.App.Properties.getString('app_token'),
 				profile: textArea.value
 		};
 		

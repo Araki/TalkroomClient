@@ -47,7 +47,8 @@ function settingDetailProfileWindow() {
 		
 		var url = Ti.App.domain + "update_detail_profile.json";
 		var message = {
-				user_id: Ti.App.userID,
+				//user_id: Ti.App.Properties.getString('my_id'),
+				app_token: Ti.App.Properties.getString('app_token'),
 				nickname: nicknameRow.children[1].value,
 			    age: ageRow.children[1].customItem,
 			    purpose: purposeRow.children[1].customItem,

@@ -68,7 +68,7 @@ function loadAttackData( tableView ){
 	//現在表示されているテーブルを初期化
 	tableView.data = createAttackTableView();
 	
-	var url = Ti.App.domain + "get_oneside_rooms.json?user_id=" + Ti.App.userID;
+	var url = Ti.App.domain + "get_oneside_rooms.json?app_token=" + Ti.App.Properties.getString('app_token');
 	var methodGetData = require('commonMethods').getData;
 	methodGetData(url, function( data ){
 		if (data.success) {
@@ -78,7 +78,7 @@ function loadAttackData( tableView ){
 			for (var i=0; i<json.length; i++){
 				Ti.API.info("profile_image" + json[i].profile_image);
 				tableView.data[0].rows[i].sendto = json[i].sendto_id;
-				tableView.data[0].rows[i].sendfrom = Ti.App.userID;
+				tableView.data[0].rows[i].sendfrom = Ti.App.Properties.getString('my_id');
 				tableView.data[0].rows[i].children[0].image = json[i].profile_image;
 				tableView.data[0].rows[i].children[1].text = json[i].profile;
 				tableView.data[0].rows[i].children[2].text = json[i].room_updated;
@@ -106,7 +106,7 @@ function loadTalkData( tableView ){
 	//現在表示されているテーブルを初期化
 	tableView.data = createTalkTableView();
 	
-	var url = Ti.App.domain + "get_bothside_rooms.json?user_id=" + Ti.App.userID;
+	var url = Ti.App.domain + "get_bothside_rooms.json?app_token=" + Ti.App.Properties.getString('app_token');
 	var methodGetData = require('commonMethods').getData;
 	//methodGetData("talkTableView", url, tableView);
 	methodGetData(url, function( data ){
@@ -117,7 +117,7 @@ function loadTalkData( tableView ){
 			for (var i=0; i<json.length; i++){
 				Ti.API.info("profile_image" + json[i].profile_image);
 				tableView.data[0].rows[i].sendto = json[i].sendto_id;
-				tableView.data[0].rows[i].sendfrom = Ti.App.userID;
+				tableView.data[0].rows[i].sendfrom = Ti.App.Properties.getString('my_id');
 				tableView.data[0].rows[i].children[0].image = json[i].profile_image;
 				tableView.data[0].rows[i].children[1].text = json[i].profile;
 				tableView.data[0].rows[i].children[2].text = json[i].room_updated;
