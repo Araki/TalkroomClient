@@ -2,8 +2,8 @@
 //グローバル変数の定義
 //=============================================================
 
-//Ti.App.domain = "http://talkrooms.herokuapp.com/";
-Ti.App.domain = "http://localhost:3000/";
+Ti.App.domain = "http://talkrooms.herokuapp.com/";
+//Ti.App.domain = "http://localhost:3000/";
 
 //ログインユーザーのID
 Ti.App.userID = 1;
@@ -45,6 +45,9 @@ function createTabGroup(){
 	tabGroup.open();
 }
 
+
+
+/*
 //全画面で使うローディングインディケーターの宣言
 var actInd = Titanium.UI.createActivityIndicator({
 	height:'100%',
@@ -57,3 +60,4 @@ var actInd = Titanium.UI.createActivityIndicator({
 	style:(Ti.Platform.name === 'iPhone OS' ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG), //DARK,PLAIN
 	//message: "ローディング中"
 });
+*/

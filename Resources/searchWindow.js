@@ -4,6 +4,18 @@ function searchWindow() {
 	var areaData = [];
 	var purposeData = [];
 	
+	var actInd = Titanium.UI.createActivityIndicator({
+		height:'100%',
+		width:'100%',
+		font: {fontFamily:'Helvetica Neue', fontSize:16, fontWeight:'bold'},
+		color: 'white',
+		backgroundColor:'black',
+		opacity: 0.5,
+		//borderRadius:5,
+		style:(Ti.Platform.name === 'iPhone OS' ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG), //DARK,PLAIN
+		//message: "ローディング中"
+	});
+	
 	var commonMethods = require('commonMethods');
 	
 	var ageArray = commonMethods.returnArray("age");
@@ -218,31 +230,31 @@ function searchWindow() {
 			}
 		});		
 	});
-  
-  // app_token による認証付き API の例
-  var example_button = Ti.UI.createButton({
-    title: '認証API(example_token)のテスト',
-    top: 280,
-    right: 40,
-    left: 40,
-    height: 40,
-    borderColor:"#1E90FF",
-    borderRadius:5
-  });
-  example_button.addEventListener('click', function(){
-    var app_token = Ti.App.Properties.getString('app_token');
-    var url = Ti.App.domain + "example_token.json";
-    var message = {
-      app_token: app_token,
-    };
-
-    var methodSendData = require('commonMethods').sendData;
-    methodSendData( url, message, function( data ){
-      // 成功していれば OK が返却される
-      alert(data.data);
-    });
-  });
-  
+	/*
+	// app_token による認証付き API の例
+  	var example_button = Ti.UI.createButton({
+    	title: '認証API(example_token)のテスト',
+    	top: 280,
+    	right: 40,
+    	left: 40,
+    	height: 40,
+    	borderColor:"#1E90FF",
+    	borderRadius:5
+  	});
+  	example_button.addEventListener('click', function(){
+    	var app_token = Ti.App.Properties.getString('app_token');
+    	var url = Ti.App.domain + "example_token.json";
+    	var message = {
+    		app_token: app_token,
+    	};
+    	var methodSendData = require('commonMethods').sendData;
+    	methodSendData( url, message, function( data ){
+    		// 成功していれば OK が返却される
+    		alert(data.data);
+    	});
+	});
+	*/
+	
 	self.add(ageLabel);
 	self.add(areaLabel);
 	self.add(purposeLabel);
@@ -251,7 +263,7 @@ function searchWindow() {
 	self.add(purposeTextField);
 	self.add(searchButton);
 	self.add(actInd);
-	self.add(example_button);
+	//self.add(example_button);
 	return self;
 }
 

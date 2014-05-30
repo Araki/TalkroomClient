@@ -43,6 +43,7 @@
     <modules>
         <module platform="android">facebook</module>
         <module platform="iphone">facebook</module>
+        <module platform="iphone">ti.storekit</module>
     </modules>
     <deployment-targets>
         <target device="android">true</target>

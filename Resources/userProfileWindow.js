@@ -1,6 +1,18 @@
 //type: myProfileだった場合、「トークする」ボタンを非表示
 function userProfileWindow( type ) {
 	
+	var actInd = Titanium.UI.createActivityIndicator({
+		height:'100%',
+		width:'100%',
+		font: {fontFamily:'Helvetica Neue', fontSize:16, fontWeight:'bold'},
+		color: 'white',
+		backgroundColor:'black',
+		opacity: 0.5,
+		//borderRadius:5,
+		style:(Ti.Platform.name === 'iPhone OS' ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG), //DARK,PLAIN
+		//message: "ローディング中"
+	});
+	
 	var self = Titanium.UI.createWindow({  
     	//title:'[ユーザーの名前]',
     	backgroundColor:'#fff'
@@ -164,6 +176,8 @@ function userProfileWindow( type ) {
 	});
 	
 	readPastTalkButton.addEventListener('click', function() {
+		actInd.show();
+		
 		var utWindow = require('userTalkedRoomWindow');
 		var userTalkedRoomWindow = new utWindow();
 		
@@ -189,7 +203,7 @@ function userProfileWindow( type ) {
 				// 通信に失敗したら行う処理
 			}
 		});
-		
+		actInd.hide();
 		tabGroup.activeTab.open(userTalkedRoomWindow);
 		
 		Ti.API.info("URL:" + url);
@@ -213,6 +227,7 @@ function userProfileWindow( type ) {
 	detailView.add(salaryLabel);
 	self.add(readPastTalkButton);
 	
+	
 	if( type != "myProfile"){
 		var talkButton = Ti.UI.createButton({
 			title: 'トークする',
@@ -226,12 +241,15 @@ function userProfileWindow( type ) {
 		self.add(talkButton);
 		
 		talkButton.addEventListener('click', function() {
+			actInd.show();
 			var cWindow = require('chatWindow');
 			var chatWindow = new cWindow(Ti.App.Properties.getString('my_id'), self.id, true);
+			
+			actInd.hide();
 			tabGroup.activeTab.open(chatWindow);
 		});
 	}
-	
+	self.add(actInd);
 	return self;
 
 }
