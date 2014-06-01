@@ -10,6 +10,7 @@ Flurry.sessionReportsOnCloseEnabled = true;
 Flurry.sessionReportsOnPauseEnabled = true;
 Flurry.sessionReportsOnActivityChangeEnabled = true;
 Flurry.secureTransportEnabled = false;
+Flurry.crashReportingEnabled = true;
 
 
 switch(Ti.Platform.osname){
@@ -33,7 +34,7 @@ Flurry.logEvent('test');
 //グローバル変数の定義
 //=============================================================
 
-Ti.App.domain = "http://talkrooms.herokuapp.com/";
+Ti.App.domain = "http://api.talkroom.co/";
 //Ti.App.domain = "http://localhost:3000/";
 
 //ログインユーザーのID
