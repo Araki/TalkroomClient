@@ -120,6 +120,7 @@ function settingBuyPointsWindow() {
 					}
 				} else {
 					alert('購入が完了しました');
+					alert(evt.receipt);
 					markProductAsPurchased(evt.productIdentifier);
 				}
 				if (evt.downloads) {

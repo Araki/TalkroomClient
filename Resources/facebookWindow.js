@@ -26,8 +26,8 @@ function facebookWindow() {
 	
 	fb.addEventListener('login', function(e) {
 	    if (e.success) {
-	        alert('Logged in');
-	        
+	    	
+	    	alert('Logged in');
 	        getUserDataList();
 	        
 			
@@ -74,6 +74,18 @@ function facebookWindow() {
 				            var obj = JSON.parse(data.data);
 				            Ti.API.info(obj);
 							if(obj.result == "true"){//既に登録済みのユーザーの処理
+								
+								var birth = birthday.split("/");
+								var current = new Date();
+								var age = current.getFullYear() - birth[2]
+								alert("年齢：" + age + "\nID：" + String(uid) + "\n性別：" + gender);
+								Flurry.setAge(age);
+								Flurry.setUserId(String(uid));
+								if(gender == "male"){
+									Flurry.setGender('m');
+								}else{
+									Flurry.setGender('f');
+								}
 								
 								Ti.UI.createAlertDialog({
 									title: '既にログイン済みのユーザー',

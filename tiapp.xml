@@ -44,6 +44,8 @@
         <module platform="android">facebook</module>
         <module platform="iphone">facebook</module>
         <module platform="iphone">ti.storekit</module>
+        <module platform="iphone">com.onecowstanding.flurry</module>
+        <module platform="android">com.onecowstanding.flurry</module>
     </modules>
     <deployment-targets>
         <target device="android">true</target>

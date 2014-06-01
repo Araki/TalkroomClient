@@ -1,4 +1,35 @@
 //=============================================================
+//Flurry初期設定
+//=============================================================
+var Flurry = require('com.onecowstanding.flurry');
+
+Flurry.appVersion = Ti.App.version;
+Flurry.debugLogEnabled = true;
+Flurry.eventLoggingEnabled = true;
+Flurry.sessionReportsOnCloseEnabled = true;
+Flurry.sessionReportsOnPauseEnabled = true;
+Flurry.sessionReportsOnActivityChangeEnabled = true;
+Flurry.secureTransportEnabled = false;
+
+
+switch(Ti.Platform.osname){
+    case 'iphone':
+        Ti.API.info("Flurry iPhoneスタート");
+        Flurry.startSession('F5NQXW4FTH444BFF9939');
+        break;
+    case 'ipad':
+        Ti.API.info("Flurry iPadスタート");
+        break;
+    case 'android':
+        Ti.API.info("Flurry Androidスタート");
+		Flurry.startSession();
+        break;
+}
+
+Flurry.logAllPageViews();
+Flurry.logEvent('test');
+
+//=============================================================
 //グローバル変数の定義
 //=============================================================
 
