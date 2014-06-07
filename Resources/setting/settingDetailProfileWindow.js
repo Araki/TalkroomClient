@@ -1,9 +1,6 @@
 function settingDetailProfileWindow() {
 	
-	var self = Titanium.UI.createWindow({  
-    	title:'プロフィール編集',
-    	backgroundColor:'#fff'
-	});
+	var self = createWindow("プロフィール編集");
 	
 	var saveButton = Titanium.UI.createButton({title:'保存',borderColor:"#1E90FF",borderRadius:5});
 	self.rightNavButton = saveButton;

@@ -1,9 +1,6 @@
 function settingBuyPointsWindow() {
 	
-	var self = Titanium.UI.createWindow({  
-    	title:'ポイント購入',
-    	backgroundColor:'#fff'
-	});
+	var self = createWindow("ポイント購入");
 	
 	/*======================================
 	 * 修正箇所（始まり）
@@ -43,8 +40,6 @@ function settingBuyPointsWindow() {
 	}
 	self.add(loading);
 	
-	var tempPurchasedStore = {};
-	
 	function isIOS7Plus()
 	{
 		if (Titanium.Platform.name == 'iPhone OS')
@@ -63,13 +58,6 @@ function settingBuyPointsWindow() {
 	}
 	//◆◆◆もし本番の場合、「//」を取り、Titaniumからビルドし、xcodeprojファイルを立ち上げ「Version」を「bundleVersion」と一致させXcodeからビルドする
 	var IOS7 = false;//isIOS7Plus();
-	
-	function markProductAsPurchased(identifier)
-	{
-		Ti.API.info('Marking as purchased: ' + identifier);
-		tempPurchasedStore[identifier] = true;
-		Ti.App.Properties.setBool('Purchased-' + identifier, true);
-	}
 	 
 	function requestProduct(identifier, success)
 	{
@@ -109,7 +97,7 @@ function settingBuyPointsWindow() {
 							if (e.success) {
 								if (e.valid) {
 									alert('Thanks! Receipt Verified');
-									markProductAsPurchased(evt.productIdentifier);
+									//markProductAsPurchased(evt.productIdentifier);
 								} else {
 									alert('Sorry. Receipt is invalid');
 								}
@@ -121,7 +109,8 @@ function settingBuyPointsWindow() {
 				} else {
 					alert('購入が完了しました');
 					alert(evt.receipt);
-					markProductAsPurchased(evt.productIdentifier);
+					setProperties(evt.receipt);
+					//markProductAsPurchased(evt.productIdentifier);
 				}
 				if (evt.downloads) {
 					Storekit.startDownloads({
@@ -224,7 +213,22 @@ function settingBuyPointsWindow() {
 		});
 	}
 	
-	
+	function setProperties(receipt){
+		var json = JSON.parse(receipt);
+		var receiptList = [];
+		alert(json);
+		if(Ti.App.Properties.getString('receipts') == null){
+			receiptList = [];
+		}else{
+			receiptList = Ti.App.Properties.getString('receipts');
+		}
+		
+		receiptList[receiptList.length] = receipt;
+		Ti.App.Properties.setString('receipts', receiptList);
+		for(var i = 0; i<receiptList.length; i++){
+			
+		}
+	}
 	
 	
 	

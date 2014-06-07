@@ -1,9 +1,6 @@
 function settingWindow() {
 	
-	var self = Titanium.UI.createWindow({  
-    	title:'その他',
-    	backgroundColor:'#fff'
-	});
+	var self = createWindow("その他");
 
 	var inputData = [
 		{ header:'プロフィール',
@@ -178,133 +175,18 @@ function settingWindow() {
 				tabGroup.activeTab.open(settingBuyPointsWindow);
 	  			break;
 	  			
-	  			/*
-	  			var Storekit = require('ti.storekit');
-	  			Storekit.receiptVerificationSandbox = true;
-	  			//Storekit.receiptVerificationSharedSecret = "7c7fe33a9fe84f529c3cf339629f738b";
-	  			var verifyingReceipts = false;
 	  			
-	  			var loading = Ti.UI.createActivityIndicator({
-					bottom:10, height:50, width:50,
-					backgroundColor:'black', borderRadius:10,
-					style:Ti.UI.iPhone.ActivityIndicatorStyle.BIG
-				});
-				var loadingCount = 0;
-				function showLoading()
-				{
-					loadingCount += 1;
-					if (loadingCount == 1) {
-						loading.show();
-					}
-				}
-				function hideLoading()
-				{
-					if (loadingCount > 0) {
-						loadingCount -= 1;
-						if (loadingCount == 0) {
-							loading.hide();
-						}
-					}
-				}
-				self.add(loading);
-				
-				function purchaseProduct(product)
-				{
-					if (product.downloadable) {
-						Ti.API.info('Purchasing a product that is downloadable');
-					}
-					showLoading();
-					Storekit.purchase({
-						product: product
-						// applicationUsername is a opaque identifier for the user’s account on your system. 
-						// Used by Apple to detect irregular activity. Should hash the username before setting.
-						// applicationUsername: '<HASHED APPLICATION USERNAME>'
-					});
-				}
-				
-				function requestProduct(identifier, success)
-				{
-					showLoading();
-					Storekit.requestProducts([identifier], function (evt) {
-						hideLoading();
-						if (!evt.success) {
-							alert('ERROR: We failed to talk to Apple!');
-						}
-						else if (evt.invalid) {
-							alert('ERROR: We requested an invalid product!');
-						}
-						else {
-							success(evt.products[0]);
-						}
-					});
-				}
-				
-				Storekit.addEventListener('transactionState', function (evt) {
-				    hideLoading();
-				    switch (evt.state) {
-				        case Storekit.FAILED:
-				        	hideLoading();
-				            if (evt.cancelled) {
-				                alert('Purchase cancelled');
-				            } else {
-				                alert('ERROR: Buying failed! ' + evt.message);
-				            }
-				            break;
-				        case Storekit.PURCHASED:
-				        	hideLoading();
-				            if (verifyingReceipts) {
-				                Storekit.verifyReceipt(evt, function (e) {
-				                    if (e.success) {
-				                        if (e.valid) {
-				                            alert('Thanks! Receipt Verified');
-				                            markProductAsPurchased(evt.productIdentifier);
-				                        } else {
-				                            alert('Sorry. Receipt is invalid');
-				                        }
-				                    } else {
-				                        alert(e.message);
-				                    }
-				                });
-				            } else {
-				                alert('Thanks!');
-				                markProductAsPurchased(evt.productIdentifier);
-				            }
-				            break;
-				        case Storekit.PURCHASING:
-				        	hideLoading();
-				            Ti.API.info("Purchasing " + evt.productIdentifier);
-				            break;
-				        case Storekit.RESTORED:
-				        	hideLoading();
-				            // The complete list of restored products is sent with the `restoredCompletedTransactions` event
-				            Ti.API.info("Restored " + evt.productIdentifier);
-				            break;
-				    }
-				});
-				
-				Storekit.addTransactionObserver();
-				
-				requestProduct('jp.shiftage.talkroom.testpoint100', function (product) {
-					
-					//var buySingleItem = Ti.UI.createButton({
-					//	title:'Buy ' + product.title + ', ' + product.formattedPrice,
-					//	top:60, left:5, right:5, height:40
-					//});
-					//buySingleItem.addEventListener('click', function () {
-					//	purchaseProduct(product);
-					//});
-					//win.add(buySingleItem);
-					
-					alert('RequestProduct' + product);
-					purchaseProduct(product);
-				});
-				break;
-				*/				
 	  		case "reward": 
+	  			/*
 	  			var srWindow = require('setting/settingRewardWindow');
 				var settingRewardWindow = new srWindow();
 				tabGroup.activeTab.open(settingRewardWindow);
+				*/
+				var car = require('ti.car');
+				var param = ["3344", Ti.App.Properties.getString('my_id'), "ncIdX3la", "477538846cd8ed2f", "TITLE", "BACK", "http://car.mobadme.jp/spg/spnew/702/3344/index.php"];
+				car.showMediaView(param);
 	  			break;
+	  			
 	  		case "video": 
 	  			var svWindow = require('setting/settingVideoWindow');
 				var settingVideoWindow = new svWindow();

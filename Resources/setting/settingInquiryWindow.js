@@ -1,9 +1,6 @@
 function settingInquiryWindow() {
 	
-	var self = Titanium.UI.createWindow({  
-    	title:'お問い合わせ',
-    	backgroundColor:'#fff'
-	});
+	var self = createWindow("お問い合わせ");
 	
 	return self;
 }

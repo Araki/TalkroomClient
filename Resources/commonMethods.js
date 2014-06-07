@@ -12,6 +12,8 @@ exports.getData = function(val ,callback) {
 	//HTTPClientを生成する
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.timeout = 10000;
+	//SSL通信
+	//xhr.validatesSecureCertificate = false;
 	
 	//HTTPClientを開く
 	xhr.open("GET", url);

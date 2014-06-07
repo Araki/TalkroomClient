@@ -1,9 +1,6 @@
 function settingVideoWindow() {
 	
-	var self = Titanium.UI.createWindow({  
-    	title:'ビデオを見てポイントGET',
-    	backgroundColor:'#fff'
-	});
+	var self = createWindow("ビデオを見てポイントGET");
 	
 	return self;
 }

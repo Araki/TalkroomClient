@@ -1,9 +1,6 @@
 function searchTableWindow( numberOfRow ) {
 
-	var self = Titanium.UI.createWindow({  
-	    title:'検索結果',
-	    backgroundColor:'#fff'
-	});
+	var self = createWindow("検索結果");
 
 	var actInd = Titanium.UI.createActivityIndicator({
 		height:'100%',

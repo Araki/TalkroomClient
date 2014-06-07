@@ -15,10 +15,7 @@ function facebookWindow() {
 	var registWindow = require('registrationWindow');
 	var registrationWindow = new registWindow();
 	
-	var self = Titanium.UI.createWindow({  
-	   	title:'フェイスブック',
-	   	backgroundColor:'#fff'
-	});
+	var self = createWindow("フェイスブック");
 	
 	fb.appid = '349815825157641';
 	fb.permissions = ['email', 'user_birthday', 'read_friendlists'];

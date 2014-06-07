@@ -1,8 +1,5 @@
 function talkWindow() {
-	var self = Titanium.UI.createWindow({  
-    	//title:'トーク',
-    	backgroundColor:'#fff'
-	});
+	var self = createWindow("");
 	
 	var statusButtonBar = Titanium.UI.createTabbedBar({
 		labels:['アタック中', 'トーク中', '足あと'], 

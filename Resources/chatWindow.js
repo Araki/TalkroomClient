@@ -56,10 +56,7 @@ function chatWindow(sendfrom, sendto, textField) {
 	//テストデータ終わり
 	
 	
-	var self = Titanium.UI.createWindow({  
-	    title:'チャット',
-	    backgroundColor:'#fff'
-	});
+	var self = createWindow("チャット");
 	
 	var scrollView = Titanium.UI.createScrollView({
 		contentWidth: "auto",

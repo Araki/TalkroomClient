@@ -1,9 +1,6 @@
 function settingTOSWindow() {
 	
-	var self = Titanium.UI.createWindow({  
-    	title:'利用規約',
-    	backgroundColor:'#fff'
-	});
+	var self = createWindow("利用規約");
 	
 	return self;
 }

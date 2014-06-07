@@ -1,9 +1,6 @@
 function settingInviteFriendsWindow() {
 	
-	var self = Titanium.UI.createWindow({  
-    	title:'友達招待',
-    	backgroundColor:'#fff'
-	});
+	var self = createWindow("友達招待");
 	
 	return self;
 }

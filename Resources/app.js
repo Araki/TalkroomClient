@@ -77,19 +77,39 @@ function createTabGroup(){
 	tabGroup.open();
 }
 
+//=======================================================================================
+//Windowを返すファンクション
+//=======================================================================================
+function createWindow(titleName){
+	var win = Titanium.UI.createWindow({  
+		title: titleName,
+		backgroundColor:'#fff',
+		barImage:'images/bg/navBar_bg.png',
+		titleControl: Ti.UI.createLabel({
+	        text: titleName,
+	        color:'#fff',
+	        font:{fontFamily:'',fontSize:18},
+	        shadowColor: 'gray',
+	        shadowOffset: {x: 1, y: 1}
+	    })
+	});
+	/*
+	// create the label
+	var titleLabel = Titanium.UI.createLabel({
+	    color:'#fff',
+	    height:18,
+	    width:210,
+	    top:10,
+	    text:titleName,
+	    textAlign:'center',
+	    
+	    shadowColor:'#eee',shadowOffset:{x:0,y:1}
+	});
+	
+	// associate label to title
+	win.setTitleControl(titleLabel);
+	*/
+	return win;
+}
 
 
-/*
-//全画面で使うローディングインディケーターの宣言
-var actInd = Titanium.UI.createActivityIndicator({
-	height:'100%',
-	width:'100%',
-	font: {fontFamily:'Helvetica Neue', fontSize:16, fontWeight:'bold'},
-	color: 'white',
-	backgroundColor:'black',
-	opacity: 0.5,
-	//borderRadius:5,
-	style:(Ti.Platform.name === 'iPhone OS' ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG), //DARK,PLAIN
-	//message: "ローディング中"
-});
-*/

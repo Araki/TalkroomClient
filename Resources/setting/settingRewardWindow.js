@@ -1,9 +1,6 @@
 function settingRewardWindow() {
 	
-	var self = Titanium.UI.createWindow({  
-    	title:'無料でポイントGET',
-    	backgroundColor:'#fff'
-	});
+	var self = createWindow("無料でポイントGET");
 	
 	return self;
 }

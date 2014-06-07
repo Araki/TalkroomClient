@@ -13,10 +13,7 @@ function userProfileWindow( type ) {
 		//message: "ローディング中"
 	});
 	
-	var self = Titanium.UI.createWindow({  
-    	//title:'[ユーザーの名前]',
-    	backgroundColor:'#fff'
-	});
+	var self = createWindow("");
 	
 	var profileImage1 = Titanium.UI.createImageView({
     	//image: 'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',

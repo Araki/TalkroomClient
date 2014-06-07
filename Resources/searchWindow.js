@@ -46,10 +46,7 @@ function searchWindow() {
 	}
 	
 
-	var self = Titanium.UI.createWindow({  
-    	title:'探す',
-    	backgroundColor:'#fff'
-	});
+	var self = createWindow("探す");
 	
 	//=========================================
 	//age系要素の定義

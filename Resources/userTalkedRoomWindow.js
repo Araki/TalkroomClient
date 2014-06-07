@@ -1,9 +1,6 @@
 function userTalkedRoomWindow() {
 
-	var self = Titanium.UI.createWindow({  
-	    title:'過去のトーク',
-	    backgroundColor:'#fff'
-	});
+	var self = createWindow("過去のトーク");
 
 	var tableViewRowData = [];
 	
