@@ -6,22 +6,22 @@ function tabGroup() {
 	var searchWindow = require('searchWindow');
 	var win1 = new searchWindow();
 	
-	var tab1 = Titanium.UI.createTab({  
+	var tab1 = Titanium.UI.createTab({ 
 	    icon:'KS_nav_ui.png',
 	    title:'探す',
 	    window:win1
 	});
-	
-	
-	
-	
+
+		
+		
+		
 	//==================================================================
 	// 「のぞく」ウィンドウ
 	//==================================================================
 	var publicRoomWindow = require('publicRoomWindow');
 	var win2 = new publicRoomWindow();
 	
-	var tab2 = Titanium.UI.createTab({  
+	var tab2 = Titanium.UI.createTab({ 
 	    icon:'KS_nav_views.png',
 	    title:'のぞく',
 	    window:win2
@@ -61,23 +61,15 @@ function tabGroup() {
 	//==================================================================
 	
 	// create tab group
-	var self = Titanium.UI.createTabGroup();
+	var self = Titanium.UI.createTabGroup({});
+	self.tabsBackgroundColor = "white"; //タブバーの色
+	self.tabsTintColor = "#003366"; //選択時のタブの色
+	self.tabsBackgroundImage = 'images/bg/tabBar_bg.png';
 	
 	self.addTab(tab1);  
 	self.addTab(tab2);  
 	self.addTab(tab3);
 	self.addTab(tab4);
-	
-	/*
-	tabGroup.addEventListener('open', function () {
-		var cuWindow = require('choiceUserWindow');
-		var choiceUserWindow = new cuWindow();
-		choiceUserWindow.open();
-	});
-	*/
-	
-	// open tab group
-	//tabGroup.open();
 
 	return self;
 }

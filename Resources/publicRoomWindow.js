@@ -17,8 +17,18 @@ function publicRoomWindow() {
 	});
 	
 	var tableView = Titanium.UI.createTableView({});
-	self.add(tableView);
+	tableView.addEventListener('click', function(e) {
+			Ti.API.info(e.row.id);
+			//alert("ルームIDは" + e.row.id);
+			//tableViewRowClickHandler();
+			Ti.API.info("クリック");
+			var cWindow = require('chatWindow');
+			var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, false);
+		
+			tabGroup.activeTab.open(chatWindow);
+		});	
 	
+	self.add(tableView);
 	self.add(actInd);
 	
 
@@ -77,9 +87,6 @@ function publicRoomWindow() {
 	function createView(json){
 		
 		var tableViewRowData = [];
-		
-		
-		
 		for (var i=0; i<json.length; i++){
 	    
 	    	var labelSendFromMessage = Titanium.UI.createLabel({
@@ -129,6 +136,7 @@ function publicRoomWindow() {
 		   var row = Ti.UI.createTableViewRow({
 		        hasChild: true,
 		        height:60,
+		        backgroundImage: '',
 		        id: ''
 		   });
 	   	
@@ -147,17 +155,6 @@ function publicRoomWindow() {
 		//self.add(tableView);
 		
 		tableView.data = tableViewRowData;
-	
-		tableView.addEventListener('click', function(e) {
-			Ti.API.info(e.row.id);
-			//alert("ルームIDは" + e.row.id);
-			//tableViewRowClickHandler();
-			Ti.API.info("クリック");
-			var cWindow = require('chatWindow');
-			var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, false);
-		
-			tabGroup.activeTab.open(chatWindow);
-		});	
 		
 		for (var i=0; i< json.length; i++){
 			Ti.API.info("###ROOM_ID:" + json[i].room_id);

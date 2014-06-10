@@ -42,7 +42,8 @@ Ti.App.userID = 1;
 
 //画面サイズの取得
 Ti.App.displayWidth = Titanium.Platform.displayCaps.platformWidth;
-Ti.App.displayWidth = Titanium.Platform.displayCaps.platformHeight;
+Ti.App.displayHeight = Titanium.Platform.displayCaps.platformHeight;
+Ti.App.navBarHeight = 44;
 
 Ti.API.info("==================app_token:::::::::" + Ti.App.Properties.getString('app_token'));
 Ti.API.info("==================my_id:::::::::" + Ti.App.Properties.getString('my_id'));
@@ -93,22 +94,7 @@ function createWindow(titleName){
 	        shadowOffset: {x: 1, y: 1}
 	    })
 	});
-	/*
-	// create the label
-	var titleLabel = Titanium.UI.createLabel({
-	    color:'#fff',
-	    height:18,
-	    width:210,
-	    top:10,
-	    text:titleName,
-	    textAlign:'center',
-	    
-	    shadowColor:'#eee',shadowOffset:{x:0,y:1}
-	});
 	
-	// associate label to title
-	win.setTitleControl(titleLabel);
-	*/
 	return win;
 }
 

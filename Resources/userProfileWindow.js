@@ -13,10 +13,25 @@ function userProfileWindow( type ) {
 		//message: "ローディング中"
 	});
 	
-	var self = createWindow("");
+	var self = createWindow();
+	
+	var profileBgView = Titanium.UI.createView({
+		top: 0,
+		left: 0,
+		right: 0,
+		height: 112,
+		backgroundImage: "images/bg/profile_photo_bg.png"
+	});
+	
+	var buttonBgView = Titanium.UI.createView({
+		bottom: 0,
+		left: 0,
+		right: 0,
+		height: 76,
+		backgroundImage: "images/bg/profile_btn_bg.png"
+	});
 	
 	var profileImage1 = Titanium.UI.createImageView({
-    	//image: 'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',
     	top: 10,
     	left: 15,
     	width: 90,
@@ -24,7 +39,6 @@ function userProfileWindow( type ) {
 	});
 	
 	var profileImage2 = Titanium.UI.createImageView({
-    	//image: 'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',
     	top: 10,
     	left: 115,
     	width: 90,
@@ -32,18 +46,75 @@ function userProfileWindow( type ) {
 	});
 	
 	var profileImage3 = Titanium.UI.createImageView({
-    	//image: 'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',
     	top: 10,
     	right: 15,
     	width: 90,
     	height: 90,
 	});
 	
+	//=================================================	
+	
+	var tableView = Titanium.UI.createTableView({
+		top: profileBgView.height,
+		bottom: buttonBgView.height,
+		showVerticalScrollIndicator: true,
+		separatorStyle:'NONE'
+	});
+	
+	var tableViewRowData = [];
+	for (var i=0; i<11; i++){
+    
+    	var titleLabel = Titanium.UI.createLabel({
+        	font:{fontSize:14}, 
+        	textAlign:'left',
+        	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+        	color:'#000',
+        	top:9,
+        	bottom:9, 
+        	left:20, 
+	        right:210
+	    });
+    
+	    var variableLabel = Titanium.UI.createLabel({
+        	font:{fontSize:14}, 
+        	textAlign:'left',
+        	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+        	color:'#000',
+        	top:9,
+        	bottom:9, 
+        	left:120, 
+	        right:20
+	    });
+	    
+	   var row = Ti.UI.createTableViewRow({
+	        hasChild: false,
+	        right:0,
+	        left:0,
+	        height:48,
+	        touchEnabled: false,
+	        selectionStyle: Ti.UI.iPhone.TableViewCellSelectionStyle.NONE
+	   });
+	   
+	   if(i%2 == 0){
+	   		row.backgroundImage = 'images/bg/table_bg_white.png';
+	   	}else{
+	   		row.backgroundImage = 'images/bg/table_bg_gray.png';
+	   	}
+   	
+	   row.add(titleLabel);
+	   row.add(variableLabel);
+
+	   tableViewRowData.push(row);
+	}
+	
+	tableView.data = tableViewRowData;
+	//=================================================
+	/*
 	var scrollView = Titanium.UI.createScrollView({
 		contentWidth: "auto",
 		contentHeight: "auto",
-		top: 110,
-		bottom: 140,
+		top: profileBgView.height,
+		bottom: buttonBgView.height,
 		showVerticalScrollIndicator: true,
 		//backgroundColor: "blue"
 	});
@@ -161,13 +232,14 @@ function userProfileWindow( type ) {
         //text: "給料： ",
 	    //backgroundColor: "green"
 	});
+	*/
 	
 	var readPastTalkButton = Ti.UI.createButton({
 		title: '過去トークを見る',
-		bottom: 80,
-		right: 20,
-		left: 20,
-		height: 50,
+		bottom: 15,
+		width: 130,
+		left: 15,
+		top: 15,
 		borderColor:"#1E90FF",
 		borderRadius:5
 	});
@@ -206,9 +278,37 @@ function userProfileWindow( type ) {
 		Ti.API.info("URL:" + url);
 	});
 	
-	self.add(profileImage1);
-	self.add(profileImage2);
-	self.add(profileImage3);
+	profileBgView.add(profileImage1);
+	profileBgView.add(profileImage2);
+	profileBgView.add(profileImage3);
+	buttonBgView.add(readPastTalkButton);
+	
+	if( type != "myProfile"){
+		var talkButton = Ti.UI.createButton({
+			title: 'トークする',
+			bottom: 15,
+			width: 130,
+			right: 15,
+			top: 15,
+			borderColor:"#1E90FF",
+			borderRadius:5
+		});
+		buttonBgView.add(talkButton);
+		
+		talkButton.addEventListener('click', function() {
+			actInd.show();
+			var cWindow = require('chatWindow');
+			var chatWindow = new cWindow(Ti.App.Properties.getString('my_id'), self.id, true);
+			
+			actInd.hide();
+			tabGroup.activeTab.open(chatWindow);
+		});
+	}
+	
+	self.add(tableView);
+	self.add(profileBgView);
+	self.add(buttonBgView);
+	/*
 	self.add(scrollView);
 	scrollView.add(detailView);
 	detailView.add(ageLabel);
@@ -222,30 +322,13 @@ function userProfileWindow( type ) {
 	detailView.add(alcoholLabel);
 	detailView.add(cigaretteLabel);
 	detailView.add(salaryLabel);
-	self.add(readPastTalkButton);
+	*/
 	
 	
-	if( type != "myProfile"){
-		var talkButton = Ti.UI.createButton({
-			title: 'トークする',
-			bottom: 20,
-			right: 20,
-			left: 20,
-			height: 50,
-			borderColor:"#1E90FF",
-			borderRadius:5
-		});
-		self.add(talkButton);
-		
-		talkButton.addEventListener('click', function() {
-			actInd.show();
-			var cWindow = require('chatWindow');
-			var chatWindow = new cWindow(Ti.App.Properties.getString('my_id'), self.id, true);
-			
-			actInd.hide();
-			tabGroup.activeTab.open(chatWindow);
-		});
-	}
+	
+	
+	
+	
 	self.add(actInd);
 	return self;
 

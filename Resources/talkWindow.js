@@ -3,6 +3,7 @@ function talkWindow() {
 	
 	var statusButtonBar = Titanium.UI.createTabbedBar({
 		labels:['アタック中', 'トーク中', '足あと'], 
+		backgroundColor:"#fff",
 		index:0 
 	});
 	

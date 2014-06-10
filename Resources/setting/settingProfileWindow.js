@@ -2,7 +2,7 @@ function settingProfileWindow() {
 	
 	var self = createWindow("一言編集");
 	
-	var saveButton = Titanium.UI.createButton({title:'保存', borderColor:"#1E90FF", borderRadius:5});
+	var saveButton = Titanium.UI.createButton({title:'保存', borderColor:"#fff", borderRadius:5});
 	self.rightNavButton = saveButton;
 	
 	saveButton.addEventListener('click', function(){
