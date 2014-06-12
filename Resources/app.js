@@ -31,10 +31,10 @@ Flurry.logAllPageViews();
 Flurry.logEvent('test');
 
 //=============================================================
-//グローバル変数の定義
+//Ti.Appの初期化
 //=============================================================
 
-Ti.App.domain = "http://api.talkroom.co/";
+Ti.App.domain = "https://api.talkroom.co/";
 //Ti.App.domain = "http://localhost:3000/";
 
 //ログインユーザーのID
@@ -47,6 +47,7 @@ Ti.App.navBarHeight = 44;
 
 Ti.API.info("==================app_token:::::::::" + Ti.App.Properties.getString('app_token'));
 Ti.API.info("==================my_id:::::::::" + Ti.App.Properties.getString('my_id'));
+
 //=============================================================
 //REQUIRE
 //=============================================================

@@ -38,7 +38,14 @@ function publicRoomWindow() {
 		//その後、次に要素を取得し表示する関数を実行
 		//次の10件を読み込むで更に要素を取得し表示する関数を実行
 		
-		actInd.show();
+		if(dataList == null){
+			loadTableView();
+		}
+		
+ 	});
+ 	
+ 	function loadTableView(){
+ 		actInd.show();
 		
 		//100件のルームIDとアップデート日時を取得
 		var url = Ti.App.domain + "get_recent_rooms.json?app_token=" + Ti.App.Properties.getString('app_token');
@@ -77,7 +84,7 @@ function publicRoomWindow() {
 				// 通信に失敗したら行う処理
 			}
 		});
- 	});
+ 	}
 	
 	
 	

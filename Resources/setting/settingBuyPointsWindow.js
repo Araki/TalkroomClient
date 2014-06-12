@@ -88,6 +88,12 @@ function settingBuyPointsWindow() {
 				evt.transaction && evt.transaction.finish();
 				break;
 			case Storekit.TRANSACTION_STATE_PURCHASED:
+				
+				//alert(evt.receipt);
+				setProperties(evt.receipt);
+				alert('購入が完了しました');
+					
+				/*
 				if (verifyingReceipts) {
 					if (IOS7) {
 						var msg = Storekit.validateReceipt() ? 'Receipt is Valid!' : 'Receipt is Invalid.'; 
@@ -119,6 +125,7 @@ function settingBuyPointsWindow() {
 				} else {
 					evt.transaction && evt.transaction.finish();
 				}
+				*/
 				
 				break;
 			case Storekit.TRANSACTION_STATE_PURCHASING:
@@ -214,20 +221,19 @@ function settingBuyPointsWindow() {
 	}
 	
 	function setProperties(receipt){
-		var json = JSON.parse(receipt);
-		var receiptList = [];
-		alert(json);
-		if(Ti.App.Properties.getString('receipts') == null){
-			receiptList = [];
-		}else{
-			receiptList = Ti.App.Properties.getString('receipts');
-		}
 		
-		receiptList[receiptList.length] = receipt;
-		Ti.App.Properties.setString('receipts', receiptList);
-		for(var i = 0; i<receiptList.length; i++){
-			
+		var receiptString;
+		//alert("レシート" + receipt);
+		//alert("保存されていたレシート" + Ti.App.Properties.getString('LastReceipts'));
+		if(Ti.App.Properties.getString('LastReceipts') == null){
+			alert("レシート情報なし");
+			receiptString = receipt;
+		}else{
+			alert("レシート情報あり");
+			receiptString = Ti.App.Properties.getString('LastReceipts') + receipt;
 		}
+		Ti.App.Properties.setString('LastReceipts', receiptString);
+		alert("結合後" + Ti.App.Properties.getString('LastReceipts'));
 	}
 	
 	

@@ -74,7 +74,7 @@ function facebookWindow() {
 								
 								var birth = birthday.split("/");
 								var current = new Date();
-								var age = current.getFullYear() - birth[2]
+								var age = current.getFullYear() - birth[2];
 								alert("年齢：" + age + "\nID：" + String(uid) + "\n性別：" + gender);
 								Flurry.setAge(age);
 								Flurry.setUserId(String(uid));
