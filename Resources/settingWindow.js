@@ -236,12 +236,12 @@ function settingWindow() {
 				tabGroup.activeTab.open(settingTOSWindow);
 	  			break;
 	  		case "inquiry": 
-	  			/*
+	  			
 	  			var siWindow = require('setting/settingInquiryWindow');
 				var settingInquiryWindow = new siWindow();
 				tabGroup.activeTab.open(settingInquiryWindow);
-				*/
 				
+				/*
 				var url = Ti.App.domain + "get_all_users.json?app_token=" + Ti.App.Properties.getString('app_token');
 				
 				var commonMethods = require('commonMethods');
@@ -267,13 +267,6 @@ function settingWindow() {
 						// 通信に失敗したら行う処理
 					}
 				});
-				
-				
-				//================
-				/*
-				var cuWindow = require('choiceUserWindow');
-				var choiceUserWindow = new cuWindow();
-				choiceUserWindow.open();
 				*/
 	  			break;
 	  		case "logout":
