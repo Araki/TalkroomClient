@@ -1,5 +1,7 @@
 function settingBuyPointsWindow() {
-	
+  // レシート処理
+  checkReceipt();
+  
 	var self = createWindow("ポイント購入");
 	
 	/*======================================
@@ -220,21 +222,18 @@ function settingBuyPointsWindow() {
 		});
 	}
 	
-	function setProperties(receipt){
-		
-		var receiptString;
-		//alert("レシート" + receipt);
-		//alert("保存されていたレシート" + Ti.App.Properties.getString('LastReceipts'));
-		if(Ti.App.Properties.getString('LastReceipts') == null){
-			alert("レシート情報なし");
-			receiptString = receipt;
-		}else{
-			alert("レシート情報あり");
-			receiptString = Ti.App.Properties.getString('LastReceipts') + receipt;
-		}
-		Ti.App.Properties.setString('LastReceipts', receiptString);
-		alert("結合後" + Ti.App.Properties.getString('LastReceipts'));
-	}
+  // Receipt にレシート情報を保存
+  function setProperties(receipt){
+    receiptSignature = Ti.Utils.base64encode(receipt).text;
+    Ti.App.Properties.setString('Receipt', receiptSignature); 
+
+    Ti.API.info('***** Changed receipt *****');
+    Ti.API.debug(receipt);
+
+    // レシート検証
+    checkReceipt();
+  }
+
 	
 	
 	

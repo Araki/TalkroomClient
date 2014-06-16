@@ -12,6 +12,8 @@ Flurry.sessionReportsOnActivityChangeEnabled = true;
 Flurry.secureTransportEnabled = false;
 Flurry.crashReportingEnabled = true;
 
+// レシート処理
+checkReceipt();
 
 switch(Ti.Platform.osname){
     case 'iphone':
@@ -99,4 +101,50 @@ function createWindow(titleName){
 	return win;
 }
 
+
+//=======================================================================================
+// レシート検証をする関数
+//=======================================================================================
+function verifyReceipt(receipt){
+  var url = Ti.App.domain + "/verify_receipt";
+
+  var client = Ti.Network.createHTTPClient({
+    onload : function(e) {
+      // 認証済み
+      Ti.API.info("Received text: " + this.responseText);
+      alert('success');
+
+      // 成功時はレシートをクリアする
+      Ti.App.Properties.removeProperty('Receipt'); 
+    },
+    onerror : function(e) {
+      Ti.API.debug(e.error);
+      Ti.API.info("Received text: " + this.responseText);
+      alert('error');
+    },
+    timeout : 5000  // in milliseconds
+  });
+
+  // Prepare the connection.
+  client.open("POST", url);
+  // Send the request.
+  client.send({
+    app_token: Ti.App.Properties.getString('app_token'),
+    receipt: receipt
+  });
+}
+
+//=======================================================================================
+// 未処理のレシートがないか確認し，あれば処理を再開する
+//=======================================================================================
+function checkReceipt(){
+  var receipt = Ti.App.Properties.getString('Receipt', ''); 
+
+  // すべて処理済み
+  if(receipt === ''){
+    return;
+  }
+
+  verifyReceipt(receipt);
+}
 
