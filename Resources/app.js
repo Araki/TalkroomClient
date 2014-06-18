@@ -12,9 +12,6 @@ Flurry.sessionReportsOnActivityChangeEnabled = true;
 Flurry.secureTransportEnabled = false;
 Flurry.crashReportingEnabled = true;
 
-// レシート処理
-checkReceipt();
-
 switch(Ti.Platform.osname){
     case 'iphone':
         Ti.API.info("Flurry iPhoneスタート");
@@ -73,11 +70,14 @@ var fbWindow = require('facebookWindow');
 var facebookWindow = new fbWindow();
 facebookWindow.open();
 
-
 var tabGroup;
 function createTabGroup(){
 	var tGroup = require('tabGroup');
 	tabGroup = new tGroup();
+  tabGroup.addEventListener('open', function(){
+    // レシート処理
+    checkReceipt();
+  });
 	tabGroup.open();
 }
 
