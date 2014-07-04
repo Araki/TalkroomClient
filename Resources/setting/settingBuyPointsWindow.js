@@ -3,7 +3,11 @@ function settingBuyPointsWindow() {
   checkReceipt();
   
 	var self = createWindow("ポイント購入");
-	
+  // 閉じるときに Storekit のイベントリスナーを削除
+  self.addEventListener('close', function(){
+    Storekit.removeEventListener('transactionState', onTransactionState);
+  });
+  
 	/*======================================
 	 * 修正箇所（始まり）
 	 ======================================*/
@@ -78,7 +82,7 @@ function settingBuyPointsWindow() {
 		});
 	}
 	 
-	Storekit.addEventListener('transactionState', function (evt) {
+  var onTransactionState = function (evt) {
 		hideLoading();
 		switch (evt.state) {
 			case Storekit.TRANSACTION_STATE_FAILED:
@@ -137,7 +141,10 @@ function settingBuyPointsWindow() {
 				Ti.API.info('Restored ' + evt.productIdentifier);
 				break;
 		}
-	});
+	};
+  
+  Storekit.addEventListener('transactionState', onTransactionState);
+  
 	 
 	function purchaseProduct(product)
 	{
