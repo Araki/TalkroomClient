@@ -12,9 +12,6 @@ Flurry.sessionReportsOnActivityChangeEnabled = true;
 Flurry.secureTransportEnabled = false;
 Flurry.crashReportingEnabled = true;
 
-// レシート処理
-checkReceipt();
-
 switch(Ti.Platform.osname){
     case 'iphone':
         Ti.API.info("Flurry iPhoneスタート");
@@ -55,6 +52,13 @@ Ti.API.info("==================my_id:::::::::" + Ti.App.Properties.getString('my
 //=============================================================
 var fb = require('facebook');
 
+//=============================================================
+//消費ポイントの定義
+//=============================================================
+readPoint();
+var point;
+var peepPoint = 5;
+var privatePoint = 100;
 
 //=============================================================
 //ソース
@@ -78,6 +82,12 @@ var tabGroup;
 function createTabGroup(){
 	var tGroup = require('tabGroup');
 	tabGroup = new tGroup();
+	
+	tabGroup.addEventListener('open', function(){
+		//レシート処理
+		checkReceipt();
+	});
+	
 	tabGroup.open();
 }
 
@@ -101,6 +111,55 @@ function createWindow(titleName){
 	return win;
 }
 
+//=======================================================================================
+//Windowを返すファンクション
+//=======================================================================================
+function consumePointDialog( type, callback ){
+	var description;
+	var consumePoint;
+	if (type == "peep"){
+		description = peepPoint + 'ポイント消費して、\nこのルームをのぞきますか？';
+		consumePoint = peepPoint;
+	}else if(type == "private"){
+		description = privatePoint + 'ポイント消費して、\nこのルームを非公開にしますか？';
+		consumePoint = privatePoint;
+	}
+	var alertDialog = Titanium.UI.createAlertDialog({
+	    title: point + 'ポイント保有',
+	    message: description,
+	    buttonNames: ['はい','いいえ'],
+	    // キャンセルボタンがある場合、何番目(0オリジン)のボタンなのかを指定できます。
+	    cancel: 1
+	});
+	alertDialog.addEventListener('click',function(event){
+	    // Cancelボタンが押されたかどうか
+	    if(event.cancel){
+	        // cancel時の処理
+	    }
+	    // 選択されたボタンのindexも返る
+	    if(event.index == 0){
+	        // "OK"時の処理
+	        if (point >= consumePoint){
+		        var url = Ti.App.domain + "consume_point.json?consume_point=" + consumePoint + "&app_token=" + Ti.App.Properties.getString('app_token');
+				var methodGetData = require('commonMethods').getData;
+				methodGetData(url, function( data ){
+					if (data.success) {
+						// 通信に成功したら行う処理
+						point = data.data;
+						callback({success: true});
+					} else{
+						// 通信に失敗したら行う処理
+						alert("通信に失敗しました");
+					}
+				});
+			}else{
+				alert("ポイントが足りません");
+			}
+	    }
+	});
+	alertDialog.show();
+}
+
 
 //=======================================================================================
 // レシート検証をする関数
@@ -120,7 +179,7 @@ function verifyReceipt(receipt){
     onerror : function(e) {
       Ti.API.debug(e.error);
       Ti.API.info("Received text: " + this.responseText);
-      alert('error');
+      alert('error' + this.responseText);
     },
     timeout : 5000  // in milliseconds
   });
@@ -146,5 +205,23 @@ function checkReceipt(){
   }
 
   verifyReceipt(receipt);
+}
+
+
+//=======================================================================================
+// 未処理のレシートがないか確認し，あれば処理を再開する
+//=======================================================================================
+function readPoint(){
+  	var url = Ti.App.domain + "/get_point.json?app_token=" + Ti.App.Properties.getString('app_token');
+	var commonMethods = require('commonMethods');
+	var methodGetData = commonMethods.getData;
+	methodGetData(url, function( data ){
+		if (data.success) {
+			// 通信に成功したら行う処理
+			point = data.data;
+		} else{
+			// 通信に失敗したら行う処理
+		}
+	});
 }
 

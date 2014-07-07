@@ -194,6 +194,19 @@ function chatWindow(sendfrom, sendto, textField) {
 		toolbarView.add(textField);
 		toolbarView.add(sendButton);
 		baseView.add(toolbarView);
+		
+		//非公開化ボタンの設置
+		var changePrivateButton = Titanium.UI.createButton({
+			title:'非公開'
+		});
+		self.setRightNavButton(changePrivateButton);
+		changePrivateButton.addEventListener('click',function(){
+			consumePointDialog("private", function(data){
+				if (data.success){
+					//非公開処理
+				}
+			});
+		});
 	}else{
 		scrollView.bottom = 0;
 	}

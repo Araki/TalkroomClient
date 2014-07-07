@@ -2,66 +2,72 @@ function settingInquiryWindow() {
 	
 	var self = createWindow("お問い合わせ");
 	
-	var done = Titanium.UI.createButton({
-	    title : '閉じる',
-    	style : Titanium.UI.iPhone.SystemButtonStyle.DONE,
+	var submitButton = Titanium.UI.createButton({
+		title:'送信',
+		color: "#fff",
+		borderColor:"#fff",
+		borderRadius:5
 	});
-	
-	var flexSpace = Titanium.UI.createButton({
-	    systemButton : Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE
-	});
+	self.rightNavButton = submitButton;
 	
 	var mailLabel = Titanium.UI.createLabel({
 		text: 'メールアドレス',
-		top: 20,
+		top: 10,
 		left: 20,
 		right: 20,
-		height: 20,
+		height: 15,
 		font: { fontSize: 12 }
 	});
 	
 	var mailTextField = Titanium.UI.createTextField({
-		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+		//borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 		//value: "すべて",
 		//customItem: "",
-		top: 45,
+		top: 30,
 		right: 20,
 		left: 20,
-		height: 30,
+		height: 20,
 		//enabled: false,
 		keyboardType:Titanium.UI.KEYBOARD_EMAIL,
-		borderWidth:2,
+		returnKeyType:Titanium.UI.RETURNKEY_NEXT,
+		autocapitalization: false,
+		autocorrect:false,
+		//borderWidth:2,
 	    borderColor:'#bbb',
-	    borderRadius:5
+	    borderRadius:5,
+	    font: { fontSize: 12 }
 	});
 	
 	var bodyLabel = Titanium.UI.createLabel({
 		text: 'お問い合わせ内容',
-		top: 85,
+		top: 60,
 		left: 20,
 		right: 20,
-		height: 20,
+		height: 15,
 		font: { fontSize: 12 }
 	});
 	
 	var textArea = Titanium.UI.createTextArea({
 	        value:'',
-	        top:110,
-	        bottom:240,
+	        top:80,
+	        bottom:170,
 	        left:20,
 	        right:20,
-	        font:{fontSize:13,fontFamily:'', fontWeight:''},
+	        font:{fontSize:12,fontFamily:'', fontWeight:''},
 	        color:'',
 	        textAlign:'left',
 	        appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
 	        keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
-	        //returnKeyType:Titanium.UI.RETURNKEY_DONE,
-	        keyboardToolbar : [flexSpace, done],
-	        borderWidth:2,
+	        returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,
+	        suppressReturn: false,
+	        autocapitalization: false,
+	        autocorrect:false,
+	        //keyboardToolbar : [flexSpace, done],
+	        //borderWidth:2,
 	        borderColor:'#bbb',
 	        borderRadius:5
 	});
-	
+	/*
 	var submitButton = Ti.UI.createButton({
 		title: '送信',
 		bottom: 180,
@@ -71,7 +77,7 @@ function settingInquiryWindow() {
 		borderColor:"#1E90FF",
 		borderRadius:5
 	});
-	
+	*/
 	submitButton.addEventListener('click', function(){
 		
 		var url = Ti.App.domain + "send_mail.json";
@@ -107,11 +113,19 @@ function settingInquiryWindow() {
 		});		
 	});
 	
+	self.addEventListener("open", function(){
+		mailTextField.focus();
+	});
+	
+	mailTextField.addEventListener('return', function() {
+	    textArea.focus();
+	});
+	
 	self.add(mailLabel);
 	self.add(mailTextField);
 	self.add(bodyLabel);
 	self.add(textArea);
-	self.add(submitButton);
+	//self.add(submitButton);
 	
 	return self;
 }

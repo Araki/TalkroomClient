@@ -18,15 +18,14 @@ function publicRoomWindow() {
 	
 	var tableView = Titanium.UI.createTableView({});
 	tableView.addEventListener('click', function(e) {
-			Ti.API.info(e.row.id);
-			//alert("ルームIDは" + e.row.id);
-			//tableViewRowClickHandler();
-			Ti.API.info("クリック");
-			var cWindow = require('chatWindow');
-			var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, false);
-		
-			tabGroup.activeTab.open(chatWindow);
-		});	
+		consumePointDialog("peep", function(data){
+			if (data.success){
+				var cWindow = require('chatWindow');
+				var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, false);
+				tabGroup.activeTab.open(chatWindow);
+			}
+		});
+	});	
 	
 	self.add(tableView);
 	self.add(actInd);

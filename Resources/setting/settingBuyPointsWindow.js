@@ -1,12 +1,20 @@
 function settingBuyPointsWindow() {
-  // レシート処理
-  checkReceipt();
-  
+  	// レシート処理
+  	checkReceipt();
+  	alert(Ti.App.Properties.getString('Receipt', ''));
+	
 	var self = createWindow("ポイント購入");
 	
-	/*======================================
-	 * 修正箇所（始まり）
-	 ======================================*/
+	var pointLabel = Ti.UI.createLabel({
+		font:{fontSize:14},
+		textAlign: "left",
+        text: point,
+       	color:'#000',
+       	top:10,
+       	left:20
+	});
+	self.add(pointLabel);
+	
 	
 	var Storekit = require('ti.storekit');
  
@@ -233,14 +241,7 @@ function settingBuyPointsWindow() {
     // レシート検証
     checkReceipt();
   }
-
-	
-	
-	
-	/*======================================
-	 * 修正箇所（終わり）
-	 ======================================*/
-	
+  
 	return self;
 }
 
