@@ -93,6 +93,9 @@ function facebookWindow() {
 				                Ti.App.Properties.setString('app_token', obj.app_token);
 								Ti.App.Properties.setString('my_id', obj.user_id);
 								
+								//ポイントの読み込み
+								readPoint();
+								
 								//tabGroupを開く
 								createTabGroup();
 								//このウィンドウを閉じる
