@@ -14,8 +14,10 @@ function chatWindow(sendfrom, sendto, textField) {
 		if (data.success) {
 			
 			// 通信に成功したら行う処理
+			Ti.API.info("json:" + data.data);
 			var json = data.data;
 			for (var i=json.length-1; i>=0; i--){
+				roomID = json[0].room_id;
 				chatArray[i] = new Array();
 				if(json[i].sendfrom_list_id != Ti.App.Properties.getString('my_id') && json[i].sendto_list_id != Ti.App.Properties.getString('my_id')){
 					if(json[i].sendfrom_list_id == sendto){
@@ -51,9 +53,11 @@ function chatWindow(sendfrom, sendto, textField) {
 		if(scrollViewHeight > 420){
 			scrollView.setContentOffset({x:0, y:scrollViewHeight - 420}, {animated:false});
 		}
-	});
 		
-	//テストデータ終わり
+		if(roomID != null){
+			changePrivateButton.enabled = true;
+		}
+	});
 	
 	
 	var self = createWindow("チャット");
@@ -199,11 +203,25 @@ function chatWindow(sendfrom, sendto, textField) {
 		var changePrivateButton = Titanium.UI.createButton({
 			title:'非公開'
 		});
+		
+		//通信してroomIDがnullでなければenabledをtrueにする
+		changePrivateButton.enabled = false;
+		
 		self.setRightNavButton(changePrivateButton);
 		changePrivateButton.addEventListener('click',function(){
 			consumePointDialog("private", function(data){
 				if (data.success){
-					//非公開処理
+					var url = Ti.App.domain + "change_private_room.json?room_id=" + roomID + "&app_token=" + Ti.App.Properties.getString('app_token');
+					var methodGetData = require('commonMethods').getData;
+					methodGetData(url, function( data ){
+						if (data.success) {
+							// 通信に成功したら行う処理
+							alert("ルームを非公開にしました！");
+						} else{
+							// 通信に失敗したら行う処理
+							alert("通信に失敗しました");
+						}
+					});
 				}
 			});
 		});

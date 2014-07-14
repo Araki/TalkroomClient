@@ -90,34 +90,80 @@ function settingDetailProfileWindow() {
 	
 	//プロフィール写真Row作成
     var imageRow = Ti.UI.createTableViewRow({
-        height:100,
+        height:140,
     	selectionStyle : Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE
    	});
+  
+	var profileLabel1 = Titanium.UI.createLabel({
+		text: "メイン写真",
+    	font:{fontSize:14}, 
+    	textAlign:'center',
+    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+    	color:'#000',
+    	top:5,
+    	height:20, 
+    	left:15, 
+        width: 90
+    });
+    imageRow.add(profileLabel1);
     
 	var profileImage1 = Titanium.UI.createImageView({
-    	image: 'http://graph.facebook.com/721214203/picture',
-    	top: 20,
-    	left: 45,
-    	width: 50,
-    	height: 50
+    	top: 30,
+    	left: 15,
+    	width: 90,
+    	height: 90
+    });
+    
+    profileImage1.addEventListener('click', function(e){
+    	showOptionDialog("profile_image1");
     });
     imageRow.add(profileImage1);
     
+    var profileLabel2 = Titanium.UI.createLabel({
+		text: "サブ写真①",
+    	font:{fontSize:14}, 
+    	textAlign:'center',
+    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+    	color:'#000',
+    	top:5,
+    	height:20, 
+    	left:115, 
+        width: 90
+    });
+    imageRow.add(profileLabel2);
+    
     var profileImage2 = Titanium.UI.createImageView({
-    	image: 'http://graph.facebook.com/721214203/picture',
-    	top: 20,
-    	left: 135,
-    	width: 50,
-    	height: 50
+    	top: 30,
+    	left: 115,
+    	width: 90,
+    	height: 90
+    });
+    profileImage2.addEventListener('click', function(e){
+    	showOptionDialog("profile_image2");
     });
     imageRow.add(profileImage2);
+    
+    var profileLabel3 = Titanium.UI.createLabel({
+		text: "サブ写真②",
+    	font:{fontSize:14}, 
+    	textAlign:'center',
+    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+    	color:'#000',
+    	top:5,
+    	height:20, 
+    	left:215, 
+        width: 90
+    });
+    imageRow.add(profileLabel3);
 
 	var profileImage3 = Titanium.UI.createImageView({
-    	image: 'http://graph.facebook.com/721214203/picture',
-    	top: 20,
-    	left: 225,
-    	width: 50,
-    	height: 50
+    	top: 30,
+    	left: 215,
+    	width: 90,
+    	height: 90
+    });
+    profileImage3.addEventListener('click', function(e){
+    	showOptionDialog("profile_image3");
     });
     imageRow.add(profileImage3);
 
@@ -179,6 +225,52 @@ function settingDetailProfileWindow() {
 	return self;
 	
 	
+	
+	
+	
+	
+	
+	
+	function showOptionDialog( whichImage ){	
+		if(whichImage == "profile_image1" ){
+			var sourceSelect = Titanium.UI.createOptionDialog({
+			    options: ['Facebook写真を設定する', 'アルバムから選ぶ', 'カメラで撮影する', 'キャンセル'],
+			    cancel:3
+			});
+			sourceSelect.addEventListener('click',function(e)
+			{
+			    switch( e.index ) {
+			    case 0:
+			    	registFBProfileImage(self);
+			    	break;
+			    case 1:
+			        showGallery(self, whichImage);
+			        break;
+			    case 2:
+			        showCamera(self, whichImage);
+			        break;
+			    }
+			});
+			sourceSelect.show();
+		}else{
+			var sourceSelect = Titanium.UI.createOptionDialog({
+			    options:['アルバムから選ぶ', 'カメラで撮影する', 'キャンセル'],
+			    cancel:2,
+			});
+			sourceSelect.addEventListener('click',function(e)
+			{
+			    switch( e.index ) {
+			    case 0:
+			        showGallery(self, whichImage);
+			        break;
+			    case 1:
+			        showCamera(self, whichImage);
+			        break;
+			    }
+			});
+			sourceSelect.show();
+		}
+	}
 	
 	
 	

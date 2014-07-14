@@ -69,11 +69,6 @@ var product500;
 // バックグラウンドカラーの設定
 Titanium.UI.setBackgroundColor('#000');
 
-/*
-var tGroup = require('tabGroup');
-var tabGroup = new tGroup();
-tabGroup.open();
-*/
 
 var fbWindow = require('facebookWindow');
 var facebookWindow = new fbWindow();
@@ -82,6 +77,10 @@ facebookWindow.open();
 
 var tabGroup;
 function createTabGroup(){
+	
+	//ポイントの読み込み
+	readPoint();
+	
 	var tGroup = require('tabGroup');
 	tabGroup = new tGroup();
 	
@@ -114,7 +113,211 @@ function createWindow(titleName){
 }
 
 //=======================================================================================
-//Windowを返すファンクション
+//カメラを起動するファンクション
+//=======================================================================================
+function showCamera(win, whichImage){
+	var currentWindow = win;
+	Titanium.Media.showCamera({
+		success:function(event)
+		{
+			var cropRect = event.cropRect;
+			var image = event.media;
+			if(event.mediaType == Ti.Media.MEDIA_TYPE_PHOTO)
+			{
+				uploadImage(image, currentWindow, whichImage);
+			}
+			else
+			{
+				alert("got the wrong type back ="+event.mediaType);
+			}
+		},
+		cancel:function()
+		{
+		},
+		error:function(error)
+		{
+			// create alert
+			var a = Titanium.UI.createAlertDialog({title:'Camera'});
+	
+			// set message
+			if (error.code == Titanium.Media.NO_CAMERA)
+			{
+				a.setMessage('Please run this test on device');
+			}
+			else
+			{
+				a.setMessage('Unexpected error: ' + error.code);
+			}
+	
+			// show alert
+			a.show();
+		},
+		saveToPhotoGallery:false,
+		allowEditing:true,
+		mediaTypes:[Ti.Media.MEDIA_TYPE_PHOTO]
+	});
+}
+
+//=======================================================================================
+//アルバムを起動するファンクション
+//=======================================================================================
+function showGallery(win, whichImage){
+	var currentWindow = win;
+	Titanium.Media.openPhotoGallery({
+		success: function(event) {
+	        // カメラロールで写真を選択した時の挙動(カメラと同様)
+	        var cropRect = event.cropRect;
+			var image = event.media;
+			if(event.mediaType == Ti.Media.MEDIA_TYPE_PHOTO)
+			{
+				uploadImage(image, currentWindow, whichImage);
+			}
+	    },
+	    error: function(error) {
+	        // notify(e.message);
+	    },
+	    cancel: function() {
+	        // キャンセル時の挙動
+	    },
+	    // 選択直後に拡大縮小移動をするか否かのフラグ
+	    allowEditing: true,
+	    // 選択可能なメディア種別を配列で指定
+	    mediaTypes:[Ti.Media.MEDIA_TYPE_PHOTO]
+	});
+}
+
+
+//=======================================================================================
+//画像をアップロードするファンクション
+//=======================================================================================
+function uploadImage(image, win, whichImage){
+	var currentWindow = win;
+	var ind = Titanium.UI.createProgressBar({
+		height:'100%',
+		width:'100%',
+		min:0,
+		max:1,
+		value:0,
+		style:Titanium.UI.iPhone.ProgressBarStyle.DEFAULT,
+		//top:200,
+		message:'Uploading image',
+		font:{fontSize:12, fontWeight:'bold'},
+		backgroundColor:'black',
+		opacity: 0.5,
+		color: 'white'
+	});
+	
+	currentWindow.add(ind);
+	ind.show();
+	
+	var resizedImage;
+	if(image.width >= image.height){
+		var resizedHeight = (200 * image.height)/image.width;
+		resizedImage = image.imageAsResized(200, resizedHeight);
+	}else{
+		var resizedWidth = (200 * image.width)/image.height;
+		resizedImage = image.imageAsResized(resizedWidth, 200);
+	}
+	
+	var xhr = Ti.Network.createHTTPClient();
+	var url = Ti.App.domain + "/upload_image.json";
+	xhr.onsendstream = function(e){
+		ind.value = e.progress;
+		ind.message = 'Uploading photo, please wait... ' + (Math.round(e.progress * 100)).toString().replace(".","") + '%';
+	};
+	xhr.open('POST', url);
+	xhr.send({
+		app_token: Ti.App.Properties.getString('app_token'),
+		media:resizedImage,
+		which_image: whichImage
+	});
+	
+	xhr.onload = function(){
+		ind.hide();
+		//alert("レスポンス" + xhr.responseText);
+		if(xhr.responseText == "success"){
+			reloadImage(currentWindow, whichImage);
+			alert("アップロード成功");
+		}else{
+			alert("アップロードに失敗しました");
+		}
+		//var json = JSON.parse(xhr.responseText);
+	};
+	xhr.onerror = function(){
+		ind.hide();
+		alert("アップロードに失敗しました");
+	};
+}
+
+//=======================================================================================
+//Facebookのプロフィール画像を登録するファンクション
+//=======================================================================================
+function registFBProfileImage( win ){
+	var currentWindow = win;
+	var ind = Titanium.UI.createActivityIndicator({
+		height:'100%',
+		width:'100%',
+		font: {fontFamily:'Helvetica Neue', fontSize:16, fontWeight:'bold'},
+		color: 'white',
+		backgroundColor:'black',
+		opacity: 0.5,
+		//borderRadius:5,
+		style:(Ti.Platform.name === 'iPhone OS' ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG), //DARK,PLAIN
+		//message: "ローディング中"
+	});
+	
+	currentWindow.add(ind);
+	ind.show();
+	
+	var xhr = Ti.Network.createHTTPClient();
+	var url = Ti.App.domain + "/upload_fb_image.json";
+	xhr.open('POST', url);
+	xhr.send({
+		app_token: Ti.App.Properties.getString('app_token')
+	});
+	xhr.onload = function(){
+		ind.hide();
+		if(xhr.responseText == "success"){
+			reloadImage(currentWindow, "profile_image1");
+			alert("アップロード成功");
+		}else{
+			alert("アップロードに失敗しました");
+		}
+	};
+	xhr.onerror = function(){
+		ind.hide();
+		alert("アップロードに失敗しました");
+	};
+}
+
+//=======================================================================================
+//アプリ側に画像キャッシュが残るので即時反映したい場合のリロードファンクション
+//=======================================================================================
+function reloadImage(window, image){
+	switch(image){
+		case 'profile_image1':
+			var url = window.children[0].data[0].rows[0].children[1].url;
+			var urlArray = url.split("?");
+			alert(urlArray[0] + "?" + new Date().getTime());
+			window.children[0].data[0].rows[0].children[1].image = urlArray[0] + "?" + new Date().getTime(); 
+	    	break;
+	    case 'profile_image2':
+	    	var url = window.children[0].data[0].rows[0].children[3].url;
+			var urlArray = url.split("?");
+			alert(urlArray[0] + "?" + new Date().getTime());
+			window.children[0].data[0].rows[0].children[3].image = urlArray[0] + "?" + new Date().getTime(); 
+	    	break;
+	    case 'profile_image3':
+	    	var url = window.children[0].data[0].rows[0].children[5].url;
+			var urlArray = url.split("?");
+			alert(urlArray[0] + "?" + new Date().getTime());
+			window.children[0].data[0].rows[0].children[5].image = urlArray[0] + "?" + new Date().getTime(); 
+	    	break;
+	}
+}
+
+//=======================================================================================
+//ポイント消費確認ダイアログを表示するファンクション
 //=======================================================================================
 function consumePointDialog( type, callback ){
 	var description;
@@ -162,6 +365,8 @@ function consumePointDialog( type, callback ){
 	alertDialog.show();
 }
 
+
+//課金リクエスト部分
 function requestProduct(identifier, success)
 {
 	//showLoading();
