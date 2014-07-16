@@ -5,6 +5,9 @@ function chatWindow(sendfrom, sendto, textField) {
 	var chatArray = new Array();
 	
 	var roomID;
+	var roomPublic;
+	var roomMessageCount;
+	
 	var visibleTextField = textField;
 	var scrollViewHeight = 0;
 	
@@ -16,28 +19,33 @@ function chatWindow(sendfrom, sendto, textField) {
 			// 通信に成功したら行う処理
 			Ti.API.info("json:" + data.data);
 			var json = data.data;
-			for (var i=json.length-1; i>=0; i--){
-				roomID = json[0].room_id;
+			roomID = json.room_id;
+			roomPublic = json.public;
+			Ti.API.info("######PUBLIC:" + roomPublic);
+			roomMessageCount = json.message_count;
+			
+			for (var i=json.messages.length-1; i>=0; i--){
 				chatArray[i] = new Array();
-				if(json[i].sendfrom_list_id != Ti.App.Properties.getString('my_id') && json[i].sendto_list_id != Ti.App.Properties.getString('my_id')){
-					if(json[i].sendfrom_list_id == sendto){
+				if(json.messages[i].sendfrom_list_id != Ti.App.Properties.getString('my_id') && json.messages[i].sendto_list_id != Ti.App.Properties.getString('my_id')){
+					if(json.messages[i].sendfrom_list_id == sendto){
 						chatArray[i]["side"] = "right";
 					}else{
 						chatArray[i]["side"] = "left";
 					}
 				}else{
-					if(json[i].sendfrom_list_id == Ti.App.Properties.getString('my_id')){
+					if(json.messages[i].sendfrom_list_id == Ti.App.Properties.getString('my_id')){
 						chatArray[i]["side"] = "right";
 					}else{
 						chatArray[i]["side"] = "left";
 					}
 				}
-				chatArray[i]["message"] = json[i].body;
-				chatArray[i]["image"] = json[i].sendfrom_image;
-				chatArray[i]["time"] = json[i].year + "/" + json[i].month + "/" + json[i].day + " " + json[i].hour + ":" + json[i].min;
+				chatArray[i]["id"] = json.messages[i].sendfrom_list_id;
+				chatArray[i]["message"] = json.messages[i].body;
+				chatArray[i]["image"] = json.messages[i].sendfrom_image;
+				chatArray[i]["time"] = json.messages[i].year + "/" + json.messages[i].month + "/" + json.messages[i].day + " " + json.messages[i].hour + ":" + json.messages[i].min;
 				
 				var cbView = require('chatBalloonView');
-				var chatView = new cbView(chatArray[i]["side"], chatArray[i]["message"], chatArray[i]["image"], chatArray[i]["time"], scrollViewHeight);
+				var chatView = new cbView(chatArray[i]["id"], chatArray[i]["side"], chatArray[i]["message"], chatArray[i]["image"], chatArray[i]["time"], scrollViewHeight);
 				scrollView.add(chatView);
 				scrollViewHeight = scrollViewHeight + chatView.height;
 				Ti.API.info("++++ScrollViewHeight:" + scrollViewHeight);
@@ -54,8 +62,17 @@ function chatWindow(sendfrom, sendto, textField) {
 			scrollView.setContentOffset({x:0, y:scrollViewHeight - 420}, {animated:false});
 		}
 		
-		if(roomID != null){
-			changePrivateButton.enabled = true;
+		if(visibleTextField){//自分がチャットできるルームである場合
+			if(roomID != null){//ルームが既にある場合（メッセージが1通以上ある場合）
+				if(roomPublic == true){//ルームがパブリックであるときの処理
+					changePrivateButton.enabled = true;
+				}else{//ルームがプライベートであるときの処理
+					//ルームがプライベートのとき、「非公開ボタン」を「非公開中」などに変更して押せないようにする。
+					changePrivateButton.enabled = false;
+					//changePrivateButton.image = "";
+					
+				}
+			}
 		}
 	});
 	
@@ -216,6 +233,8 @@ function chatWindow(sendfrom, sendto, textField) {
 					methodGetData(url, function( data ){
 						if (data.success) {
 							// 通信に成功したら行う処理
+							changePrivateButton.enabled = false;
+							//changePrivateButton.image = "";//「非公開中」などのボタンに変更する
 							alert("ルームを非公開にしました！");
 						} else{
 							// 通信に失敗したら行う処理

@@ -36,9 +36,6 @@ Flurry.logEvent('test');
 Ti.App.domain = "https://api.talkroom.co/";
 //Ti.App.domain = "http://localhost:3000/";
 
-//ログインユーザーのID
-Ti.App.userID = 1;
-
 //画面サイズの取得
 Ti.App.displayWidth = Titanium.Platform.displayCaps.platformWidth;
 Ti.App.displayHeight = Titanium.Platform.displayCaps.platformHeight;
@@ -294,24 +291,36 @@ function registFBProfileImage( win ){
 //アプリ側に画像キャッシュが残るので即時反映したい場合のリロードファンクション
 //=======================================================================================
 function reloadImage(window, image){
+	//alert(window.children[0].data[0].rows[0].children[1].url);
 	switch(image){
 		case 'profile_image1':
 			var url = window.children[0].data[0].rows[0].children[1].url;
 			var urlArray = url.split("?");
-			alert(urlArray[0] + "?" + new Date().getTime());
 			window.children[0].data[0].rows[0].children[1].image = urlArray[0] + "?" + new Date().getTime(); 
 	    	break;
 	    case 'profile_image2':
 	    	var url = window.children[0].data[0].rows[0].children[3].url;
-			var urlArray = url.split("?");
-			alert(urlArray[0] + "?" + new Date().getTime());
-			window.children[0].data[0].rows[0].children[3].image = urlArray[0] + "?" + new Date().getTime(); 
+	    	if(url != null){
+				var urlArray = url.split("?");
+				window.children[0].data[0].rows[0].children[3].image = urlArray[0] + "?" + new Date().getTime();
+			}else{
+				var url = window.children[0].data[0].rows[0].children[1].url;
+				var modifiedurl = url.replace("image1", "image2");
+				var urlArray = modifiedurl.split("?");
+				window.children[0].data[0].rows[0].children[3].image = urlArray[0] + "?" + new Date().getTime();
+			} 
 	    	break;
 	    case 'profile_image3':
 	    	var url = window.children[0].data[0].rows[0].children[5].url;
-			var urlArray = url.split("?");
-			alert(urlArray[0] + "?" + new Date().getTime());
-			window.children[0].data[0].rows[0].children[5].image = urlArray[0] + "?" + new Date().getTime(); 
+	    	if(url != null){
+	    		var urlArray = url.split("?");	
+	    		window.children[0].data[0].rows[0].children[5].image = urlArray[0] + "?" + new Date().getTime();
+	    	}else{
+	    		var url = window.children[0].data[0].rows[0].children[1].url;
+				var modifiedurl = url.replace("image1", "image3");
+				var urlArray = modifiedurl.split("?");
+				window.children[0].data[0].rows[0].children[5].image = urlArray[0] + "?" + new Date().getTime();
+	    	}			 
 	    	break;
 	}
 }
@@ -374,7 +383,7 @@ function requestProduct(identifier, success)
 		//hideLoading();
 		//alert("requestProduct");
 		if (!evt.success) {
-			alert('ERROR: We failed to talk to Apple!');
+			//alert('ERROR: We failed to talk to Apple!');
 		}
 		else if (evt.invalid) {
 			alert('ERROR: We requested an invalid product!');

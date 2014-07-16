@@ -24,7 +24,7 @@ function facebookWindow() {
 	fb.addEventListener('login', function(e) {
 	    if (e.success) {
 	    	
-	    	alert('Logged in');
+	    	//alert('Logged in');
 	        getUserDataList();
 	        
 			

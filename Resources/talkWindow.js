@@ -3,7 +3,7 @@ function talkWindow() {
 	var statusID = 0;
 	
 	var statusButtonBar = Titanium.UI.createTabbedBar({
-		labels:['アタック中', 'トーク中', '足あと'], 
+		labels:['新規トーク', 'トーク中', '足あと'], 
 		backgroundColor:"#fff",
 		index:0 
 	});
@@ -35,7 +35,7 @@ function talkWindow() {
 	
 	//初期表示テーブルの設定
 	var tableView = Titanium.UI.createTableView({
-		data: createAttackTableView()
+		data: createNewTalkTableView()
 	});
 	
 	tableView.addEventListener('click', function(e) {
@@ -72,7 +72,7 @@ module.exports = talkWindow;
 
 function loadAttackData( tableView ){
 	//現在表示されているテーブルを初期化
-	tableView.data = createAttackTableView();
+	tableView.data = createNewTalkTableView();
 	
 	var commonMethods = require('commonMethods');
 	
@@ -85,7 +85,7 @@ function loadAttackData( tableView ){
 			Ti.API.info("アタック中テーブル");
 			for (var i=0; i<json.length; i++){
 				Ti.API.info("profile_image" + json[i].profile_image);
-				tableView.data[0].rows[i].sendto = json[i].sendto_id;
+				tableView.data[0].rows[i].sendto = json[i].user_id;
 				tableView.data[0].rows[i].sendfrom = Ti.App.Properties.getString('my_id');
 				tableView.data[0].rows[i].children[0].image = json[i].profile_image;
 				tableView.data[0].rows[i].children[1].text = json[i].profile;
@@ -93,9 +93,9 @@ function loadAttackData( tableView ){
 				tableView.data[0].rows[i].children[3].text = json[i].nickname;
 				
 				if (json[i].room_public == "0" ){ 
-					tableView.data[0].rows[i].children[4].text = "非公開";
+					tableView.data[0].rows[i].children[4].text = "非公開 | " +json[i].type;
 				}else if ( json[i].room_public == "1" ){
-					tableView.data[0].rows[i].children[4].text = "公開";
+					tableView.data[0].rows[i].children[4].text = "公開 | " + json[i].type;
 				}
 			}
 		} else{
@@ -185,7 +185,7 @@ function loadFootprintData( tableView ){
 //===================
 //アタック中のテーブル生成ファンクション
 //===================
-function createAttackTableView() {
+function createNewTalkTableView() {
 	
 	var tableViewRowData = [];
 	

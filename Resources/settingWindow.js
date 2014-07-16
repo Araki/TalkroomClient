@@ -7,7 +7,7 @@ function settingWindow() {
 	
 	self.addEventListener('focus', function(e){
 		if(previousPoint != _point){
-			alert("ポイント：" + _point);
+			//alert("ポイント：" + _point);
 			previousPoint = _point;
 			loadTableViewView();
 		}
@@ -181,9 +181,9 @@ function settingWindow() {
 							*/
 							userProfileWindow.id = Ti.App.Properties.getString('my_id');
 							userProfileWindow.titleControl.text = json[0].nickname;
-							userProfileWindow.children[1].children[0].image = json[0].profile_image1;
-							userProfileWindow.children[1].children[1].image = json[0].profile_image2;
-							userProfileWindow.children[1].children[2].image = json[0].profile_image3;
+							userProfileWindow.children[1].children[0].image = json[0].profile_image1 + "?" + new Date().getTime();
+							userProfileWindow.children[1].children[1].image = json[0].profile_image2 + "?" + new Date().getTime();
+							userProfileWindow.children[1].children[2].image = json[0].profile_image3 + "?" + new Date().getTime();
 							userProfileWindow.children[0].data[0].rows[0].children[0].text = "年代";
 							userProfileWindow.children[0].data[0].rows[0].children[1].text = commonMethods.exchangeFromNumber(json[0].age, "age");
 							userProfileWindow.children[0].data[0].rows[1].children[0].text = "エリア";

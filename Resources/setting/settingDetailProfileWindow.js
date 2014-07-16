@@ -111,7 +111,8 @@ function settingDetailProfileWindow() {
     	top: 30,
     	left: 15,
     	width: 90,
-    	height: 90
+    	height: 90,
+    	borderRadius:10
     });
     
     profileImage1.addEventListener('click', function(e){
@@ -136,7 +137,8 @@ function settingDetailProfileWindow() {
     	top: 30,
     	left: 115,
     	width: 90,
-    	height: 90
+    	height: 90,
+    	borderRadius:10
     });
     profileImage2.addEventListener('click', function(e){
     	showOptionDialog("profile_image2");
@@ -160,7 +162,8 @@ function settingDetailProfileWindow() {
     	top: 30,
     	left: 215,
     	width: 90,
-    	height: 90
+    	height: 90,
+    	borderRadius:45
     });
     profileImage3.addEventListener('click', function(e){
     	showOptionDialog("profile_image3");
