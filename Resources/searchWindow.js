@@ -1,10 +1,10 @@
 function searchWindow() {
 	
+	var self = createWindow("探す");
+	
 	var ageData = [];
 	var areaData = [];
 	var purposeData = [];
-	
-	var actInd = createActInd();
 	
 	var ageArray = returnArray("age");
 	for (var i=0; i<ageArray.length; i++){
@@ -32,9 +32,6 @@ function searchWindow() {
 			purposeData[i] = Ti.UI.createPickerRow({title:purposeArray[i],custom_item:i});
 		}
 	}
-	
-
-	var self = createWindow("探す");
 	
 	//=========================================
 	//age系要素の定義
@@ -167,9 +164,6 @@ function searchWindow() {
 	
 	searchButton.addEventListener('click', function(){
 		
-		//アクティビティインジケーターを表示
-		actInd.show();
-		
 		var url = Ti.App.domain + "get_search_users.json?age=" + 
 				  ageTextField.customItem +
 				  "&area=" +
@@ -180,34 +174,11 @@ function searchWindow() {
 				  Ti.App.Properties.getString('app_token');
 				  //"&user_id=" +
 				  //Ti.App.Properties.getString('my_id');
-	
-		getData(url, function( data ){
-			
-			if (data.success) {
-				// 通信に成功したら行う処理
-				var json = data.data;
-				
-				var stWindow = require('searchTableWindow');
-				var searchTableWindow = new stWindow(json.length);
-				
-				for (var i=0; i<json.length; i++){
-					Ti.API.info("JSON:" + json[i].id);
-					searchTableWindow.children[0].data[0].rows[i].children[0].text = json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）";
-					searchTableWindow.children[0].data[0].rows[i].children[1].image = json[i].profile_image1;
-					searchTableWindow.children[0].data[0].rows[i].children[2].text = json[i].profile;
-					searchTableWindow.children[0].data[0].rows[i].children[3].text = exchangeFromNumber( json[i].area, "area" ) + " | " + exchangeFromNumber( json[i].purpose, "purpose" ) + " | " + json[i].last_logined;
-					searchTableWindow.children[0].data[0].rows[i].id = json[i].id;
-				}
-				
-				//アクティビティインジケーターを非表示
-				actInd.hide();
-				
-				tabGroup.activeTab.open(　searchTableWindow　);
-				
-			} else{
-				// 通信に失敗したら行う処理
-			}
-		});		
+		
+		var stWindow = require('searchTableWindow');
+		var searchTableWindow = new stWindow( url );
+		
+		tabGroup.activeTab.open(　searchTableWindow　);		
 	});
 	
 	self.add(ageLabel);
@@ -217,7 +188,7 @@ function searchWindow() {
 	self.add(areaTextField);
 	self.add(purposeTextField);
 	self.add(searchButton);
-	self.add(actInd);
+	
 	return self;
 }
 
