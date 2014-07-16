@@ -12,8 +12,7 @@ function chatWindow(sendfrom, sendto, textField) {
 	var scrollViewHeight = 0;
 	
 	var url = Ti.App.domain + "get_room_message.json?sendfrom=" + sendfrom + "&sendto=" + sendto + "&app_token=" + Ti.App.Properties.getString('app_token');
-	var methodGetData = require('commonMethods').getData;
-	methodGetData(url, function( data ){
+	getData(url, function( data ){
 		if (data.success) {
 			
 			// 通信に成功したら行う処理
@@ -146,9 +145,7 @@ function chatWindow(sendfrom, sendto, textField) {
 			
 			url = Ti.App.domain + "create_message.json";
 			
-			//入力されたチャットをサーバーに送信
-			var methodSendData = require('commonMethods').sendData;
-			methodSendData( url, message, function( data ){
+			sendData( url, message, function( data ){
 				if (data.success){
 					//通信に成功したら行う処理
 					Ti.API.info("戻り値:" + data.data);
@@ -229,8 +226,7 @@ function chatWindow(sendfrom, sendto, textField) {
 			consumePointDialog("private", function(data){
 				if (data.success){
 					var url = Ti.App.domain + "change_private_room.json?room_id=" + roomID + "&app_token=" + Ti.App.Properties.getString('app_token');
-					var methodGetData = require('commonMethods').getData;
-					methodGetData(url, function( data ){
+					getData(url, function( data ){
 						if (data.success) {
 							// 通信に成功したら行う処理
 							changePrivateButton.enabled = false;

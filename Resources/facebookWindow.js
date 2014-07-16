@@ -69,8 +69,7 @@ function facebookWindow() {
 					var url = Ti.App.domain + "check_login.json";
 					var message = {fb_uid: uid, access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(uid))};
 					
-					var methodSendData = require('commonMethods').sendData;
-					methodSendData( url, message, function( data ){
+					sendData( url, message, function( data ){
 						if (data.success){
 							//通信に成功したら行う処理
 				            var obj = JSON.parse(data.data);
@@ -249,8 +248,7 @@ function facebookWindow() {
 				ageNum = 11;
 			}
 			//ageNumをテキストに変換
-			var commonMethods = require('commonMethods');
-			ageText = commonMethods.exchangeFromNumber( ageNum, "age" );
+			ageText = exchangeFromNumber( ageNum, "age" );
 		}
 		
 	}

@@ -6,9 +6,7 @@ function searchWindow() {
 	
 	var actInd = createActInd();
 	
-	var commonMethods = require('commonMethods');
-	
-	var ageArray = commonMethods.returnArray("age");
+	var ageArray = returnArray("age");
 	for (var i=0; i<ageArray.length; i++){
 		if(i == 0){
 			ageData[i] = Ti.UI.createPickerRow({title:ageArray[i],custom_item:''});
@@ -17,7 +15,7 @@ function searchWindow() {
 		}
 	}
 	
-	var areaArray = commonMethods.returnArray("area");
+	var areaArray = returnArray("area");
 	for (var i=0; i<areaArray.length; i++){
 		if(i == 0){
 			areaData[i] = Ti.UI.createPickerRow({title:areaArray[i],custom_item:''});
@@ -26,7 +24,7 @@ function searchWindow() {
 		}
 	}
 	
-	var purposeArray = commonMethods.returnArray("purpose");
+	var purposeArray = returnArray("purpose");
 	for (var i=0; i<purposeArray.length; i++){
 		if(i == 0){
 			purposeData[i] = Ti.UI.createPickerRow({title:purposeArray[i],custom_item:''});
@@ -67,9 +65,8 @@ function searchWindow() {
 		switch (Titanium.Platform.osname){
 			case 'iphone':
 				
-				var commonMethods = require('commonMethods');
-				var agePickerView = commonMethods.createPickerView( ageData, ageTextField );
-				commonMethods.pickerSlideIn( self, agePickerView );
+				var agePickerView = createPickerView( ageData, ageTextField );
+				pickerSlideIn( self, agePickerView );
     			break;
     			
     		case 'android':
@@ -107,9 +104,8 @@ function searchWindow() {
 		switch (Titanium.Platform.osname){
 			case 'iphone':
     			
-    			var commonMethods = require('commonMethods');
-				var areaPickerView = commonMethods.createPickerView( areaData, areaTextField );
-				commonMethods.pickerSlideIn(self, areaPickerView);
+				var areaPickerView = createPickerView( areaData, areaTextField );
+				pickerSlideIn(self, areaPickerView);
     			break;
     			
     		case 'android':
@@ -146,9 +142,8 @@ function searchWindow() {
 		switch (Titanium.Platform.osname){
 			case 'iphone':
 			
-				var commonMethods = require('commonMethods');
-				var purposePickerView = commonMethods.createPickerView( purposeData, purposeTextField );
-				commonMethods.pickerSlideIn( self, purposePickerView );
+				var purposePickerView = createPickerView( purposeData, purposeTextField );
+				pickerSlideIn( self, purposePickerView );
     			break;
     			
     		case 'android':
@@ -185,11 +180,8 @@ function searchWindow() {
 				  Ti.App.Properties.getString('app_token');
 				  //"&user_id=" +
 				  //Ti.App.Properties.getString('my_id');
-		
-		var commonMethods = require('commonMethods');
-		var methodGetData = commonMethods.getData;
 	
-		methodGetData(url, function( data ){
+		getData(url, function( data ){
 			
 			if (data.success) {
 				// 通信に成功したら行う処理
@@ -200,10 +192,10 @@ function searchWindow() {
 				
 				for (var i=0; i<json.length; i++){
 					Ti.API.info("JSON:" + json[i].id);
-					searchTableWindow.children[0].data[0].rows[i].children[0].text = json[i].nickname + "（" + commonMethods.exchangeFromNumber( json[i].age, "age" ) + "）";
+					searchTableWindow.children[0].data[0].rows[i].children[0].text = json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）";
 					searchTableWindow.children[0].data[0].rows[i].children[1].image = json[i].profile_image1;
 					searchTableWindow.children[0].data[0].rows[i].children[2].text = json[i].profile;
-					searchTableWindow.children[0].data[0].rows[i].children[3].text = commonMethods.exchangeFromNumber( json[i].area, "area" ) + " | " + commonMethods.exchangeFromNumber( json[i].purpose, "purpose" ) + " | " + json[i].last_logined;
+					searchTableWindow.children[0].data[0].rows[i].children[3].text = exchangeFromNumber( json[i].area, "area" ) + " | " + exchangeFromNumber( json[i].purpose, "purpose" ) + " | " + json[i].last_logined;
 					searchTableWindow.children[0].data[0].rows[i].id = json[i].id;
 				}
 				
@@ -217,30 +209,6 @@ function searchWindow() {
 			}
 		});		
 	});
-	/*
-	// app_token による認証付き API の例
-  	var example_button = Ti.UI.createButton({
-    	title: '認証API(example_token)のテスト',
-    	top: 280,
-    	right: 40,
-    	left: 40,
-    	height: 40,
-    	borderColor:"#1E90FF",
-    	borderRadius:5
-  	});
-  	example_button.addEventListener('click', function(){
-    	var app_token = Ti.App.Properties.getString('app_token');
-    	var url = Ti.App.domain + "example_token.json";
-    	var message = {
-    		app_token: app_token,
-    	};
-    	var methodSendData = require('commonMethods').sendData;
-    	methodSendData( url, message, function( data ){
-    		// 成功していれば OK が返却される
-    		alert(data.data);
-    	});
-	});
-	*/
 	
 	self.add(ageLabel);
 	self.add(areaLabel);
@@ -250,7 +218,6 @@ function searchWindow() {
 	self.add(purposeTextField);
 	self.add(searchButton);
 	self.add(actInd);
-	//self.add(example_button);
 	return self;
 }
 

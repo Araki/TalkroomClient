@@ -118,8 +118,7 @@ function userProfileWindow( type ) {
 		var url = Ti.App.domain + "get_user_rooms.json?user_id=" + self.id + "&app_token=" + Ti.App.Properties.getString('app_token');
 		Ti.API.info("+++ID:" + self.id);
 		
-		var methodGetData = require('commonMethods').getData;
-		methodGetData(url, function( data ){
+		getData(url, function( data ){
 			if (data.success) {
 				// 通信に成功したら行う処理
 				var json = data.data;

@@ -14,8 +14,7 @@ function settingProfileWindow() {
 				profile: textArea.value
 		};
 		
-		var methodSendData = require('commonMethods').sendData;
-		methodSendData( url, message, function( data ){
+		sendData( url, message, function( data ){
 			if (data.success){
 				//通信に成功したら行う処理
 				Ti.API.info("戻り値:" + data.data);

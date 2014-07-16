@@ -64,8 +64,7 @@ function settingDetailProfileWindow() {
 			    salary: salaryRow.children[1].customItem
 		};
 		
-		var methodSendData = require('commonMethods').sendData;
-		methodSendData( url, message, function( data ){
+		sendData( url, message, function( data ){
 			if (data.success){
 				//通信に成功したら行う処理
 				Ti.API.info("戻り値:" + data.data);
@@ -283,8 +282,7 @@ function settingDetailProfileWindow() {
 		row.children[1].keyboardToolbar = false;
 		row.children[1].addEventListener('click', function(){
 			var data = [];
-			var commonMethods = require('commonMethods');
-			var array = commonMethods.returnArray(rowName);
+			var array = returnArray(rowName);
 			
 			for (var i=0; i<array.length; i++){
 				if(i == 0){
@@ -296,8 +294,8 @@ function settingDetailProfileWindow() {
 			
 			switch (Titanium.Platform.osname){
 				case 'iphone':
-					var pickerView = commonMethods.createPickerView( data, row.children[1] );
-					commonMethods.pickerSlideIn( self, pickerView );
+					var pickerView = createPickerView( data, row.children[1] );
+					pickerSlideIn( self, pickerView );
 	    			break;
 	    			
 	    		case 'android':

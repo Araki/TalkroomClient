@@ -5,11 +5,10 @@ function registrationWindow(){
 	var areaData = [];
 	var purposeData = [];
 	
-	var commonMethods = require('commonMethods');
 	var iWindow = require('introductionWindow');
 	var introductionWindow = new iWindow();
 	
-	var ageArray = commonMethods.returnArray("age");
+	var ageArray = returnArray("age");
 	for (var i=0; i<ageArray.length; i++){
 		if(i == 0){
 			ageData[i] = Ti.UI.createPickerRow({title:'',custom_item:''});
@@ -18,7 +17,7 @@ function registrationWindow(){
 		}
 	}
 	
-	var areaArray = commonMethods.returnArray("area");
+	var areaArray = returnArray("area");
 	for (var i=0; i<areaArray.length; i++){
 		if(i == 0){
 			areaData[i] = Ti.UI.createPickerRow({title:'',custom_item:''});
@@ -27,7 +26,7 @@ function registrationWindow(){
 		}
 	}
 	
-	var purposeArray = commonMethods.returnArray("purpose");
+	var purposeArray = returnArray("purpose");
 	for (var i=0; i<purposeArray.length; i++){
 		if(i == 0){
 			purposeData[i] = Ti.UI.createPickerRow({title:'',custom_item:''});
@@ -86,9 +85,8 @@ function registrationWindow(){
 	ageTextField.addEventListener('click', function(){
 		switch (Titanium.Platform.osname){
 			case 'iphone':
-    			var commonMethods = require('commonMethods');
-				var agePickerView = commonMethods.createPickerView( ageData, ageTextField );
-				commonMethods.pickerSlideIn(self, agePickerView);
+				var agePickerView = createPickerView( ageData, ageTextField );
+				pickerSlideIn(self, agePickerView);
     			break;
     			
     		case 'android':
@@ -122,9 +120,8 @@ function registrationWindow(){
 	areaTextField.addEventListener('click', function(){
 		switch (Titanium.Platform.osname){
 			case 'iphone':
-    			var commonMethods = require('commonMethods');
-				var areaPickerView = commonMethods.createPickerView( areaData, areaTextField );
-				commonMethods.pickerSlideIn(self, areaPickerView);
+				var areaPickerView = createPickerView( areaData, areaTextField );
+				pickerSlideIn(self, areaPickerView);
     			break;
     			
     		case 'android':
@@ -158,9 +155,8 @@ function registrationWindow(){
 	purposeTextField.addEventListener('click', function(){
 		switch (Titanium.Platform.osname){
 			case 'iphone':
-    			var commonMethods = require('commonMethods');
-				var purposePickerView = commonMethods.createPickerView( purposeData, purposeTextField );
-				commonMethods.pickerSlideIn(self, purposePickerView);
+				var purposePickerView = createPickerView( purposeData, purposeTextField );
+				pickerSlideIn(self, purposePickerView);
     			break;
     			
     		case 'android':
@@ -243,8 +239,7 @@ function registrationWindow(){
 				//friends_list: self.friends_list
 			};
 			
-			var methodSendData = require('commonMethods').sendData;
-			methodSendData( url, message, function( data ){
+			sendData( url, message, function( data ){
 				if (data.success){
 					//通信に成功したら行う処理
 					Ti.API.info("戻り値:" + data.data);
