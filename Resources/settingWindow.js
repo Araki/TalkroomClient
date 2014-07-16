@@ -250,8 +250,6 @@ function settingWindow() {
 							case 0:
 								fb.logout();
 								alert('Logged out');
-							    //var fbWindow = require('facebookWindow');
-								//var facebookWindow = new fbWindow();
 								facebookWindow.open();
 						}
 					});

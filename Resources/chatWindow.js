@@ -11,6 +11,50 @@ function chatWindow(sendfrom, sendto, textField) {
 	var visibleTextField = textField;
 	var scrollViewHeight = 0;
 	
+	var self = createWindow("チャット");
+	
+	var scrollView = Titanium.UI.createScrollView({
+		contentWidth: "auto",
+		contentHeight: "auto",
+		top: 0,
+		showVerticalScrollIndicator: true
+	});
+	
+	var baseView = Titanium.UI.createScrollView({
+		contentWidth: "auto",
+		contentHeight: "auto",
+		top: 0,
+		bottom:0,
+		showVerticalScrollIndicator: true
+	});
+	
+	var toolbarView = Titanium.UI.createView({
+		bottom: 0,
+		height: 35,
+		right:0,
+		left:0,
+		backgroundColor: "#999"
+	});
+	
+	var textField = Titanium.UI.createTextField({
+		height:32,
+		left:5,
+		right:77,
+		backgroundImage:'inputfield.png',
+		font:{fontSize:13},
+		color:'#777',
+		paddingLeft:10,
+		borderStyle:Titanium.UI.INPUT_BORDERSTYLE_NONE
+	});
+	
+	var sendButton = Titanium.UI.createButton({
+		backgroundImage:'send.png',
+		backgroundSelectedImage:'send_selected.png',
+		width:67,
+		height:32,
+		right:5
+	});
+	
 	var url = Ti.App.domain + "get_room_message.json?sendfrom=" + sendfrom + "&sendto=" + sendto + "&app_token=" + Ti.App.Properties.getString('app_token');
 	getData(url, function( data ){
 		if (data.success) {
@@ -76,50 +120,6 @@ function chatWindow(sendfrom, sendto, textField) {
 	});
 	
 	
-	var self = createWindow("チャット");
-	
-	var scrollView = Titanium.UI.createScrollView({
-		contentWidth: "auto",
-		contentHeight: "auto",
-		top: 0,
-		showVerticalScrollIndicator: true
-	});
-	
-	var baseView = Titanium.UI.createScrollView({
-		contentWidth: "auto",
-		contentHeight: "auto",
-		top: 0,
-		bottom:0,
-		showVerticalScrollIndicator: true
-	});
-	
-	var toolbarView = Titanium.UI.createView({
-		bottom: 0,
-		height: 35,
-		right:0,
-		left:0,
-		backgroundColor: "#999"
-	});
-	
-	var textField = Titanium.UI.createTextField({
-		height:32,
-		left:5,
-		right:77,
-		backgroundImage:'inputfield.png',
-		font:{fontSize:13},
-		color:'#777',
-		paddingLeft:10,
-		borderStyle:Titanium.UI.INPUT_BORDERSTYLE_NONE
-	});
-	
-	var sendButton = Titanium.UI.createButton({
-		backgroundImage:'send.png',
-		backgroundSelectedImage:'send_selected.png',
-		width:67,
-		height:32,
-		right:5
-	});
-	
 	sendButton.addEventListener('click', function(){
 		//２回押されないようにsendButtonを一旦無効に
 		sendButton.enabled = false;
@@ -153,18 +153,21 @@ function chatWindow(sendfrom, sendto, textField) {
 					var json = JSON.parse(data.data);
 					var time = json[0].year + "/" + json[0].month + "/" + json[0].day + " " + json[0].hour + ":" + json[0].min;
 					
-					var cbView = require('chatBalloonView');
+					
 					Ti.API.info("json[0].body:" + json[0].body);
 					Ti.API.info("json[0].sendfrom_image:" + json[0].sendfrom_image);
 					Ti.API.info("％％％ScrollViewHeight:" + scrollViewHeight);
 					Ti.API.info("％％％Time:" + time);
-					var chatView = new cbView("right", json[0].body, json[0].sendfrom_image,　time, scrollViewHeight);
+					var cbView = require('chatBalloonView');
+					var chatView = new cbView(json[0].sendfrom_list_id, "right", json[0].body, json[0].sendfrom_image,　time, scrollViewHeight);
 					scrollView.add(chatView);
+					scrollViewHeight = scrollViewHeight + chatView.height;
 					
 					//Ti.API.info("scrollViewHeight:" + scrollView.toImage().height);
-					Ti.API.info("scrollViewHeight:" + scrollViewHeight);
+					//Ti.API.info("scrollViewHeight:" + scrollViewHeight);
 					
-					scrollViewHeight = scrollViewHeight + chatView.height;
+					//scrollViewHeight = scrollViewHeight + chatView.height;
+					Ti.API.info("chatView.height:" + chatView.height);
 					bottomPosition = bottomPosition + chatView.height;
 					
 					//スクロールして表示する

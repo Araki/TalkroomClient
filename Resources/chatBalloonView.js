@@ -119,7 +119,6 @@ function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whatTime,
 					userProfileWindow = new upWindow();
 				}
 				
-				
 				userProfileWindow.id = userID;
 				userProfileWindow.titleControl.text = json[0].nickname;
 				userProfileWindow.children[1].children[0].image = json[0].profile_image1;
