@@ -42,7 +42,12 @@ function facebookWindow() {
 	}));
 	
 	
+	
+	
+	//=============================================================
 	//FacebookGraph APIからユーザーのデータを取得するFunction
+	//=============================================================
+	
 	function getUserDataList() {
 		fb.requestWithGraphPath(
 		    'me',
@@ -70,6 +75,7 @@ function facebookWindow() {
 							//通信に成功したら行う処理
 				            var obj = JSON.parse(data.data);
 				            Ti.API.info(obj);
+				            
 							if(obj.result == "true"){//既に登録済みのユーザーの処理
 								
 								var birth = birthday.split("/");
@@ -151,8 +157,13 @@ function facebookWindow() {
 		);
 	}
 	
-	/*Facebook Friendsを取得し知り合いが検索に出ないようにする機能は必要になったときに実装し初期バージョンでは実装しない
+	
+	
+	//=============================================================
 	//FacebookのGraphAPIからフレンドリストを取得するFunction
+	//=============================================================
+	/*Facebook Friendsを取得し知り合いが検索に出ないようにする機能は必要になったときに実装し初期バージョンでは実装しない
+	
 	function getFbFriendsList(){
 		fb.requestWithGraphPath(
 		    'me/friends/?fields=id,gender',
@@ -169,7 +180,13 @@ function facebookWindow() {
 	}
 	*/
 	
+	
+	
+	
+	//=============================================================
 	//年齢を計算し、年齢番号を割り出すFunction
+	//=============================================================
+	
 	function calculateAge(cY, cM, cD, bY, bM, bD){
 		var currentYear = cY;
 		var currentMonth = cM;

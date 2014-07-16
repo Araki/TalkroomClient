@@ -1,17 +1,7 @@
 //type: myProfileだった場合、「トークする」ボタンを非表示
 function userProfileWindow( type ) {
 	
-	var actInd = Titanium.UI.createActivityIndicator({
-		height:'100%',
-		width:'100%',
-		font: {fontFamily:'Helvetica Neue', fontSize:16, fontWeight:'bold'},
-		color: 'white',
-		backgroundColor:'black',
-		opacity: 0.5,
-		//borderRadius:5,
-		style:(Ti.Platform.name === 'iPhone OS' ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG), //DARK,PLAIN
-		//message: "ローディング中"
-	});
+	var actInd = createActInd();
 	
 	var self = createWindow();
 	
