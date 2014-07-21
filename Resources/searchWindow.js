@@ -164,19 +164,12 @@ function searchWindow() {
 	
 	searchButton.addEventListener('click', function(){
 		
-		var url = Ti.App.domain + "get_search_users.json?age=" + 
-				  ageTextField.customItem +
-				  "&area=" +
-				  areaTextField.customItem +
-				  "&purpose=" +
-				  purposeTextField.customItem +
-				  "&app_token=" +
-				  Ti.App.Properties.getString('app_token');
-				  //"&user_id=" +
-				  //Ti.App.Properties.getString('my_id');
-		
 		var stWindow = require('searchTableWindow');
-		var searchTableWindow = new stWindow( url );
+		var searchTableWindow = new stWindow(
+			ageTextField.customItem,
+			areaTextField.customItem,
+			purposeTextField.customItem
+			);
 		
 		tabGroup.activeTab.open(　searchTableWindow　);		
 	});
