@@ -70,7 +70,7 @@ module.exports = searchTableWindow;
 function createRow(nickName, iconImage, profile, info, userID){
 	
 	var nickNameLabel = Titanium.UI.createLabel({
-    	font:{fontSize:12},
+    	font:{fontFamily: _font, fontSize:12},
     	textAlign: 'left',
     	color: '#000',
     	top: 3, 
@@ -89,7 +89,7 @@ function createRow(nickName, iconImage, profile, info, userID){
     });
     
     var profileLabel = Titanium.UI.createLabel({
-    	font:{fontSize:10}, 
+    	font:{fontFamily: _font, fontSize:10}, 
     	textAlign:'left',
     	color:'#000',
     	top: 18, 
@@ -100,7 +100,7 @@ function createRow(nickName, iconImage, profile, info, userID){
     });
     
     var infoLabel = Titanium.UI.createLabel({
-    	font:{fontSize:9}, 
+    	font:{fontFamily: _font, fontSize:9}, 
     	textAlign:'right',
     	color:'#000',
     	bottom: 3, 

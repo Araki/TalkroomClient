@@ -42,48 +42,18 @@ function userProfileWindow( userID, type ) {
 		actInd.hide();	
 	});
 	
-	readPastTalkButton.addEventListener('click', function() {
-		actInd.show();
-		
+	readPastTalkButton.addEventListener('click', function() {	
 		var utWindow = require('userTalkedRoomWindow');
-		var userTalkedRoomWindow = new utWindow();
-		
-		var url = Ti.App.domain + "get_user_rooms.json?user_id=" + self.id + "&app_token=" + Ti.App.Properties.getString('app_token');
-		Ti.API.info("+++ID:" + self.id);
-		
-		getData(url, function( data ){
-			if (data.success) {
-				// 通信に成功したら行う処理
-				var json = data.data;
-				for (var i=0; i<json.length; i++){
-					userTalkedRoomWindow.children[0].data[0].rows[i].children[0].image = json[i].sendfrom_image;
-					userTalkedRoomWindow.children[0].data[0].rows[i].children[1].image = json[i].sendto_image;
-					userTalkedRoomWindow.children[0].data[0].rows[i].children[2].text = json[i].sendfrom_message;
-					userTalkedRoomWindow.children[0].data[0].rows[i].children[3].text = json[i].sendto_message;
-					userTalkedRoomWindow.children[0].data[0].rows[i].children[4].text = json[i].updated_at;
-					userTalkedRoomWindow.children[0].data[0].rows[i].id = json[i].room_id;
-					userTalkedRoomWindow.children[0].data[0].rows[i].sendto = json[i].sendto_id;//self.id;
-					userTalkedRoomWindow.children[0].data[0].rows[i].sendfrom = json[i].sendfrom_id;
-				}
-			} else{
-				// 通信に失敗したら行う処理
-			}
-		});
-		actInd.hide();
+		var userTalkedRoomWindow = new utWindow( self.id );
 		tabGroup.activeTab.open(userTalkedRoomWindow);
-		
-		Ti.API.info("URL:" + url);
 	});
 	
 	if( type != "myProfile"){
 		var talkButton = createTalkButton();
 		buttonBgView.add(talkButton);
 		talkButton.addEventListener('click', function() {
-			actInd.show();
 			var cWindow = require('chatWindow');
 			var chatWindow = new cWindow(Ti.App.Properties.getString('my_id'), self.id, true);
-			
-			actInd.hide();
 			tabGroup.activeTab.open(chatWindow);
 		});
 	}
@@ -118,7 +88,8 @@ function createBgView(){
 		left: 0,
 		right: 0,
 		height: 112,
-		backgroundImage: "images/bg/profile_photo_bg.png"
+		//backgroundImage: "images/bg/profile_photo_bg.png"
+		backgroundColor: _liteBlue
 	});
 	return view;
 }
@@ -129,7 +100,8 @@ function createButtonBgView(){
 		left: 0,
 		right: 0,
 		height: 76,
-		backgroundImage: "images/bg/profile_btn_bg.png"
+		//backgroundImage: "images/bg/profile_btn_bg.png"
+		backgroundColor: _liteBlue
 	});
 	return view;
 }
@@ -178,7 +150,7 @@ function createTableRow(title, data, backgroundType){
 	for (var i=0; i<11; i++){
     
     	var titleLabel = Titanium.UI.createLabel({
-        	font:{fontSize:14}, 
+        	font:{fontFamily: _font, fontSize:14}, 
         	textAlign:'left',
         	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
         	color:'#000',
@@ -190,7 +162,7 @@ function createTableRow(title, data, backgroundType){
 	    });
     
 	    var variableLabel = Titanium.UI.createLabel({
-        	font:{fontSize:14}, 
+        	font:{fontFamily: _font, fontSize:14}, 
         	textAlign:'left',
         	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
         	color:'#000',
@@ -226,6 +198,7 @@ function createTableRow(title, data, backgroundType){
 function createReadPastTalkButton(){
 	view = Ti.UI.createButton({
 		title: '過去トークを見る',
+		font:{fontFamily: _font},
 		bottom: 15,
 		width: 130,
 		left: 15,
@@ -239,6 +212,7 @@ function createReadPastTalkButton(){
 function createTalkButton(){
 	view =Ti.UI.createButton({
 		title: 'トークする',
+		font:{fontFamily: _font},
 		bottom: 15,
 		width: 130,
 		right: 15,

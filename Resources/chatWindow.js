@@ -2,29 +2,28 @@
 
 function chatWindow(sendfrom, sendto, textField) {
 	
-	var chatArray = new Array();
-	
+	var self = createWindow("トークルーム");
 	var roomID;
 	var roomPublic;
 	var roomMessageCount;
-	
 	var visibleTextField = textField;
 	var scrollViewHeight = 0;
-	
-	var self = createWindow("チャット");
-	
-	var scrollView = Titanium.UI.createScrollView({
-		contentWidth: "auto",
-		contentHeight: "auto",
-		top: 0,
-		showVerticalScrollIndicator: true
-	});
+	var chatArray = new Array();
+	var actInd = createActInd();
+	actInd.show();
 	
 	var baseView = Titanium.UI.createScrollView({
 		contentWidth: "auto",
 		contentHeight: "auto",
 		top: 0,
 		bottom:0,
+		showVerticalScrollIndicator: true
+	});
+	
+	var scrollView = Titanium.UI.createScrollView({
+		contentWidth: "auto",
+		contentHeight: "auto",
+		top: 0,
 		showVerticalScrollIndicator: true
 	});
 	
@@ -60,7 +59,6 @@ function chatWindow(sendfrom, sendto, textField) {
 		if (data.success) {
 			
 			// 通信に成功したら行う処理
-			Ti.API.info("json:" + data.data);
 			var json = data.data;
 			roomID = json.room_id;
 			roomPublic = json.public;
@@ -91,7 +89,6 @@ function chatWindow(sendfrom, sendto, textField) {
 				var chatView = new cbView(chatArray[i]["id"], chatArray[i]["side"], chatArray[i]["message"], chatArray[i]["image"], chatArray[i]["time"], scrollViewHeight);
 				scrollView.add(chatView);
 				scrollViewHeight = scrollViewHeight + chatView.height;
-				Ti.API.info("++++ScrollViewHeight:" + scrollViewHeight);
 			}		
 		} else{
 			// 通信に失敗したら行う処理
@@ -117,7 +114,59 @@ function chatWindow(sendfrom, sendto, textField) {
 				}
 			}
 		}
+		
+		baseView.add(scrollView);
+		actInd.hide();
+		
 	});
+	
+	
+	var bottomPosition = scrollView.toImage().height - 455;
+	scrollView.addEventListener("scroll",function(e){
+               // Ti.API.info("scroll y=" + e.y);
+    });
+    
+	//visibleTextFieldがTRUEならテキストフィールドを表示
+	if(visibleTextField){
+		scrollView.bottom = 35;
+		//Ti.API.info("bottomPosition:" + bottomPosition);
+		bottomPosition = bottomPosition + 35;
+		//Ti.API.info("bottomPosition:" + bottomPosition);
+		toolbarView.add(textField);
+		toolbarView.add(sendButton);
+		baseView.add(toolbarView);
+		
+		//非公開化ボタンの設置
+		var changePrivateButton = Titanium.UI.createButton({
+			font:{fontFamily: _font},
+			title:'非公開'
+		});
+		
+		//通信してroomIDがnullでなければenabledをtrueにする
+		changePrivateButton.enabled = false;
+		
+		self.setRightNavButton(changePrivateButton);
+		changePrivateButton.addEventListener('click',function(){
+			consumePointDialog("private", function(data){
+				if (data.success){
+					var url = Ti.App.domain + "change_private_room.json?room_id=" + roomID + "&app_token=" + Ti.App.Properties.getString('app_token');
+					getData(url, function( data ){
+						if (data.success) {
+							// 通信に成功したら行う処理
+							changePrivateButton.enabled = false;
+							//changePrivateButton.image = "";//「非公開中」などのボタンに変更する
+							alert("ルームを非公開にしました！");
+						} else{
+							// 通信に失敗したら行う処理
+							alert("通信に失敗しました");
+						}
+					});
+				}
+			});
+		});
+	}else{
+		scrollView.bottom = 0;
+	}
 	
 	
 	sendButton.addEventListener('click', function(){
@@ -135,7 +184,6 @@ function chatWindow(sendfrom, sendto, textField) {
 		  	sendButton.enabled = true;
 		  	
 		}else{
-			
 			var message = {
 				//sendfrom_list_id: Ti.App.Properties.getString('my_id'),
 				app_token: Ti.App.Properties.getString('app_token'),
@@ -144,7 +192,6 @@ function chatWindow(sendfrom, sendto, textField) {
 			};
 			
 			url = Ti.App.domain + "create_message.json";
-			
 			sendData( url, message, function( data ){
 				if (data.success){
 					//通信に成功したら行う処理
@@ -201,55 +248,10 @@ function chatWindow(sendfrom, sendto, textField) {
 		}
 	});
 	
-	var bottomPosition = scrollView.toImage().height - 455;
-	scrollView.addEventListener("scroll",function(e){
-               // Ti.API.info("scroll y=" + e.y);
-    });
-    
-	//visibleTextFieldがTRUEならテキストフィールドを表示
-	if(visibleTextField){
-		scrollView.bottom = 35;
-		//Ti.API.info("bottomPosition:" + bottomPosition);
-		bottomPosition = bottomPosition + 35;
-		//Ti.API.info("bottomPosition:" + bottomPosition);
-		toolbarView.add(textField);
-		toolbarView.add(sendButton);
-		baseView.add(toolbarView);
-		
-		//非公開化ボタンの設置
-		var changePrivateButton = Titanium.UI.createButton({
-			title:'非公開'
-		});
-		
-		//通信してroomIDがnullでなければenabledをtrueにする
-		changePrivateButton.enabled = false;
-		
-		self.setRightNavButton(changePrivateButton);
-		changePrivateButton.addEventListener('click',function(){
-			consumePointDialog("private", function(data){
-				if (data.success){
-					var url = Ti.App.domain + "change_private_room.json?room_id=" + roomID + "&app_token=" + Ti.App.Properties.getString('app_token');
-					getData(url, function( data ){
-						if (data.success) {
-							// 通信に成功したら行う処理
-							changePrivateButton.enabled = false;
-							//changePrivateButton.image = "";//「非公開中」などのボタンに変更する
-							alert("ルームを非公開にしました！");
-						} else{
-							// 通信に失敗したら行う処理
-							alert("通信に失敗しました");
-						}
-					});
-				}
-			});
-		});
-	}else{
-		scrollView.bottom = 0;
-	}
 	
-	baseView.add(scrollView);
+	//baseView.add(scrollView);
 	self.add(baseView);
-	
+	self.add(actInd);
 	return self;
 }
 

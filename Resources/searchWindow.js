@@ -2,6 +2,11 @@ function searchWindow() {
 	
 	var self = createWindow("探す");
 	
+	var baseView = Titanium.UI.createView({
+		top: 0,
+		bottom: 250,
+		backgroundColor: _liteBlue
+	});
 	var ageData = [];
 	var areaData = [];
 	var purposeData = [];
@@ -38,23 +43,28 @@ function searchWindow() {
 	//=========================================
 	var ageLabel = Titanium.UI.createLabel({
 		text: '年齢',
-		top: 30,
-		left: 40,
-		width: 40,
+		top: 15,
+		left: 30,
+		width: 60,
 		height: 30,
-		font: { fontSize: 12 }
+		color: _white,
+		font:{fontFamily: _font, fontSize: 17 }
 	});
 	
 	var ageTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+		font:{fontFamily: _font, fontSize: 17},
 		value: "すべて",
 		customItem: "",
-		top: 30,
-		right: 40,
-		left: 85,
+		textAlign: "center",
+		top: 15,
+		right: 30,
+		left: 100,
 		height: 30,
 		enabled: false,
-		keyboardToolbar: false
+		color: _liteBlue,
+		keyboardToolbar: false,
+		borderRadius: 15
 	});
 	
 	//テキストフィールドがタップされたときの挙動
@@ -77,23 +87,28 @@ function searchWindow() {
 	//=========================================
 	var areaLabel = Titanium.UI.createLabel({
 		text: 'エリア',
-		top: 90,
-		left: 40,
-		width: 40,
+		top: 60,
+		left: 30,
+		width: 60,
 		height: 30,
-		font: { fontSize: 12 }
+		color: _white,
+		font:{fontFamily: _font, fontSize: 17 }
 	});
 	
 	var areaTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+		font:{fontFamily: _font, fontSize: 17},
 		value: "すべて",
 		customItem: "",
-		top: 90,
-		right: 40,
-		left: 85,
+		textAlign: "center",
+		top: 60,
+		right: 30,
+		left: 100,
 		height: 30,
 		enabled: false,
-		keyboardToolbar: false
+		color: _liteBlue,
+		keyboardToolbar: false,
+		borderRadius: 15
 	});
 
 	//テキストフィールドがタップされたときの挙動
@@ -115,23 +130,28 @@ function searchWindow() {
 	//=========================================
 	var purposeLabel = Titanium.UI.createLabel({
 		text: '目的',
-		top: 150,
-		left: 40,
-		width: 40,
+		top: 105,
+		left: 30,
+		width: 60,
 		height: 30,
-		font: { fontSize: 12 }
+		color: _white,
+		font:{fontFamily: _font, fontSize: 17 }
 	});
 	
 	var purposeTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+		font:{fontFamily: _font, fontSize: 17},
 		value: "すべて",
 		customItem: "",
-		top: 150,
-		right: 40,
-		left: 85,
+		textAlign: "center",
+		top: 105,
+		right: 30,
+		left: 100,
 		enabled: false,
 		height: 30,
-		keyboardToolbar: false
+		color: _liteBlue,
+		keyboardToolbar: false,
+		borderRadius: 15
 	});
 	
 	//テキストフィールドがタップされたときの挙動
@@ -154,12 +174,15 @@ function searchWindow() {
 	
 	var searchButton = Ti.UI.createButton({
 		title: 'この条件で探す',
-		top: 220,
-		right: 40,
-		left: 40,
-		height: 40,
-		borderColor:"#1E90FF",
-		borderRadius:5
+		font:{fontFamily: _font, fontSize: 18},
+		top: 155,
+		right: 65,
+		left: 65,
+		height: 35,
+		//borderColor:"#1E90FF",
+		color: _white,
+		backgroundColor: _vividPink,
+		borderRadius:10
 	});
 	
 	searchButton.addEventListener('click', function(){
@@ -174,14 +197,15 @@ function searchWindow() {
 		tabGroup.activeTab.open(　searchTableWindow　);		
 	});
 	
-	self.add(ageLabel);
-	self.add(areaLabel);
-	self.add(purposeLabel);
-	self.add(ageTextField);
-	self.add(areaTextField);
-	self.add(purposeTextField);
-	self.add(searchButton);
 	
+	baseView.add(ageLabel);
+	baseView.add(areaLabel);
+	baseView.add(purposeLabel);
+	baseView.add(ageTextField);
+	baseView.add(areaTextField);
+	baseView.add(purposeTextField);
+	baseView.add(searchButton);
+	self.add(baseView);
 	return self;
 }
 

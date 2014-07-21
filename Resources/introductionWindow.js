@@ -24,6 +24,7 @@ function introductionWindow(){
 	// buttonの生成
 	var button = Titanium.UI.createButton({
 		title: '始める',
+		font:{fontFamily: _font},
 		bottom: '10dp',
 		left: '60dp',
 		right: '60dp',

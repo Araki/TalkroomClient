@@ -42,18 +42,18 @@ function publicRoomWindow() {
 			if (data.success) {
 				// 通信に成功したら行う処理
 				dataList = data.data;
-				Ti.API.info(dataList[0]);
+				//Ti.API.info(dataList[0]);
 				
 				var url = Ti.App.domain + "get_room_summary_data.json?app_token=" + Ti.App.Properties.getString('app_token') + "&room_ids=";
 				for (var i=0; i<dataList.length; i++){
 					if (i == 0){
 						url = url + dataList[i].room_id;
-						Ti.API.info("ROOM_ID:" + dataList[i]["room_id"]);
-						Ti.API.info("URL:" + url);
+						//Ti.API.info("ROOM_ID:" + dataList[i]["room_id"]);
+						//Ti.API.info("URL:" + url);
 					}else{
 						url = url + "," + dataList[i].room_id;
-						Ti.API.info("ROOM_ID:" + dataList[i].room_id);
-						Ti.API.info("URL:" + url);
+						//Ti.API.info("ROOM_ID:" + dataList[i].room_id);
+						//Ti.API.info("URL:" + url);
 					}
 				}
 				
@@ -85,23 +85,25 @@ function publicRoomWindow() {
 		for (var i=0; i<json.length; i++){
 	    
 	    	var labelSendFromMessage = Titanium.UI.createLabel({
-	        	font:{fontSize:13}, 
+	        	font:{fontFamily: _font,fontSize:13}, 
 	        	textAlign:'left',
 	        	color:'#000',
 	        	top:0, 
 	        	right:30, 
 	        	left:115, 
-		        height:30
+		        height:30,
+		        text:json[i].sendfrom_message
 		    });
 	    
 		    var labelSendToMessage = Titanium.UI.createLabel({
-		        font:{fontSize:13}, 
+		        font:{fontFamily: _font,fontSize:13}, 
 		        textAlign:'left',
 		        color:'#000',
 		        top:30, 
 		        right:30, 
 		        left:115, 
-		        height:30
+		        height:30,
+		        text: json[i].sendto_message
 		    });
 	    
 		    var sendFromImage = Titanium.UI.createImageView({
@@ -109,7 +111,8 @@ function publicRoomWindow() {
 		    	top: 5,
 		    	left: 5,
 		    	width: 50,
-		    	height: 50
+		    	height: 50,
+		    	image: json[i].sendfrom_image
 		    });
 	   
 		   var sendToImage = Titanium.UI.createImageView({
@@ -117,22 +120,25 @@ function publicRoomWindow() {
 		    	top: 5,
 		    	left: 60,
 		    	width: 50,
-		    	height: 50
+		    	height: 50,
+		    	image: json[i].sendto_image
 		    });
 		    
 		    var timeLabel = Titanium.UI.createLabel({
-		        font:{fontSize:10}, 
+		        font:{fontFamily: _font, fontSize:10}, 
 		        textAlign:'right',
 		        color:'#000',
 		        top:5, 
-		        right:5
+		        right:5,
+		        text: json[i].updated_at
 		    });
 		    
 		   var row = Ti.UI.createTableViewRow({
 		        hasChild: true,
 		        height:60,
 		        backgroundImage: '',
-		        id: ''
+		        sendfrom: json[i].sendfrom_id,
+		        sendto: json[i].sendto_id
 		   });
 	   	
 		   row.add(sendFromImage);
@@ -150,7 +156,7 @@ function publicRoomWindow() {
 		//self.add(tableView);
 		
 		tableView.data = tableViewRowData;
-		
+		/*
 		for (var i=0; i< json.length; i++){
 			Ti.API.info("###ROOM_ID:" + json[i].room_id);
 			Ti.API.info("JSONデータ:::::" + json[i].sendfrom_image);
@@ -163,6 +169,7 @@ function publicRoomWindow() {
 			tableView.data[0].rows[i].sendto = json[i].sendto_id;
 			//row.id = json[i].room_id;
 		}
+		*/
 		
 		actInd.hide();
 		

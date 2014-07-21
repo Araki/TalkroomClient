@@ -45,7 +45,7 @@ function registrationWindow(){
 		left: 40,
 		width: 40,
 		height: 30,
-		font: { fontSize: 12 }
+		font:{fontFamily: _font, fontSize: 12 }
 	});
 	self.add(nicknameLabel);
 	
@@ -66,7 +66,7 @@ function registrationWindow(){
 		left: 40,
 		width: 40,
 		height: 30,
-		font: { fontSize: 12 }
+		font:{fontFamily: _font, fontSize: 12 }
 	});
 	self.add(ageLabel);
 	
@@ -101,7 +101,7 @@ function registrationWindow(){
 		left: 40,
 		width: 40,
 		height: 30,
-		font: { fontSize: 12 }
+		font:{fontFamily: _font, fontSize: 12 }
 	});
 	self.add(areaLabel);
 	
@@ -136,7 +136,7 @@ function registrationWindow(){
 		left: 40,
 		width: 40,
 		height: 30,
-		font: { fontSize: 12 }
+		font:{fontFamily: _font, fontSize: 12 }
 	});
 	self.add(purposeLabel);
 	
@@ -171,7 +171,7 @@ function registrationWindow(){
 		left: 40,
 		width: 40,
 		height: 30,
-		font: { fontSize: 12 }
+		font:{fontFamily: _font, fontSize: 12 }
 	});
 	self.add(profileLabel);
 	
@@ -182,6 +182,7 @@ function registrationWindow(){
         left:40,
         right:40,
         textAlign:'left',
+        font:{fontFamily: _font},
         appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
         keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
         returnKeyType:Titanium.UI.RETURNKEY_DONE,
@@ -194,6 +195,7 @@ function registrationWindow(){
 	
 	var submitButton = Ti.UI.createButton({
 		title: '決定',
+		font:{fontFamily: _font},
 		bottom: 50,
 		right: 20,
 		left: 20,

@@ -1,7 +1,24 @@
 function settingBuyPointsWindow() {
-	
+	var verifyingReceipts = false;
+	var loading = createActInd();
+	var loadingCount = 0;
+	function showLoading(){
+		loadingCount += 1;
+		if (loadingCount == 1) {
+			loading.show();
+		}
+	}
+	function hideLoading(){
+		if (loadingCount > 0) {
+			loadingCount -= 1;
+			if (loadingCount == 0) {
+				loading.hide();
+			}
+		}
+	}	
   	// レシート処理
-  	checkReceipt(function(){});
+  	showLoading();
+  	checkReceipt(function(){hideLoading();});
   	alert(Ti.App.Properties.getString('Receipt', ''));
 	
 	var self = createWindow("ポイント購入");
@@ -11,9 +28,9 @@ function settingBuyPointsWindow() {
 		Storekit.removeEventListener('transactionState', onTransactionState);
 	});
 	
-	alert("POINT" + _point);
+	//alert("POINT" + _point);
 	var pointLabel = Ti.UI.createLabel({
-		font:{fontSize:20},
+		font:{fontFamily: _font, fontSize:20},
 		textAlign: "left",
         text: _point,
        	color:'#000',
@@ -26,40 +43,6 @@ function settingBuyPointsWindow() {
 	
 	Storekit.bundleVersion = "1.0";
 	Storekit.bundleIdentifier = "jp.shiftage.talkroom";
-	
-	var verifyingReceipts = false;
-	 
-	var loading = Ti.UI.createActivityIndicator({
-		height:'100%',
-		width:'100%',
-		font: {fontFamily:'Helvetica Neue', fontSize:16, fontWeight:'bold'},
-		color: 'white',
-		backgroundColor:'black',
-		opacity: 0.5,
-		//borderRadius:5,
-		style:(Ti.Platform.name === 'iPhone OS' ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG), //DARK,PLAIN
-		//message: "ローディング中"
-	});
-	
-	var loadingCount = 0;
-	function showLoading()
-	{
-		//alert("showLoading:" + loadingCount);
-		loadingCount += 1;
-		if (loadingCount == 1) {
-			loading.show();
-		}
-	}
-	function hideLoading()
-	{
-		//alert("hideLoading:" + loadingCount);
-		if (loadingCount > 0) {
-			loadingCount -= 1;
-			if (loadingCount == 0) {
-				loading.hide();
-			}
-		}
-	}
 	
 	function isIOS7Plus()
 	{
@@ -163,6 +146,7 @@ function settingBuyPointsWindow() {
   	
   	var buy100points = Ti.UI.createButton({
 		title:'Buy ' + product100.title + ', ' + product100.formattedPrice,
+		font:{fontFamily: _font},
 		top:60, left:5,
 		right:5,
 		height:40,
@@ -176,6 +160,7 @@ function settingBuyPointsWindow() {
   	
   	var buy300points = Ti.UI.createButton({
 		title:'Buy ' + product300.title + ', ' + product300.formattedPrice,
+		font:{fontFamily: _font},
 		top:110, 
 		left:5, 
 		right:5, 
@@ -190,6 +175,7 @@ function settingBuyPointsWindow() {
   
   	var buy500points = Ti.UI.createButton({
 		title:'Buy ' + product500.title + ', ' + product500.formattedPrice,
+		font:{fontFamily: _font},
 		top:160, 
 		left:5, 
 		right:5, 

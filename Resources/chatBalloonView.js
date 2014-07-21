@@ -22,7 +22,7 @@ function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whatTime,
 	
 	var labelNameTime = Titanium.UI.createLabel({
 		text: time,
-		font:{fontSize:10},
+		font:{fontFamily: _font, fontSize:10},
 		color:'#000'
 	});
 	
@@ -42,10 +42,11 @@ function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whatTime,
 	});
 	
 	var messageLabel = Ti.UI.createLabel({
-		font:{fontSize:14},
+		font:{fontFamily: _font, fontSize:14},
 		//backgroundColor: "white",
 		textAlign: "left",
 		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+		font:{fontFamily: _font},
         text: message,
        	color:'#000',
        	height: "auto",

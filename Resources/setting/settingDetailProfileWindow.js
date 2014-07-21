@@ -1,16 +1,79 @@
 function settingDetailProfileWindow() {
 	
 	var self = createWindow("プロフィール編集");
+	var tableView = Titanium.UI.createTableView({});
+	var tableViewRowData = [];
+	var actInd = createActInd();
+	actInd.show();
+	
+	//==================================================
+   	//ユーザーデータの読み込み
+   	//==================================================
+   	var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.Properties.getString('my_id') +"&app_token=" + Ti.App.Properties.getString('app_token');
+	getData(url, function( data ){
+		if (data.success) {
+			// 通信に成功したら行う処理
+			var json = data.data;
+			
+			profileImage1.image = json[0].profile_image1 + "?" + new Date().getTime();
+			profileImage1.url = json[0].profile_image1 + "?" + new Date().getTime();
+			if(json[0].profile_image2 != null){
+				profileImage2.image = json[0].profile_image2 + "?" + new Date().getTime();
+				profileImage2.url = json[0].profile_image2 + "?" + new Date().getTime();
+			}else{
+				profileImage2.image = "images/choice_image.png";
+			}
+			if(json[0].profile_image3 != null){
+				profileImage3.image = json[0].profile_image3 + "?" + new Date().getTime();
+				profileImage3.url = json[0].profile_image3 + "?" + new Date().getTime();
+			}else{
+				profileImage3.image = "images/choice_image.png";
+			}
+			
+			nicknameRow.children[1].value = json[0].nickname;
+			ageRow.children[1].value = exchangeFromNumber( json[0].age, "age" );
+			ageRow.children[1].customItem = json[0].age;
+			purposeRow.children[1].value = exchangeFromNumber( json[0].purpose, "purpose" );
+			purposeRow.children[1].customItem = json[0].purpose;
+			areaRow.children[1].value = exchangeFromNumber( json[0].area, "area" );
+			areaRow.children[1].customItem = json[0].area;
+			tallRow.children[1].value = exchangeFromNumber( json[0].tall, "tall" );
+			tallRow.children[1].customItem = json[0].tall;
+			bloodRow.children[1].value = exchangeFromNumber( json[0].blood, "blood" );
+			bloodRow.children[1].customItem = json[0].blood;
+			styleRow.children[1].value = exchangeFromNumber( json[0].style, "style" );
+			styleRow.children[1].customItem = json[0].style;
+			holidayRow.children[1].value = exchangeFromNumber( json[0].holiday, "holiday" );
+			holidayRow.children[1].customItem = json[0].holiday;
+			alcoholRow.children[1].value = exchangeFromNumber( json[0].alcohol, "alcohol" );
+			alcoholRow.children[1].customItem = json[0].alcohol;
+			cigaretteRow.children[1].value = exchangeFromNumber( json[0].cigarette, "cigarette" );
+			cigaretteRow.children[1].customItem = json[0].cigarette;
+			salaryRow.children[1].value = exchangeFromNumber( json[0].salary, "salary" );
+			salaryRow.children[1].customItem = json[0].salary;
+			
+			tableView.data = tableViewRowData;
+			
+		} else{
+			// 通信に失敗したら行う処理
+		}
+		actInd.hide();
+	});
 	
 	var saveButton = Titanium.UI.createButton({
 		title:'保存',
+		font:{fontFamily: _font},
 		color: "#fff",
 		borderColor:"#fff",
 		borderRadius:5
 	});
 	self.rightNavButton = saveButton;
 	
+	//==================================================
+   	//保存ボタンが押されたときの挙動
+   	//==================================================
 	saveButton.addEventListener('click', function(){
+		actInd.show();
 		var alertMessage = "";
 		if( nicknameRow.children[1].value == ''){
 			alertMessage = alertMessage + "ニックネームを入力してください。\n";
@@ -26,12 +89,14 @@ function settingDetailProfileWindow() {
 		}
 		
 		if( alertMessage != "" ){
+			actInd.hide();
 			Ti.UI.createAlertDialog({
 				title: 'エラー',
 			  	message: alertMessage
 			}).show();
+			return;
 		}
-		
+		/*
 		Ti.UI.createAlertDialog({
 			title: 'customItem',
 		  	message: "ニックネーム：" + nicknameRow.children[1].value +
@@ -46,7 +111,7 @@ function settingDetailProfileWindow() {
 		  	         "\nタバコ：" + cigaretteRow.children[1].customItem +
 		  	         "\n年収：" + salaryRow.children[1].customItem
 		}).show();
-		
+		*/
 		var url = Ti.App.domain + "update_detail_profile.json";
 		var message = {
 				//user_id: Ti.App.Properties.getString('my_id'),
@@ -65,13 +130,13 @@ function settingDetailProfileWindow() {
 		};
 		
 		sendData( url, message, function( data ){
+			
 			if (data.success){
 				//通信に成功したら行う処理
 				Ti.API.info("戻り値:" + data.data);
-				
 				Ti.UI.createAlertDialog({
-					title: 'データ送信成功',
-				  	message: data.data
+					title: 'プロフィールを更新しました',
+				  	//message: data.data
 				}).show();
 				
 			} else{
@@ -79,15 +144,15 @@ function settingDetailProfileWindow() {
 				Ti.UI.createAlertDialog({
 					title: 'エラー',
 				  	message: data.data
-				}).show();
-				
+				}).show();	
 			}
+			actInd.hide();
 		});	
 	});
-	
-	var tableViewRowData = [];
-	
-	//プロフィール写真Row作成
+
+	//==================================================
+   	//画面UIの作成
+   	//==================================================
     var imageRow = Ti.UI.createTableViewRow({
         height:140,
     	selectionStyle : Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE
@@ -95,7 +160,7 @@ function settingDetailProfileWindow() {
   
 	var profileLabel1 = Titanium.UI.createLabel({
 		text: "メイン写真",
-    	font:{fontSize:14}, 
+    	font:{fontFamily: _font, fontSize:14}, 
     	textAlign:'center',
     	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
     	color:'#000',
@@ -121,7 +186,7 @@ function settingDetailProfileWindow() {
     
     var profileLabel2 = Titanium.UI.createLabel({
 		text: "サブ写真①",
-    	font:{fontSize:14}, 
+    	font:{fontFamily: _font, fontSize:14}, 
     	textAlign:'center',
     	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
     	color:'#000',
@@ -146,7 +211,7 @@ function settingDetailProfileWindow() {
     
     var profileLabel3 = Titanium.UI.createLabel({
 		text: "サブ写真②",
-    	font:{fontSize:14}, 
+    	font:{fontFamily: _font, fontSize:14}, 
     	textAlign:'center',
     	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
     	color:'#000',
@@ -171,8 +236,6 @@ function settingDetailProfileWindow() {
 
    	tableViewRowData.push(imageRow);
    	
-   	
-   	//定型Rowを作成
    	var nicknameRow = createRow("ニックネーム");
    	tableViewRowData.push(nicknameRow);   
    	
@@ -216,23 +279,9 @@ function settingDetailProfileWindow() {
    	setPickerView(salaryRow, 'salary');
    	tableViewRowData.push(salaryRow);
 	
-	
-	//テーブルにRowデータを挿入
-	var tableView = Titanium.UI.createTableView({
-		data: tableViewRowData
-	});
-	
-	self.add(tableView);
-	
-	return self;
-	
-	
-	
-	
-	
-	
-	
-	
+	//==================================================
+	//写真がタップされたときのオプションダイアログ
+	//==================================================
 	function showOptionDialog( whichImage ){	
 		if(whichImage == "profile_image1" ){
 			var sourceSelect = Titanium.UI.createOptionDialog({
@@ -274,9 +323,9 @@ function settingDetailProfileWindow() {
 		}
 	}
 	
-	
-	
-	
+	//==================================================
+	//ピッカービューの表示
+	//==================================================
 	function setPickerView( row, rowName ){
 		row.children[1].enabled = false;
 		row.children[1].keyboardToolbar = false;
@@ -304,17 +353,23 @@ function settingDetailProfileWindow() {
 			
 		});
 	}
+	
+	self.add(tableView);
+	self.add(actInd);
+	return self;
 }
 
 module.exports = settingDetailProfileWindow;
 
-
-
-
-
-
-
-
+//############################################################
+//############################################################
+//############################################################
+//############################################################
+//ファンクション
+//############################################################
+//############################################################
+//############################################################
+//############################################################
 
 function createRow( labelText ) {
 	
@@ -324,7 +379,7 @@ function createRow( labelText ) {
    	});
    	
    	var label = Titanium.UI.createLabel({
-    	font:{fontSize: 13}, 
+    	font:{fontFamily: _font, fontSize: 13}, 
     	text: labelText,
     	textAlign: 'right',
     	color: 'black',

@@ -51,7 +51,7 @@ Ti.API.info("==================app_token:::::::::" + Ti.App.Properties.getString
 Ti.API.info("==================my_id:::::::::" + Ti.App.Properties.getString('my_id'));
 
 //=============================================================
-//消費ポイントの定義
+//グローバル変数の定義
 //=============================================================
 var _point;
 var _peepPoint = 5;
@@ -59,6 +59,17 @@ var _privatePoint = 100;
 var product100;
 var product300;
 var product500;
+var rewardFlag;
+
+var _white = '#FFFFFF';
+var _whiteBlue = '#E8F8FF';
+var _liteBlue = '#6FD3D8';
+var _darkBlue = '#1CADC3';
+var _vividPink = '#EB3B86';
+var _mossGreen = '#86BA1A';
+var _darkGray= '#7B8C94';
+
+var _font = 'Rounded-X M+ 2p';
 
 //############################################################
 //############################################################
@@ -129,7 +140,8 @@ function getUserDataList() {
 					if (data.success){
 						//通信に成功したら行う処理
 			            var obj = JSON.parse(data.data);
-			            Ti.API.info(obj);
+			            rewardFlag = obj.reward_flag;
+			            alert("リワード:" + rewardFlag);
 			            
 						if(obj.result == "true"){//既に登録済みのユーザーの処理
 							
@@ -348,12 +360,13 @@ function createWindow(titleName){
 	var win = Titanium.UI.createWindow({  
 		title: titleName,
 		backgroundColor:'#fff',
-		barImage:'images/bg/navBar_bg.png',
+		//barImage:'images/bg/navBar_bg.png',
+		barColor:'#1CADC3',
 		titleControl: Ti.UI.createLabel({
 	        text: titleName,
 	        color:'#fff',
-	        font:{fontFamily:'',fontSize:18},
-	        shadowColor: 'gray',
+	        font:{fontFamily: _font, fontSize:18},
+	        //shadowColor: 'gray',
 	        shadowOffset: {x: 1, y: 1}
 	    })
 	});
@@ -365,7 +378,7 @@ function createActInd() {
 	var activityIndicator = Titanium.UI.createActivityIndicator({
 		height:'100%',
 		width:'100%',
-		font: {fontFamily:'Helvetica Neue', fontSize:16, fontWeight:'bold'},
+		font: {fontFamily: _font, fontSize:16, fontWeight:'bold'},
 		color: 'white',
 		backgroundColor:'black',
 		opacity: 0.5,
@@ -465,7 +478,7 @@ function uploadImage(image, win, whichImage){
 		style:Titanium.UI.iPhone.ProgressBarStyle.DEFAULT,
 		//top:200,
 		message:'Uploading image',
-		font:{fontSize:12, fontWeight:'bold'},
+		font:{fontFamily: _font, fontSize:12, fontWeight:'bold'},
 		backgroundColor:'black',
 		opacity: 0.5,
 		color: 'white'
@@ -665,58 +678,14 @@ if (!Storekit.canMakePayments)
 else {
 	requestProduct('jp.shiftage.talkroom.testpoint100', function (product) {
 		product100 = product;
-		/*
-		var buy100points = Ti.UI.createButton({
-			title:'Buy ' + product.title + ', ' + product.formattedPrice,
-			top:60, left:5,
-			right:5,
-			height:40,
-			borderColor:"#1E90FF",
-			borderRadius:5
-		});
-		buy100points.addEventListener('click', function () {
-			purchaseProduct(product);
-		});
-		self.add(buy100points);
-		*/
 	});
 
 	requestProduct('jp.shiftage.talkroom.testpoint300', function (product) {
 		product300 = product;
-		/*
-		var buy300points = Ti.UI.createButton({
-			title:'Buy ' + product.title + ', ' + product.formattedPrice,
-			top:110, 
-			left:5, 
-			right:5, 
-			height:40,
-			borderColor:"#1E90FF",
-			borderRadius:5
-		});
-		buy300points.addEventListener('click', function () {
-			purchaseProduct(product);
-		});
-		self.add(buy300points);
-		*/
 	});
 	
 	requestProduct('jp.shiftage.talkroom.testpoint500', function (product) {
 		product500 = product;
-		/*
-		var buy500points = Ti.UI.createButton({
-			title:'Buy ' + product.title + ', ' + product.formattedPrice,
-			top:160, 
-			left:5, 
-			right:5, 
-			height:40,
-			borderColor:"#1E90FF",
-			borderRadius:5
-		});
-		buy500points.addEventListener('click', function () {
-			purchaseProduct(product);
-		});
-		self.add(buy500points);
-		*/
 	});
 }
 
@@ -762,11 +731,12 @@ function checkReceipt(callback){
 
   // すべて処理済み
   if(receipt === ''){
+  	callback();
     return;
   }
 
   //verifyReceipt(receipt);
-  var url = Ti.App.domain + "/verify_receipt";
+  var url = Ti.App.domain + "/verify_receipt.json";
 
   var client = Ti.Network.createHTTPClient({
     onload : function(e) {
@@ -914,6 +884,7 @@ function createPickerView( data, tf ){
 	
 	var doneButton = Titanium.UI.createButton({
 		title: '完了',
+		font:{fontFamily: _font},
 		style: Titanium.UI.iPhone.SystemButtonStyle.DONE
 	});
 

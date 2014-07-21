@@ -1,6 +1,9 @@
+var actInd = createActInd();
+
 function talkWindow() {
 	var self = createWindow("");
 	var statusID = 0;
+	
 	
 	var statusButtonBar = Titanium.UI.createTabbedBar({
 		labels:['新規トーク', 'トーク中', '足あと'], 
@@ -58,12 +61,21 @@ function talkWindow() {
  	//});
 	
 	self.add(tableView);
+	self.add(actInd);
 	return self;
 }
 
 module.exports = talkWindow;
 
-
+//############################################################
+//############################################################
+//############################################################
+//############################################################
+//ファンクション
+//############################################################
+//############################################################
+//############################################################
+//############################################################
 
 
 //===================
@@ -71,6 +83,7 @@ module.exports = talkWindow;
 //===================
 
 function loadAttackData( tableView ){
+	actInd.show();
 	//現在表示されているテーブルを初期化
 	tableView.data = createNewTalkTableView();
 	
@@ -98,7 +111,9 @@ function loadAttackData( tableView ){
 		} else{
 			// 通信に失敗したら行う処理
 		}
+		actInd.hide();
 	});
+	
 }
 
 
@@ -108,6 +123,7 @@ function loadAttackData( tableView ){
 //===================
 
 function loadTalkData( tableView ){
+	actInd.show();
 	//現在表示されているテーブルを初期化
 	tableView.data = createTalkTableView();
 	
@@ -135,6 +151,7 @@ function loadTalkData( tableView ){
 		} else{
 			// 通信に失敗したら行う処理
 		}
+		actInd.hide();
 	});
 }
 
@@ -145,6 +162,7 @@ function loadTalkData( tableView ){
 //===================
 
 function loadFootprintData( tableView ){
+	actInd.show();
 	//現在表示されているテーブルを初期化
 	tableView.data = createFootprintTableView();
 	
@@ -164,6 +182,7 @@ function loadFootprintData( tableView ){
 		} else{
 			// 通信に失敗したら行う処理
 		}
+		actInd.hide();
 	});
 }
 

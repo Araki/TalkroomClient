@@ -1,12 +1,26 @@
 function settingProfileWindow() {
 	
 	var self = createWindow("一言編集");
+	var actInd = createActInd();
+	actInd.show();
 	
-	var saveButton = Titanium.UI.createButton({title:'保存', borderColor:"#fff", borderRadius:5});
+	var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.Properties.getString('my_id') +"&app_token=" + Ti.App.Properties.getString('app_token');
+	getData(url, function( data ){		
+		if (data.success) {
+			// 通信に成功したら行う処理
+			var json = data.data;
+			textArea.value = json[0].profile;
+		} else{
+			// 通信に失敗したら行う処理
+		}
+		actInd.hide();
+	});
+	
+	var saveButton = Titanium.UI.createButton({title:'保存', font:{fontFamily: _font}, borderColor:"#fff", borderRadius:5});
 	self.rightNavButton = saveButton;
 	
 	saveButton.addEventListener('click', function(){
-		
+		actInd.show();
 		var url = Ti.App.domain + "update_profile.json";
 		var message = {
 				//user_id: Ti.App.Properties.getString('my_id'),
@@ -20,8 +34,8 @@ function settingProfileWindow() {
 				Ti.API.info("戻り値:" + data.data);
 				
 				Ti.UI.createAlertDialog({
-					title: 'データ送信成功',
-				  	message: data.data
+					title: '一言を更新しました',
+				  	//message: data.data
 				}).show();
 				
 			} else{
@@ -32,6 +46,7 @@ function settingProfileWindow() {
 				}).show();
 				
 			}
+			actInd.hide();
 		});		
 	});
 		
@@ -42,7 +57,7 @@ function settingProfileWindow() {
 	        bottom:250,
 	        left:20,
 	        right:20,
-	        font:{fontSize:13,fontFamily:'', fontWeight:''},
+	        font:{fontSize:13,fontFamily:_font, fontWeight:''},
 	        color:'',
 	        textAlign:'left',
 	        appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
@@ -54,7 +69,7 @@ function settingProfileWindow() {
 	});
 	
 	self.add(textArea);
-	
+	self.add(actInd);
 	return self;
 }
 

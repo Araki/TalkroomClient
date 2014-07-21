@@ -62,9 +62,9 @@ function tabGroup() {
 	
 	// create tab group
 	var self = Titanium.UI.createTabGroup({});
-	self.tabsBackgroundColor = "white"; //タブバーの色
+	self.tabsBackgroundColor = "#1CADC3"; //タブバーの色
 	self.tabsTintColor = "#003366"; //選択時のタブの色
-	self.tabsBackgroundImage = 'images/bg/tabBar_bg.png';
+	//self.tabsBackgroundImage = 'images/bg/tabBar_bg.png';
 	
 	self.addTab(tab1);  
 	self.addTab(tab2);  

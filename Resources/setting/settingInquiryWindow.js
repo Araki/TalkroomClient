@@ -4,6 +4,7 @@ function settingInquiryWindow() {
 	
 	var submitButton = Titanium.UI.createButton({
 		title:'送信',
+		font:{fontFamily: _font},
 		color: "#fff",
 		borderColor:"#fff",
 		borderRadius:5
@@ -16,7 +17,7 @@ function settingInquiryWindow() {
 		left: 20,
 		right: 20,
 		height: 15,
-		font: { fontSize: 12 }
+		font:{fontFamily: _font, fontSize: 12 }
 	});
 	
 	var mailTextField = Titanium.UI.createTextField({
@@ -44,7 +45,7 @@ function settingInquiryWindow() {
 		left: 20,
 		right: 20,
 		height: 15,
-		font: { fontSize: 12 }
+		font:{fontFamily: _font, fontSize: 12 }
 	});
 	
 	var textArea = Titanium.UI.createTextArea({
@@ -53,7 +54,7 @@ function settingInquiryWindow() {
 	        bottom:170,
 	        left:20,
 	        right:20,
-	        font:{fontSize:12,fontFamily:'', fontWeight:''},
+	        font:{fontSize:12, fontFamily: _font, fontWeight:''},
 	        color:'',
 	        textAlign:'left',
 	        appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
@@ -70,6 +71,7 @@ function settingInquiryWindow() {
 	/*
 	var submitButton = Ti.UI.createButton({
 		title: '送信',
+		font:{fontFamily: _font},
 		bottom: 180,
 		right: 40,
 		left: 40,

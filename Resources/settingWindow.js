@@ -1,22 +1,84 @@
 function settingWindow() {
 	var previousPoint;
+	var listenerFunction;
 	var self = createWindow("その他");
 	
 	var tableView = Titanium.UI.createTableView();
-	tableView.style = Titanium.UI.iPhone.TableViewStyle.GROUPED;
-	
-	self.addEventListener('focus', function(e){
-		if(previousPoint != _point){
-			//alert("ポイント：" + _point);
-			previousPoint = _point;
-			loadTableViewView();
-		}
-	});
-	
-	self.add(tableView);
-	
-	
+	//tableView.style = Titanium.UI.iPhone.TableViewStyle.GROUPED;
+		
 	function loadTableViewView(){
+		var rowData = [];
+		function createHeaderRow( labelName ){
+			var headerRow = Ti.UI.createTableViewRow({
+				backgroundColor: _darkBlue,
+				selectionStyle : Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE,
+				height: 40				
+			});
+			var label = Titanium.UI.createLabel({
+		        color:'#fff',
+		        textAlign:'left',
+		        font:{fontFamily: _font, fontSize:15},
+		        left: 15,
+		        width:'auto',
+		        height:'auto',
+		        text: labelName
+			});
+			headerRow.add(label);
+			return headerRow;
+		}
+		function createDefaultRow( titleName, id ){
+			var defaultRow = Ti.UI.createTableViewRow({
+				font:{fontFamily: _font},
+				hasChild: true,
+				title: titleName,
+				id: id
+			});
+			return defaultRow;
+		}
+		
+		var profileHeaderRow = createHeaderRow("プロフィール");
+		rowData.push(profileHeaderRow);
+		var profileRow = createDefaultRow("一言を編集する", "profile");
+		rowData.push(profileRow);
+		var detailProfileRow = createDefaultRow("プロフィールを編集する", "detail_profile");
+		rowData.push(detailProfileRow);
+		var myProfileRow = createDefaultRow("自分のプロフィールを見る", "my_profile");
+		rowData.push(myProfileRow);
+		
+		var pointHeaderRow = createHeaderRow("ポイント");
+		var pointLabel = Titanium.UI.createLabel({
+			backgroundColor: '#fff',
+	        color: _darkBlue,
+	        textAlign:'left',
+	        right: 10,
+	        width:'auto',
+	        height:'auto',
+	        borderRadius:5,
+	        font:{fontFamily: _font},
+	        text: "  " + _point + " ポイント  "
+		});
+		pointHeaderRow.add(pointLabel);
+		rowData.push(pointHeaderRow);
+		var buyPointsRow = createDefaultRow("ポイント購入", "buy_points");
+		rowData.push(buyPointsRow);
+		if(rewardFlag == true){
+			var rewardRow = createDefaultRow("無料でポイントGET", "reward");
+			rowData.push(rewardRow);
+		}
+		var inviteFriendsRow = createDefaultRow("友達招待してポイントGET", "invite_friends");
+		rowData.push(inviteFriendsRow);
+		
+		var anotherHeaderRow = createHeaderRow("その他");
+		rowData.push(anotherHeaderRow);
+		var howtoRow = createDefaultRow("使い方", "how_to");
+		rowData.push(howtoRow);
+		var tosRow = createDefaultRow("利用規約", "tos");
+		rowData.push(tosRow);
+		var inquiryRow = createDefaultRow("お問い合わせ", "inquiry");
+		rowData.push(inquiryRow);
+		var logoutRow = createDefaultRow("ログアウト", "logout");
+		rowData.push(logoutRow);
+		/*
 		var inputData = [
 			{ header:'プロフィール',
 				hasChild:true, title:'一言を編集する', id:'profile' },
@@ -39,121 +101,34 @@ function settingWindow() {
 				hasChild:true, title:'ログアウト', id:'logout'}
 			  
 		];
-		
-		tableView.data = inputData;
-		
-		tableView.addEventListener('click', function(e) {
-			
+		*/
+		//tableView.data = inputData;
+		tableView.data = rowData;
+		listenerFunction = function(e) {
 			switch (e.row.id) {
-				
-		  		case "profile":		
-					var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.Properties.getString('my_id') +"&app_token=" + Ti.App.Properties.getString('app_token');
-				
-					getData(url, function( data ){
-						
-						if (data.success) {
-							// 通信に成功したら行う処理
-							var json = data.data;
-							
-							var spWindow = require('setting/settingProfileWindow');
-							var settingProfileWindow = new spWindow();
-							
-							settingProfileWindow.children[0].value = json[0].profile;
-							
-							tabGroup.activeTab.open(settingProfileWindow);
-							
-						} else{
-							// 通信に失敗したら行う処理
-						}
-					});
+		  		case "profile":
+		  			var spWindow = require('setting/settingProfileWindow');
+					var settingProfileWindow = new spWindow();
+					tabGroup.activeTab.open(settingProfileWindow);
 		  			break;
-		  			
-		  			
 		  			
 		  		case "detail_profile": 
-					var url = Ti.App.domain + "get_detail_profile.json?user_id=" + Ti.App.Properties.getString('my_id') +"&app_token=" + Ti.App.Properties.getString('app_token');
-
-					getData(url, function( data ){
-						
-						if (data.success) {
-							// 通信に成功したら行う処理
-							var json = data.data;
-							
-							Ti.API.info("++++++++++++" + json[0]);
-							Ti.API.info("+++PROFILE+++" + json[0].profile_image3);
-							
-							var sdpWindow = require('setting/settingDetailProfileWindow');
-							var settingDetailProfileWindow = new sdpWindow();
-							
-							settingDetailProfileWindow.children[0].data[0].rows[0].children[1].image = json[0].profile_image1 + "?" + new Date().getTime();
-							settingDetailProfileWindow.children[0].data[0].rows[0].children[1].url = json[0].profile_image1 + "?" + new Date().getTime();
-							if(json[0].profile_image2 != null){
-								settingDetailProfileWindow.children[0].data[0].rows[0].children[3].image = json[0].profile_image2 + "?" + new Date().getTime();
-								settingDetailProfileWindow.children[0].data[0].rows[0].children[3].url = json[0].profile_image2 + "?" + new Date().getTime();
-							}else{
-								settingDetailProfileWindow.children[0].data[0].rows[0].children[3].image = "images/choice_image.png";
-							}
-							if(json[0].profile_image3 != null){
-								settingDetailProfileWindow.children[0].data[0].rows[0].children[5].image = json[0].profile_image3 + "?" + new Date().getTime();
-								settingDetailProfileWindow.children[0].data[0].rows[0].children[5].url = json[0].profile_image3 + "?" + new Date().getTime();
-							}else{
-								settingDetailProfileWindow.children[0].data[0].rows[0].children[5].image = "images/choice_image.png";
-							}
-							
-							settingDetailProfileWindow.children[0].data[0].rows[1].children[1].value = json[0].nickname;
-							settingDetailProfileWindow.children[0].data[0].rows[2].children[1].value = exchangeFromNumber( json[0].age, "age" );
-							settingDetailProfileWindow.children[0].data[0].rows[2].children[1].customItem = json[0].age;
-							settingDetailProfileWindow.children[0].data[0].rows[3].children[1].value = exchangeFromNumber( json[0].purpose, "purpose" );
-							settingDetailProfileWindow.children[0].data[0].rows[3].children[1].customItem = json[0].purpose;
-							settingDetailProfileWindow.children[0].data[0].rows[4].children[1].value = exchangeFromNumber( json[0].area, "area" );
-							settingDetailProfileWindow.children[0].data[0].rows[4].children[1].customItem = json[0].area;
-							settingDetailProfileWindow.children[0].data[0].rows[5].children[1].value = exchangeFromNumber( json[0].tall, "tall" );
-							settingDetailProfileWindow.children[0].data[0].rows[5].children[1].customItem = json[0].tall;
-							settingDetailProfileWindow.children[0].data[0].rows[6].children[1].value = exchangeFromNumber( json[0].blood, "blood" );
-							settingDetailProfileWindow.children[0].data[0].rows[6].children[1].customItem = json[0].blood;
-							settingDetailProfileWindow.children[0].data[0].rows[7].children[1].value = exchangeFromNumber( json[0].style, "style" );
-							settingDetailProfileWindow.children[0].data[0].rows[7].children[1].customItem = json[0].style;
-							settingDetailProfileWindow.children[0].data[0].rows[8].children[1].value = exchangeFromNumber( json[0].holiday, "holiday" );
-							settingDetailProfileWindow.children[0].data[0].rows[8].children[1].customItem = json[0].holiday;
-							settingDetailProfileWindow.children[0].data[0].rows[9].children[1].value = exchangeFromNumber( json[0].alcohol, "alcohol" );
-							settingDetailProfileWindow.children[0].data[0].rows[9].children[1].customItem = json[0].alcohol;
-							settingDetailProfileWindow.children[0].data[0].rows[10].children[1].value = exchangeFromNumber( json[0].cigarette, "cigarette" );
-							settingDetailProfileWindow.children[0].data[0].rows[10].children[1].customItem = json[0].cigarette;
-							settingDetailProfileWindow.children[0].data[0].rows[11].children[1].value = exchangeFromNumber( json[0].salary, "salary" );
-							settingDetailProfileWindow.children[0].data[0].rows[11].children[1].customItem = json[0].salary;
-							
-							tabGroup.activeTab.open(settingDetailProfileWindow);
-							
-						} else{
-							// 通信に失敗したら行う処理
-						}
-					});	  			
+		  			var sdpWindow = require('setting/settingDetailProfileWindow');
+					var settingDetailProfileWindow = new sdpWindow();
+					tabGroup.activeTab.open(settingDetailProfileWindow);
 		  			break;
-		  			
-		  			
-		  			
-		  			
-		  			
 		  			
 		  		case "my_profile":
 					var upWindow = require('userProfileWindow');
 					var userProfileWindow = new upWindow(Ti.App.Properties.getString('my_id'), "myProfile");
 					tabGroup.activeTab.open( userProfileWindow );
-					
 		  			break;
 		  			
-		  			
-		  			
-		  			
-		  			
 		  		case "buy_points": 
-		  			Ti.API.info("BUY POINTS");
-		  			
 		  			var sbpWindow = require('setting/settingBuyPointsWindow');
 					var settingBuyPointsWindow = new sbpWindow();
 					tabGroup.activeTab.open(settingBuyPointsWindow);
 		  			break;
-		  			
 		  			
 		  		case "reward": 
 		  			/*
@@ -213,9 +188,24 @@ function settingWindow() {
 					
 					logout_alert.show();
 			}
-		});
+		};
+		
+		tableView.addEventListener('click', listenerFunction);
 	}
 	
+	self.addEventListener('focus', function(e){
+		if(previousPoint != _point){
+			if(previousPoint != null){
+				//alert("Listener削除");
+				tableView.removeEventListener('click', listenerFunction);
+			}
+			//alert("ポイント：" + _point);
+			previousPoint = _point;
+			loadTableViewView();
+		}
+	});
+	
+	self.add(tableView);
 	return self;
 }
 
