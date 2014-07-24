@@ -1,7 +1,7 @@
 function userTalkedRoomWindow( user_id ) {
 	
 	var self = createWindow("過去のトーク");
-	var tableView = Titanium.UI.createTableView({});
+	var tableView = Titanium.UI.createTableView({separatorStyle:'NONE'});
 	var tableViewRowData = [];
 	var actInd = createActInd();
 	actInd.show();
@@ -20,7 +20,8 @@ function userTalkedRoomWindow( user_id ) {
 					json[i].sendto_message, 
 					json[i].updated_at,
 					json[i].sendfrom_id,
-					json[i].sendto_id
+					json[i].sendto_id,
+					i
 				);
 			   tableViewRowData.push(row);
 			}	
@@ -32,13 +33,17 @@ function userTalkedRoomWindow( user_id ) {
 	});
 	
 	tableView.addEventListener('click', function(e) {
-		Ti.API.info(e.row.id);
-		//alert("ルームIDは" + e.row.id);
-		//tableViewRowClickHandler();
-		Ti.API.info("クリック");
-		var cWindow = require('chatWindow');
-		var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, false);
-		tabGroup.activeTab.open(chatWindow);
+		actInd.show();
+		consumePointDialog("peep", function(data){
+			if (data.success){
+				var cWindow = require('chatWindow');
+				var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, false);
+				tabGroup.activeTab.open(chatWindow);
+				actInd.hide();
+			}else{
+				actInd.hide();
+			}
+		});
 	});	
 
 	self.add(tableView);
@@ -58,62 +63,73 @@ module.exports = userTalkedRoomWindow;
 //############################################################
 //############################################################
 
-function createRow(room_id, sendfrom_image, sendto_image, sendfrom_message, sendto_message, time, sendfrom_id, sendto_id){
+function createRow(room_id, sendfrom_image, sendto_image, sendfrom_message, sendto_message, time, sendfrom_id, sendto_id, backgroundType){
 	
 	var labelSendFromMessage = Titanium.UI.createLabel({
     	font:{fontFamily: _font, fontSize:13}, 
     	textAlign:'left',
-    	color:'#000',
-    	top:0, 
-    	right:30, 
-    	left: 115, 
-        height:30,
+    	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
+    	color:_darkBlue,
+    	bottom:30, 
+    	right:0, 
+    	left: 137, 
+        height:20,
         text: sendfrom_message
     });
 
     var labelSendToMessage = Titanium.UI.createLabel({
         font:{fontFamily: _font, fontSize:13}, 
         textAlign:'left',
-        color:'#000',
-        top:30, 
-        right:30, 
-        left: 115, 
-        height:30,
+        verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
+        color:_vividPink,
+        bottom:10, 
+        right:0, 
+        left: 137, 
+        height:20,
         text: sendto_message
 	});
     
 	var sendFromImage = Titanium.UI.createImageView({
 	 	top: 5,
 	   	left: 5,
-	   	width: 50,
-	   	height: 50,
+	   	width: 60,
+	   	height: 60,
+	   	borderRadius: 6,
 	   	image: sendfrom_image
 	});
    
 	var sendToImage = Titanium.UI.createImageView({
 	   	top: 5,
-	   	left: 60,
-	   	width: 50,
-	   	height: 50,
+	   	left: 70,
+	   	width: 60,
+	   	height: 60,
+	   	borderRadius: 6,
 	   	image: sendto_image
 	});
 	    
 	var timeLabel = Titanium.UI.createLabel({
 	    font:{fontFamily: _font, fontSize:10}, 
 	    textAlign:'right',
-		color:'#000',
+	    verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+		color:_darkGray,
 		top:5, 
-		right:5,
+		right:0,
 		text: time
     });
     
    var row = Ti.UI.createTableViewRow({
    		hasChild: true,
-        height:60,
+        height:70,
         id: room_id,
         sendfrom: sendfrom_id,
         sendto: sendto_id
    });
+   
+   if(backgroundType%2 == 0){
+   		row.backgroundColor = _white;
+	}else{
+   		row.backgroundColor = _whiteGray;
+   	}
 
    row.add(labelSendFromMessage);
    row.add(labelSendToMessage);

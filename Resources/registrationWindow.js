@@ -85,7 +85,7 @@ function registrationWindow(){
 	ageTextField.addEventListener('click', function(){
 		switch (Titanium.Platform.osname){
 			case 'iphone':
-				var agePickerView = createPickerView( ageData, ageTextField );
+				var agePickerView = createPickerView( ageData, ageTextField, self );
 				pickerSlideIn(self, agePickerView);
     			break;
     			
@@ -120,7 +120,7 @@ function registrationWindow(){
 	areaTextField.addEventListener('click', function(){
 		switch (Titanium.Platform.osname){
 			case 'iphone':
-				var areaPickerView = createPickerView( areaData, areaTextField );
+				var areaPickerView = createPickerView( areaData, areaTextField, self );
 				pickerSlideIn(self, areaPickerView);
     			break;
     			
@@ -155,7 +155,7 @@ function registrationWindow(){
 	purposeTextField.addEventListener('click', function(){
 		switch (Titanium.Platform.osname){
 			case 'iphone':
-				var purposePickerView = createPickerView( purposeData, purposeTextField );
+				var purposePickerView = createPickerView( purposeData, purposeTextField, self );
 				pickerSlideIn(self, purposePickerView);
     			break;
     			

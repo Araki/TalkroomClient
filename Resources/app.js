@@ -43,10 +43,12 @@ Ti.App.domain = "https://api.talkroom.co/";
 //Ti.App.domain = "http://localhost:3000/";
 
 //画面サイズの取得
-Ti.App.displayWidth = Titanium.Platform.displayCaps.platformWidth;
-Ti.App.displayHeight = Titanium.Platform.displayCaps.platformHeight;
+var displayWidth = Titanium.Platform.displayCaps.platformWidth;
+var displayHeight = Titanium.Platform.displayCaps.platformHeight;
 Ti.App.navBarHeight = 44;
 
+Ti.API.info("displayWidth" + displayWidth);
+Ti.API.info("displayHeight" + displayHeight);
 Ti.API.info("==================app_token:::::::::" + Ti.App.Properties.getString('app_token'));
 Ti.API.info("==================my_id:::::::::" + Ti.App.Properties.getString('my_id'));
 
@@ -63,11 +65,14 @@ var rewardFlag;
 
 var _white = '#FFFFFF';
 var _whiteBlue = '#E8F8FF';
-var _liteBlue = '#6FD3D8';
+var _lightBlue = '#6FD3D8';
 var _darkBlue = '#1CADC3';
 var _vividPink = '#EB3B86';
 var _mossGreen = '#86BA1A';
-var _darkGray= '#7B8C94';
+var _darkGray = '#505050';
+var _lightGray= '#7B8C94';
+var _gray = "#C8C8C8";
+var _whiteGray = '#F5F5F5';
 
 var _font = 'Rounded-X M+ 2p';
 
@@ -359,7 +364,7 @@ function createTabGroup(){
 function createWindow(titleName){
 	var win = Titanium.UI.createWindow({  
 		title: titleName,
-		backgroundColor:'#fff',
+		backgroundColor:_white,
 		//barImage:'images/bg/navBar_bg.png',
 		barColor:'#1CADC3',
 		titleControl: Ti.UI.createLabel({
@@ -381,7 +386,7 @@ function createActInd() {
 		font: {fontFamily: _font, fontSize:16, fontWeight:'bold'},
 		color: 'white',
 		backgroundColor:'black',
-		opacity: 0.5,
+		opacity: 0.3,
 		//borderRadius:5,
 		style:(Ti.Platform.name === 'iPhone OS' ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG), //DARK,PLAIN
 		//message: "ローディング中"
@@ -627,8 +632,9 @@ function consumePointDialog( type, callback ){
 	});
 	alertDialog.addEventListener('click',function(event){
 	    // Cancelボタンが押されたかどうか
-	    if(event.cancel){
+	    if(event.index == 1){
 	        // cancel時の処理
+	        callback({success: false});
 	    }
 	    // 選択されたボタンのindexも返る
 	    if(event.index == 0){
@@ -643,11 +649,14 @@ function consumePointDialog( type, callback ){
 					} else{
 						// 通信に失敗したら行う処理
 						alert("通信に失敗しました");
+						callback({success: false});
 					}
 				});
 			}else{
 				alert("ポイントが足りません");
+				callback({success: false});
 			}
+
 	    }
 	});
 	alertDialog.show();
@@ -871,7 +880,7 @@ function sendData( val, data, callback ){
 //=======================================================================================
 //pickerViewを表示するファンクション
 //=======================================================================================
-function createPickerView( data, tf ){
+function createPickerView( data, tf, win ){
 	
 	var dataList = data;
 	var textField = tf;
@@ -880,6 +889,13 @@ function createPickerView( data, tf ){
 	var self = Titanium.UI.createView({
 		height: 251,
 		bottom: -251
+	});
+	
+	var blackView = Titanium.UI.createView({
+		top: 0,
+		bottom: 0,
+		backgroundColor: 'black',
+		opacity: 0.5
 	});
 	
 	var doneButton = Titanium.UI.createButton({
@@ -907,6 +923,7 @@ function createPickerView( data, tf ){
 	//Pickerのツールバーの完了ボタンが押された時の挙動
 	doneButton.addEventListener('click', function(e){
 		pickerSlideOut(Ti.UI.currentWindow, self);
+		win.remove(blackView);
 	});
 	
 	//Pickerの選択が変わった時の挙動
@@ -914,7 +931,7 @@ function createPickerView( data, tf ){
 		textField.value = e.row.title;
 		textField.customItem = e.row.custom_item;
 	});
-
+	win.add(blackView);
 	self.add(toolbar);
 	self.add(picker);
 	

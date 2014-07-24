@@ -1,7 +1,7 @@
 function searchTableWindow( age, area, purpose ) {
 
 	var self = createWindow("検索結果");
-	var tableView = Titanium.UI.createTableView({});
+	var tableView = Titanium.UI.createTableView({separatorStyle:'NONE'});
 	var tableViewRowData = [];
 	var actInd = createActInd();
 	actInd.show();
@@ -27,7 +27,8 @@ function searchTableWindow( age, area, purpose ) {
 					json[i].profile_image1, 
 					json[i].profile, 
 					exchangeFromNumber( json[i].area, "area" ) + " | " + exchangeFromNumber( json[i].purpose, "purpose" ) + " | " + json[i].last_logined, 
-					json[i].id
+					json[i].id,
+					i
 				);
 			   tableViewRowData.push(row);
 			}	
@@ -67,15 +68,16 @@ module.exports = searchTableWindow;
 //############################################################
 //############################################################
 
-function createRow(nickName, iconImage, profile, info, userID){
+function createRow(nickName, iconImage, profile, info, userID, backgroundType){
 	
 	var nickNameLabel = Titanium.UI.createLabel({
-    	font:{fontFamily: _font, fontSize:12},
+    	font:{fontFamily: _font, fontSize:13, fontWeight:"bold"},
     	textAlign: 'left',
-    	color: '#000',
-    	top: 3, 
-    	left: 60, 
-    	right: 20,
+    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+    	color: _vividPink,
+    	top: 5, 
+    	left: 85, 
+    	right: 0,
         height: "auto",
         text: nickName
     });
@@ -83,38 +85,49 @@ function createRow(nickName, iconImage, profile, info, userID){
     var profileImage = Titanium.UI.createImageView({
     	top: 5,
     	left: 5,
-    	width: 50,
-    	height: 50,
+    	width: 70,
+    	height: 70,
+    	borderRadius:7,
+    	//borderColor:_darkBlue,
+    	//borderWidth:1,
     	image: iconImage
     });
     
     var profileLabel = Titanium.UI.createLabel({
-    	font:{fontFamily: _font, fontSize:10}, 
+    	font:{fontFamily: _font, fontSize:12}, 
     	textAlign:'left',
-    	color:'#000',
-    	top: 18, 
+    	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+    	color: _darkGray,
+    	top: 25, 
     	bottom: 20,
-    	left: 60, 
-    	right: 20,
+    	left: 85, 
+    	right: 0,
         text: profile
     });
     
     var infoLabel = Titanium.UI.createLabel({
-    	font:{fontFamily: _font, fontSize:9}, 
+    	font:{fontFamily: _font, fontSize:10}, 
     	textAlign:'right',
-    	color:'#000',
-    	bottom: 3, 
-    	right: 5, 
-    	left: 60, 
+    	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
+    	color:_darkGray,
+    	bottom: 5, 
+    	right: 0, 
+    	left: 85, 
         height: "auto",
         text: info
     }); 
     
     var row = Ti.UI.createTableViewRow({
     	hasChild: true,
-        height:60,
+        height:80,
         id:userID
     });
+    
+    if(backgroundType%2 == 0){
+   		row.backgroundColor = _white;
+   	}else{
+   		row.backgroundColor = _whiteGray;
+   	}
 	
 	row.add(nickNameLabel);
 	row.add(profileImage);

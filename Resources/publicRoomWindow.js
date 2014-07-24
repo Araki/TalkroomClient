@@ -6,13 +6,17 @@ function publicRoomWindow() {
 	
 	var actInd = createActInd();
 	
-	var tableView = Titanium.UI.createTableView({});
+	var tableView = Titanium.UI.createTableView({separatorStyle:'NONE'});
 	tableView.addEventListener('click', function(e) {
+		actInd.show();
 		consumePointDialog("peep", function(data){
 			if (data.success){
 				var cWindow = require('chatWindow');
 				var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, false);
 				tabGroup.activeTab.open(chatWindow);
+				actInd.hide();
+			}else{
+				actInd.hide();
 			}
 		});
 	});	
@@ -87,59 +91,68 @@ function publicRoomWindow() {
 	    	var labelSendFromMessage = Titanium.UI.createLabel({
 	        	font:{fontFamily: _font,fontSize:13}, 
 	        	textAlign:'left',
-	        	color:'#000',
-	        	top:0, 
-	        	right:30, 
-	        	left:115, 
-		        height:30,
+	        	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
+	        	color:_darkBlue,
+	        	bottom:30, 
+	        	right:0, 
+	        	left:137, 
+		        height:20,
 		        text:json[i].sendfrom_message
 		    });
 	    
 		    var labelSendToMessage = Titanium.UI.createLabel({
 		        font:{fontFamily: _font,fontSize:13}, 
 		        textAlign:'left',
-		        color:'#000',
-		        top:30, 
-		        right:30, 
-		        left:115, 
-		        height:30,
+		        verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
+		        color:_vividPink,
+		        bottom:10, 
+		        right:0, 
+		        left:137, 
+		        height:20,
 		        text: json[i].sendto_message
 		    });
 	    
 		    var sendFromImage = Titanium.UI.createImageView({
-		    	image: '',
 		    	top: 5,
 		    	left: 5,
-		    	width: 50,
-		    	height: 50,
+		    	width: 60,
+		    	height: 60,
+		    	borderRadius:6,
 		    	image: json[i].sendfrom_image
 		    });
 	   
 		   var sendToImage = Titanium.UI.createImageView({
-		    	image: '',
 		    	top: 5,
-		    	left: 60,
-		    	width: 50,
-		    	height: 50,
+		    	left: 70,
+		    	width: 60,
+		    	height: 60,
+		    	borderRadius:6,
 		    	image: json[i].sendto_image
 		    });
 		    
 		    var timeLabel = Titanium.UI.createLabel({
 		        font:{fontFamily: _font, fontSize:10}, 
 		        textAlign:'right',
-		        color:'#000',
+		        verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+		        color:_darkGray,
 		        top:5, 
-		        right:5,
+		        right:0,
 		        text: json[i].updated_at
 		    });
 		    
 		   var row = Ti.UI.createTableViewRow({
 		        hasChild: true,
-		        height:60,
+		        height:70,
 		        backgroundImage: '',
 		        sendfrom: json[i].sendfrom_id,
 		        sendto: json[i].sendto_id
 		   });
+		   
+		   if(i%2 == 0){
+		   		row.backgroundColor = _white;
+		   	}else{
+		   		row.backgroundColor = _whiteGray;
+		   	}
 	   	
 		   row.add(sendFromImage);
 		   row.add(sendToImage);
@@ -150,27 +163,7 @@ function publicRoomWindow() {
 		   tableViewRowData.push(row);
 		}
 	
-		//var tableView = Titanium.UI.createTableView({
-		//	data: tableViewRowData
-		//});
-		//self.add(tableView);
-		
-		tableView.data = tableViewRowData;
-		/*
-		for (var i=0; i< json.length; i++){
-			Ti.API.info("###ROOM_ID:" + json[i].room_id);
-			Ti.API.info("JSONデータ:::::" + json[i].sendfrom_image);
-			tableView.data[0].rows[i].children[0].image = json[i].sendfrom_image;
-			tableView.data[0].rows[i].children[1].image = json[i].sendto_image;
-			tableView.data[0].rows[i].children[2].text = json[i].sendfrom_message;
-			tableView.data[0].rows[i].children[3].text = json[i].sendto_message;
-			tableView.data[0].rows[i].children[4].text = json[i].updated_at;
-			tableView.data[0].rows[i].sendfrom = json[i].sendfrom_id;
-			tableView.data[0].rows[i].sendto = json[i].sendto_id;
-			//row.id = json[i].room_id;
-		}
-		*/
-		
+		tableView.data = tableViewRowData;		
 		actInd.hide();
 		
 	}

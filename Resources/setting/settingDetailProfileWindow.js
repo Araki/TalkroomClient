@@ -343,7 +343,7 @@ function settingDetailProfileWindow() {
 			
 			switch (Titanium.Platform.osname){
 				case 'iphone':
-					var pickerView = createPickerView( data, row.children[1] );
+					var pickerView = createPickerView( data, row.children[1], self );
 					pickerSlideIn( self, pickerView );
 	    			break;
 	    			

@@ -4,8 +4,8 @@ function searchWindow() {
 	
 	var baseView = Titanium.UI.createView({
 		top: 0,
-		bottom: 250,
-		backgroundColor: _liteBlue
+		bottom: 0,
+		backgroundColor: _lightBlue
 	});
 	var ageData = [];
 	var areaData = [];
@@ -43,7 +43,7 @@ function searchWindow() {
 	//=========================================
 	var ageLabel = Titanium.UI.createLabel({
 		text: '年齢',
-		top: 15,
+		top: 30,
 		left: 30,
 		width: 60,
 		height: 30,
@@ -57,14 +57,14 @@ function searchWindow() {
 		value: "すべて",
 		customItem: "",
 		textAlign: "center",
-		top: 15,
+		top: 30,
 		right: 30,
 		left: 100,
 		height: 30,
 		enabled: false,
-		color: _liteBlue,
+		color: _lightBlue,
 		keyboardToolbar: false,
-		borderRadius: 15
+		borderRadius: 10
 	});
 	
 	//テキストフィールドがタップされたときの挙動
@@ -72,7 +72,7 @@ function searchWindow() {
 		switch (Titanium.Platform.osname){
 			case 'iphone':
 				
-				var agePickerView = createPickerView( ageData, ageTextField );
+				var agePickerView = createPickerView( ageData, ageTextField, self );
 				pickerSlideIn( self, agePickerView );
     			break;
     			
@@ -87,7 +87,7 @@ function searchWindow() {
 	//=========================================
 	var areaLabel = Titanium.UI.createLabel({
 		text: 'エリア',
-		top: 60,
+		top: 80,
 		left: 30,
 		width: 60,
 		height: 30,
@@ -101,14 +101,14 @@ function searchWindow() {
 		value: "すべて",
 		customItem: "",
 		textAlign: "center",
-		top: 60,
+		top: 80,
 		right: 30,
 		left: 100,
 		height: 30,
 		enabled: false,
-		color: _liteBlue,
+		color: _lightBlue,
 		keyboardToolbar: false,
-		borderRadius: 15
+		borderRadius: 10
 	});
 
 	//テキストフィールドがタップされたときの挙動
@@ -116,7 +116,7 @@ function searchWindow() {
 		switch (Titanium.Platform.osname){
 			case 'iphone':
     			
-				var areaPickerView = createPickerView( areaData, areaTextField );
+				var areaPickerView = createPickerView( areaData, areaTextField, self );
 				pickerSlideIn(self, areaPickerView);
     			break;
     			
@@ -130,7 +130,7 @@ function searchWindow() {
 	//=========================================
 	var purposeLabel = Titanium.UI.createLabel({
 		text: '目的',
-		top: 105,
+		top: 130,
 		left: 30,
 		width: 60,
 		height: 30,
@@ -144,14 +144,14 @@ function searchWindow() {
 		value: "すべて",
 		customItem: "",
 		textAlign: "center",
-		top: 105,
+		top: 130,
 		right: 30,
 		left: 100,
 		enabled: false,
 		height: 30,
-		color: _liteBlue,
+		color: _lightBlue,
 		keyboardToolbar: false,
-		borderRadius: 15
+		borderRadius: 10
 	});
 	
 	//テキストフィールドがタップされたときの挙動
@@ -159,7 +159,7 @@ function searchWindow() {
 		switch (Titanium.Platform.osname){
 			case 'iphone':
 			
-				var purposePickerView = createPickerView( purposeData, purposeTextField );
+				var purposePickerView = createPickerView( purposeData, purposeTextField, self );
 				pickerSlideIn( self, purposePickerView );
     			break;
     			
@@ -175,7 +175,7 @@ function searchWindow() {
 	var searchButton = Ti.UI.createButton({
 		title: 'この条件で探す',
 		font:{fontFamily: _font, fontSize: 18},
-		top: 155,
+		top: 190,
 		right: 65,
 		left: 65,
 		height: 35,

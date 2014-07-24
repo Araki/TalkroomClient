@@ -87,9 +87,9 @@ function createBgView(){
 		top: 0,
 		left: 0,
 		right: 0,
-		height: 112,
+		height: 110,
 		//backgroundImage: "images/bg/profile_photo_bg.png"
-		backgroundColor: _liteBlue
+		backgroundColor: _lightBlue
 	});
 	return view;
 }
@@ -99,9 +99,9 @@ function createButtonBgView(){
 		bottom: 0,
 		left: 0,
 		right: 0,
-		height: 76,
+		height: 55,
 		//backgroundImage: "images/bg/profile_btn_bg.png"
-		backgroundColor: _liteBlue
+		backgroundColor: _lightBlue
 	});
 	return view;
 }
@@ -111,7 +111,8 @@ function createProfileImage1(){
 		top: 10,
 		left: 15,
 		width: 90,
-		height: 90
+		height: 90,
+		borderRadius:9,
 	});
 	return view;
 }
@@ -121,7 +122,8 @@ function createProfileImage2(){
 		top: 10,
 		left: 115,
 		width: 90,
-		height: 90
+		height: 90,
+		borderRadius:9,
 	});
 	return view;
 }
@@ -132,6 +134,7 @@ function createProfileImage3(){
 		right: 15,
 		width: 90,
 		height: 90,
+		borderRadius:9,
 	});
 	return view;
 }
@@ -150,10 +153,10 @@ function createTableRow(title, data, backgroundType){
 	for (var i=0; i<11; i++){
     
     	var titleLabel = Titanium.UI.createLabel({
-        	font:{fontFamily: _font, fontSize:14}, 
+        	font:{fontFamily: _font, fontSize:15}, 
         	textAlign:'left',
         	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
-        	color:'#000',
+        	color: _darkGray,
         	top:9,
         	bottom:9, 
         	left:20, 
@@ -165,7 +168,7 @@ function createTableRow(title, data, backgroundType){
         	font:{fontFamily: _font, fontSize:14}, 
         	textAlign:'left',
         	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
-        	color:'#000',
+        	color: _darkGray,
         	top:9,
         	bottom:9, 
         	left:120, 
@@ -177,15 +180,15 @@ function createTableRow(title, data, backgroundType){
 	        hasChild: false,
 	        right:0,
 	        left:0,
-	        height:48,
+	        height:40,
 	        touchEnabled: false,
 	        selectionStyle: Ti.UI.iPhone.TableViewCellSelectionStyle.NONE
 	   });
 	   
 	   if(backgroundType%2 == 0){
-	   		row.backgroundImage = 'images/bg/table_bg_white.png';
+	   		row.backgroundColor = _white;
 	   	}else{
-	   		row.backgroundImage = 'images/bg/table_bg_gray.png';
+	   		row.backgroundColor = _whiteGray;
 	   	}
    	
 	   row.add(titleLabel);
@@ -197,14 +200,15 @@ function createTableRow(title, data, backgroundType){
 
 function createReadPastTalkButton(){
 	view = Ti.UI.createButton({
-		title: '過去トークを見る',
-		font:{fontFamily: _font},
-		bottom: 15,
+		title: '過去トーク',
+		font:{fontFamily: _font, fontSize: 18},
+		height: 35,
 		width: 130,
 		left: 15,
-		top: 15,
-		borderColor:"#1E90FF",
-		borderRadius:5
+		top: 10,
+		color:_white,
+		backgroundColor:_vividPink,
+		borderRadius:10
 	});
 	return view;
 }
@@ -212,13 +216,14 @@ function createReadPastTalkButton(){
 function createTalkButton(){
 	view =Ti.UI.createButton({
 		title: 'トークする',
-		font:{fontFamily: _font},
-		bottom: 15,
+		font:{fontFamily: _font, fontSize:18},
+		height: 35,
 		width: 130,
 		right: 15,
-		top: 15,
-		borderColor:"#1E90FF",
-		borderRadius:5
+		top: 10,
+		color: _white,
+		backgroundColor:_vividPink,
+		borderRadius:10
 	});
 	return view;
 }

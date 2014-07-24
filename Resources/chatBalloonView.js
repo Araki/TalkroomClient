@@ -43,10 +43,8 @@ function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whatTime,
 	
 	var messageLabel = Ti.UI.createLabel({
 		font:{fontFamily: _font, fontSize:14},
-		//backgroundColor: "white",
 		textAlign: "left",
 		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
-		font:{fontFamily: _font},
         text: message,
        	color:'#000',
        	height: "auto",
@@ -75,11 +73,16 @@ function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whatTime,
 	//テキストラベルの横幅がリミット値を超えなかった場合、ラベルを1行にする処理
 	else if (messageLabel.toImage().width < limitLabelWidth){
 		labelHeight = messageLabel.font.fontSize + 4;
+		Ti.API.info("messageLabel.font.fontSize:" + messageLabel.font.fontSize);
 		messageLabel.width = messageLabel.toImage().width + 10;
 		messageLabel.height = labelHeight;
 		balloonImage.height = labelHeight + 20;
 		balloonImage.width = limitLabelWidth + 30;
 	}
+
+	Ti.API.info("balloonImage.height:" + balloonImage.height);
+	Ti.API.info("balloonImage.width:" + balloonImage.width);
+	
 	
 	balloonImage.width = messageLabel.width + 30;
 	self.height = balloonImage.height + 30;

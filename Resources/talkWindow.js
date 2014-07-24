@@ -2,11 +2,12 @@ var actInd = createActInd();
 
 function talkWindow() {
 	var self = createWindow("");
+	var tableView = Titanium.UI.createTableView({separatorStyle:'NONE',backgroundColor:'#FAFAFA'});
 	var statusID = 0;
 	
 	
 	var statusButtonBar = Titanium.UI.createTabbedBar({
-		labels:['新規トーク', 'トーク中', '足あと'], 
+		labels:['新規トーク', 'トーク中', '訪問者'], 
 		backgroundColor:"#fff",
 		index:0 
 	});
@@ -37,9 +38,12 @@ function talkWindow() {
 	self.setTitleControl(statusButtonBar);
 	
 	//初期表示テーブルの設定
+	/*
 	var tableView = Titanium.UI.createTableView({
 		data: createNewTalkTableView()
 	});
+	*/
+	loadAttackData(tableView);
 	
 	tableView.addEventListener('click', function(e) {
 		Ti.API.info(e.row.id);
@@ -84,9 +88,7 @@ module.exports = talkWindow;
 
 function loadAttackData( tableView ){
 	actInd.show();
-	//現在表示されているテーブルを初期化
-	tableView.data = createNewTalkTableView();
-	
+	var tableViewRowData = [];
 	var url = Ti.App.domain + "get_oneside_rooms.json?app_token=" + Ti.App.Properties.getString('app_token');
 	getData(url, function( data ){
 		if (data.success) {
@@ -94,27 +96,137 @@ function loadAttackData( tableView ){
 			var json = data.data;
 			Ti.API.info("アタック中テーブル");
 			for (var i=0; i<json.length; i++){
-				Ti.API.info("profile_image" + json[i].profile_image);
-				tableView.data[0].rows[i].sendto = json[i].user_id;
-				tableView.data[0].rows[i].sendfrom = Ti.App.Properties.getString('my_id');
-				tableView.data[0].rows[i].children[0].image = json[i].profile_image;
-				tableView.data[0].rows[i].children[1].text = json[i].profile;
-				tableView.data[0].rows[i].children[2].text = json[i].room_updated;
-				tableView.data[0].rows[i].children[3].text = json[i].nickname;
-				
-				if (json[i].room_public == "0" ){ 
-					tableView.data[0].rows[i].children[4].text = "非公開 | " +json[i].type;
-				}else if ( json[i].room_public == "1" ){
-					tableView.data[0].rows[i].children[4].text = "公開 | " + json[i].type;
-				}
+				var row = createNewTalkTableRow(
+					json[i].user_id,
+					Ti.App.Properties.getString('my_id'),
+					json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）",
+					json[i].profile,
+					json[i].profile_image,
+					json[i].room_updated,
+					json[i].room_public,
+					json[i].type, 
+					i
+				);
+				tableViewRowData.push(row);
 			}
 		} else{
 			// 通信に失敗したら行う処理
 		}
+		tableView.data = tableViewRowData;
 		actInd.hide();
 	});
 	
 }
+
+function createNewTalkTableRow(sendto, sendfrom, name, profile, profile_image, time, room_public, type, backgroundType) {
+	var nameLabel = Titanium.UI.createLabel({
+		font:{fontFamily: _font, fontSize:13, fontWeight:"bold"},
+		textAlign: 'left',
+		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+		color: _vividPink,
+		top: 5, 
+		left: 85, 
+		right: 0,
+		height: "auto",
+		text: name
+	});    
+	
+	var profileMessage = Titanium.UI.createLabel({
+		font:{fontFamily: _font, fontSize:12}, 
+		textAlign:'left',
+		verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+		color: _darkGray,
+		top: 25, 
+		bottom: 20,
+		left: 85, 
+		right: 0,
+		text: profile
+	});
+	
+	var profileImage = Titanium.UI.createImageView({
+		top: 5,
+		left: 5,
+		width: 70,
+		height: 70,
+		borderRadius:7,
+		image: profile_image
+	});
+	    
+	var timeLabel = Titanium.UI.createLabel({
+		font:{fontFamily: _font, fontSize:10}, 
+		textAlign:'right',
+		verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+		color:_darkGray,
+		top:5, 
+		right:0,
+		text: time
+	});
+	
+	var publicLabel = Titanium.UI.createLabel({
+		font:{fontFamily: _font, fontSize:11}, 
+		textAlign:'center',
+		verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+		height: 15,
+		width: 50,
+		bottom:5, 
+		right:0,
+		borderRadius: 2
+	});
+	
+	if(room_public == 0){
+		publicLabel.text = "非公開";
+		publicLabel.backgroundColor = _gray;
+		publicLabel.color = _darkGray;
+	}else{
+		publicLabel.text = "公開中";
+		publicLabel.backgroundColor = _vividPink;
+		publicLabel.color = _white;
+	}
+	
+	var typeLabel = Titanium.UI.createLabel({
+		font:{fontFamily: _font, fontSize:11}, 
+		textAlign:'center',
+		verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+		height: 15,
+		width: 50,
+		bottom:5, 
+		right:55,
+		borderRadius: 2
+	});
+	
+	if(type == "sent"){
+		typeLabel.text = "送信";
+		typeLabel.backgroundColor = _gray;
+		typeLabel.color = _darkGray;
+	}else{
+		typeLabel.text = "受信";
+		typeLabel.backgroundColor = _vividPink;
+		typeLabel.color = _white;
+	}
+	    
+	var row = Ti.UI.createTableViewRow({
+		hasChild: true,
+		height:80,
+		sendto: sendto,
+		sendfrom: sendfrom
+	});
+	
+	if(backgroundType%2 == 0){
+		row.backgroundColor = _white;
+	}else{
+		row.backgroundColor = _whiteGray;
+	}
+	
+	row.add(profileImage);
+	row.add(profileMessage);
+	row.add(timeLabel);
+	row.add(nameLabel);
+	row.add(publicLabel);
+	row.add(typeLabel);
+	
+	return row;
+}
+
 
 
 
@@ -124,9 +236,7 @@ function loadAttackData( tableView ){
 
 function loadTalkData( tableView ){
 	actInd.show();
-	//現在表示されているテーブルを初期化
-	tableView.data = createTalkTableView();
-	
+	var tableViewRowData = [];	
 	var url = Ti.App.domain + "get_bothside_rooms.json?app_token=" + Ti.App.Properties.getString('app_token');
 	getData(url, function( data ){
 		if (data.success) {
@@ -134,27 +244,113 @@ function loadTalkData( tableView ){
 			var json = data.data;
 			Ti.API.info("トーク中テーブル");
 			for (var i=0; i<json.length; i++){
-				Ti.API.info("profile_image" + json[i].profile_image);
-				tableView.data[0].rows[i].sendto = json[i].sendto_id;
-				tableView.data[0].rows[i].sendfrom = Ti.App.Properties.getString('my_id');
-				tableView.data[0].rows[i].children[0].image = json[i].profile_image;
-				tableView.data[0].rows[i].children[1].text = json[i].profile;
-				tableView.data[0].rows[i].children[2].text = json[i].room_updated;
-				tableView.data[0].rows[i].children[3].text = json[i].nickname;
-				Ti.API.info("PUBLIC: " + json[i].room_public);
-				if (json[i].room_public == "0" ){ 
-					tableView.data[0].rows[i].children[4].text = "非公開";
-				}else if ( json[i].room_public == "1" ){
-					tableView.data[0].rows[i].children[4].text = "公開";
-				}
+				var row = createTalkTableRow(
+					json[i].sendto_id,
+					Ti.App.Properties.getString('my_id'),
+					json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）",
+					json[i].profile_image,
+					json[i].profile,
+					json[i].room_updated,
+					json[i].room_public,
+					i
+				);
+				tableViewRowData.push(row);
 			}
 		} else{
 			// 通信に失敗したら行う処理
 		}
+		tableView.data = tableViewRowData;
 		actInd.hide();
 	});
 }
+function createTalkTableRow(sendto, sendfrom, name, profile_image, profile, time, room_public, backgroundType) {
 
+	var nameLabel = Titanium.UI.createLabel({
+		font:{fontFamily: _font, fontSize:13, fontWeight:"bold"},
+    	textAlign: 'left',
+    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+    	color: _vividPink,
+    	top: 5, 
+    	left: 85, 
+    	right: 0,
+        height: "auto",
+	    text: name
+	});    
+	
+	var profileMessage = Titanium.UI.createLabel({
+		font:{fontFamily: _font, fontSize:12}, 
+    	textAlign:'left',
+    	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+    	color: _darkGray,
+    	top: 25, 
+    	bottom: 20,
+    	left: 85, 
+    	right: 0,
+	    text: profile
+	});
+	
+	var profileImage = Titanium.UI.createImageView({
+	    top: 5,
+    	left: 5,
+    	width: 70,
+    	height: 70,
+    	borderRadius:7,
+		image: profile_image
+	});
+	
+	var timeLabel = Titanium.UI.createLabel({
+	    font:{fontFamily: _font, fontSize:10}, 
+		textAlign:'right',
+		verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+		color:_darkGray,
+		top:5, 
+		right:0,
+	    text: time
+	});
+	
+   var publicLabel = Titanium.UI.createLabel({
+		font:{fontFamily: _font, fontSize:11}, 
+		textAlign:'center',
+		verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+		height: 15,
+		width: 50,
+		bottom:5, 
+		right:0,
+		borderRadius: 2
+	});
+	
+	if(room_public == 0){
+		publicLabel.text = "非公開";
+		publicLabel.backgroundColor = _gray;
+		publicLabel.color = _darkGray;
+	}else{
+		publicLabel.text = "公開中";
+		publicLabel.backgroundColor = _vividPink;
+		publicLabel.color = _white;
+	}
+   
+	var row = Ti.UI.createTableViewRow({
+   		hasChild: true,
+        height:80,
+        sendto: sendto,
+        sendfrom: sendfrom
+	});
+   
+	if(backgroundType%2 == 0){
+		row.backgroundColor = _white;
+	}else{
+		row.backgroundColor = _whiteGray;
+	}
+
+	row.add(profileImage);
+	row.add(profileMessage);
+	row.add(timeLabel);
+	row.add(nameLabel);
+	row.add(publicLabel);
+	
+	return row;
+
+}
 
 
 //===================
@@ -163,241 +359,94 @@ function loadTalkData( tableView ){
 
 function loadFootprintData( tableView ){
 	actInd.show();
-	//現在表示されているテーブルを初期化
-	tableView.data = createFootprintTableView();
-	
+	var tableViewRowData = [];
 	var url = Ti.App.domain + "get_visits.json?app_token=" + Ti.App.Properties.getString('app_token');
 	getData(url, function( data ){
 		if (data.success) {
 			// 通信に成功したら行う処理
 			var json = data.data;
-			Ti.API.info("足あとテーブル");
 			for (var i=0; i<json.length; i++){
-				tableView.data[0].rows[i].id = json[i].id;
-				tableView.data[0].rows[i].children[0].text = json[i].nickname;
-				tableView.data[0].rows[i].children[1].image = json[i].profile_image1;
-				tableView.data[0].rows[i].children[2].text = json[i].profile;
-				tableView.data[0].rows[i].children[3].text = exchangeFromNumber( json[i].area, "area" ) + " | " + exchangeFromNumber( json[i].purpose, "purpose" ) + " | " + json[i].updated_at;
+				var row = createFootprintTableRow(
+					json[i].id,
+					json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）",
+					json[i].profile_image1,
+					json[i].profile,
+					json[i].area,
+					json[i].purpose,
+					json[i].updated_at,
+					i
+				);
+				tableViewRowData.push(row);
 			}
 		} else{
 			// 通信に失敗したら行う処理
 		}
+		tableView.data = tableViewRowData;
 		actInd.hide();
 	});
 }
+function createFootprintTableRow(id, name, profile_image, profile, area, purpose, time, backgroundType) {
 
-
-
-
-
-//===================
-//アタック中のテーブル生成ファンクション
-//===================
-function createNewTalkTableView() {
-	
-	var tableViewRowData = [];
-	
-	for (var i=0; i<10; i++){
+	var nickNameLabel = Titanium.UI.createLabel({
+    	font:{fontFamily: _font, fontSize:13, fontWeight:"bold"},
+    	textAlign: 'left',
+    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+    	color: _vividPink,
+    	top: 5, 
+    	left: 85, 
+    	right: 0,
+        height: "auto",
+        text: name
+    });
     
-		var nameLabel = Titanium.UI.createLabel({
-        	font:{fontSize:13}, 
-        	textAlign:'left',
-        	color:'#000',
-        	top: 5, 
-        	left:60,
-	        height:15
-	    });    
+    var profileImage = Titanium.UI.createImageView({
+    	top: 5,
+    	left: 5,
+    	width: 70,
+    	height: 70,
+    	borderRadius:7,
+    	image: profile_image
+    });
     
-    	var profileMessage = Titanium.UI.createLabel({
-        	font:{fontSize:10}, 
-        	textAlign:'left',
-        	verticalAlign: Ti.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
-        	color:'#000',
-        	top: 25, 
-        	left:60,
-        	right:30, 
-	        height:40
-	    });
-
-	   var profileImage = Titanium.UI.createImageView({
-	    	image: '',
-	    	top: 5,
-	    	left: 5,
-	    	width: 50,
-	    	height: 50
-	    });
-	    
-	    var timeLabel = Titanium.UI.createLabel({
-	        font:{fontSize:10}, 
-	        textAlign:'right',
-	        color:'#000',
-	        top:5, 
-	        right:5
-	    });
-	    
-	    var publicLabel = Titanium.UI.createLabel({
-	        font:{fontSize:10}, 
-	        textAlign:'right',
-	        color:'#000',
-	        bottom:5, 
-	        right:5
-	    });
-	    
-	   var row = Ti.UI.createTableViewRow({
-	   		hasChild: true,
-	        height:60,
-	        id: ''
-	   });
-   	
-	   row.add(profileImage);
-	   row.add(profileMessage);
-	   row.add(timeLabel);
-	   row.add(nameLabel);
-	   row.add(publicLabel);
-
-	   tableViewRowData.push(row);
+    var profileLabel = Titanium.UI.createLabel({
+    	font:{fontFamily: _font, fontSize:12}, 
+    	textAlign:'left',
+    	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+    	color: _darkGray,
+    	top: 25, 
+    	bottom: 20,
+    	left: 85, 
+    	right: 0,
+    	text: profile
+    });
+    
+    var infoLabel = Titanium.UI.createLabel({
+    	font:{fontSize:10}, 
+		textAlign:'right',
+		color:_darkGray,
+		bottom:5, 
+		right:0,
+        text: exchangeFromNumber( area, "area" ) + " | " + exchangeFromNumber( purpose, "purpose" ) + " | " + time
+    });
+    
+    var row = Ti.UI.createTableViewRow({
+    	hasChild: true,
+        height:80,
+        id: id
+    });
+    
+    if(backgroundType%2 == 0){
+		row.backgroundColor = _white;
+	}else{
+		row.backgroundColor = _whiteGray;
 	}
-	
-	return tableViewRowData;
-
-}
-
-//===================
-//トーク中のテーブル生成ファンクション
-//===================
-function createTalkTableView() {
-	
-	var tableViewRowData = [];
-	
-	for (var i=0; i<10; i++){
     
-		var nameLabel = Titanium.UI.createLabel({
-        	font:{fontSize:13}, 
-        	textAlign:'left',
-        	color:'#000',
-        	top: 5, 
-        	left:60,
-	        height:15
-	    });    
-    
-    	var profileMessage = Titanium.UI.createLabel({
-        	font:{fontSize:10}, 
-        	textAlign:'left',
-        	verticalAlign: Ti.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
-        	color:'#000',
-        	top: 25, 
-        	left:60,
-        	right:30, 
-	        height:40
-	    });
-
-	   var profileImage = Titanium.UI.createImageView({
-	    	image: '',
-	    	top: 5,
-	    	left: 5,
-	    	width: 50,
-	    	height: 50
-	    });
+    row.add(nickNameLabel);
+    row.add(profileImage);
+    row.add(profileLabel);
+    row.add(infoLabel);
 	    
-	    var timeLabel = Titanium.UI.createLabel({
-	        font:{fontSize:10}, 
-	        textAlign:'right',
-	        color:'#000',
-	        top:5, 
-	        right:5
-	    });
-	    
-	    var publicLabel = Titanium.UI.createLabel({
-	        font:{fontSize:10}, 
-	        textAlign:'right',
-	        color:'#000',
-	        bottom:5, 
-	        right:5
-	    });
-	    
-	   var row = Ti.UI.createTableViewRow({
-	   		hasChild: true,
-	        height:60,
-	        id: ''
-	   });
-   	
-	   row.add(profileImage);
-	   row.add(profileMessage);
-	   row.add(timeLabel);
-	   row.add(nameLabel);
-	   row.add(publicLabel);
-
-	   tableViewRowData.push(row);
-	}
-	
-	return tableViewRowData;
-
-}
-
-//===================
-//あしあとのテーブル生成ファンクション
-//===================
-function createFootprintTableView() {
-	Ti.API.info("createFootprintTableViewが起動");
-	var tableViewRowData = [];
-	
-	for (var i=0; i<10; i++){
-		var nickNameLabel = Titanium.UI.createLabel({
-        	font:{fontSize:12}, 
-        	textAlign: 'left',
-        	color: '#000',
-        	top: 3, 
-        	left: 60, 
-        	right: 20,
-	        height: "auto",
-	        //backgroundColor: "blue"
-	    });
-	    
-	    var profileImage = Titanium.UI.createImageView({
-	    	image: '',//'http://profile.ak.fbcdn.net/hprofile-ak-prn2/276018_721214203_1913647351_q.jpg',
-	    	top: 5,
-	    	left: 5,
-	    	width: 50,
-	    	height: 50
-	    });
-	    
-	    var profileLabel = Titanium.UI.createLabel({
-        	font:{fontSize:10}, 
-        	textAlign:'left',
-        	color:'#000',
-        	top: 18, 
-        	bottom: 20,
-        	left: 60, 
-        	right: 20,
-	        //backgroundColor: "green"
-	    });
-	    
-	    var infoLabel = Titanium.UI.createLabel({
-        	font:{fontSize:9}, 
-        	textAlign:'right',
-        	color:'#000',
-        	bottom: 3, 
-        	right: 5, 
-        	left: 60, 
-	        height: "auto",
-	        //backgroundColor: "red"
-	    });
-	    
-	    var row = Ti.UI.createTableViewRow({
-	    	hasChild: true,
-	        height:60,
-	    });
-	    
-	    row.add(nickNameLabel);
-	    row.add(profileImage);
-	    row.add(profileLabel);
-	    row.add(infoLabel);
-	    
-	    tableViewRowData.push(row);
-	}
-	
-	return tableViewRowData;
-
+	return row;
 }
 
 function createUserProfileWindow(user_id){
