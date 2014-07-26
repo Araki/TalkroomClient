@@ -5,7 +5,7 @@ function searchWindow() {
 	var baseView = Titanium.UI.createView({
 		top: 0,
 		bottom: 0,
-		backgroundColor: _lightBlue
+		backgroundColor: _whiteBlue
 	});
 	var ageData = [];
 	var areaData = [];
@@ -47,7 +47,7 @@ function searchWindow() {
 		left: 30,
 		width: 60,
 		height: 30,
-		color: _white,
+		color: _darkBlue,
 		font:{fontFamily: _font, fontSize: 17 }
 	});
 	
@@ -62,9 +62,10 @@ function searchWindow() {
 		left: 100,
 		height: 30,
 		enabled: false,
-		color: _lightBlue,
+		color: _darkBlue,
 		keyboardToolbar: false,
-		borderRadius: 10
+		borderRadius: 10,
+		borderColor: _darkBlue
 	});
 	
 	//テキストフィールドがタップされたときの挙動
@@ -91,7 +92,7 @@ function searchWindow() {
 		left: 30,
 		width: 60,
 		height: 30,
-		color: _white,
+		color: _darkBlue,
 		font:{fontFamily: _font, fontSize: 17 }
 	});
 	
@@ -106,9 +107,10 @@ function searchWindow() {
 		left: 100,
 		height: 30,
 		enabled: false,
-		color: _lightBlue,
+		color: _darkBlue,
 		keyboardToolbar: false,
-		borderRadius: 10
+		borderRadius: 10,
+		borderColor: _darkBlue
 	});
 
 	//テキストフィールドがタップされたときの挙動
@@ -134,7 +136,7 @@ function searchWindow() {
 		left: 30,
 		width: 60,
 		height: 30,
-		color: _white,
+		color: _darkBlue,
 		font:{fontFamily: _font, fontSize: 17 }
 	});
 	
@@ -149,9 +151,10 @@ function searchWindow() {
 		left: 100,
 		enabled: false,
 		height: 30,
-		color: _lightBlue,
+		color: _darkBlue,
 		keyboardToolbar: false,
-		borderRadius: 10
+		borderRadius: 10,
+		borderColor: _darkBlue
 	});
 	
 	//テキストフィールドがタップされたときの挙動
@@ -181,7 +184,7 @@ function searchWindow() {
 		height: 35,
 		//borderColor:"#1E90FF",
 		color: _white,
-		backgroundColor: _vividPink,
+		backgroundColor: _mossGreen,
 		borderRadius:10
 	});
 	

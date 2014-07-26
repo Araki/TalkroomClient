@@ -47,7 +47,7 @@ function settingWindow() {
 		
 		var pointHeaderRow = createHeaderRow("ポイント");
 		var pointLabel = Titanium.UI.createLabel({
-			backgroundColor: '#fff',
+			backgroundColor: _white,
 	        color: _darkBlue,
 	        textAlign:'left',
 	        right: 10,
@@ -78,31 +78,7 @@ function settingWindow() {
 		rowData.push(inquiryRow);
 		var logoutRow = createDefaultRow("ログアウト", "logout");
 		rowData.push(logoutRow);
-		/*
-		var inputData = [
-			{ header:'プロフィール',
-				hasChild:true, title:'一言を編集する', id:'profile' },
-			  { hasChild:true, title:'プロフィールを編集する', id:'detail_profile' },
-			  { hasChild:true, title:'自分のプロフィールを見る', id:'my_profile' },
-			  
-			{ header:'ポイント',
-				hasChild:false, title:'所有ポイント:   ' + _point, id:'points', selectionStyle : Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE },
-			  { hasChild:true, title:'ポイント購入', id:'buy_points'},
-			  { hasChild:true, title:'無料でポイントGET', id:'reward'},
-			  { hasChild:true, title:'ビデオを見てポイントGET', id:'video'},//無料でポイントGET系はページをひとまとめにしてもいいかも
-			  { hasChild:true, title:'友達を招待してポイントGET', id:'invite_friends'},//無料でポイントGET系はページをひとまとめにしてもいいかも
-			  
-			{ header:'その他',
-				hasChild:true, title:'使い方', id:'how_to'},
-			  { hasChild:true, title:'利用規約', id:'tos'},
-			  { hasChild:true, title:'お問い合わせ', id:'inquiry'},
-			  
-			{header:'',
-				hasChild:true, title:'ログアウト', id:'logout'}
-			  
-		];
-		*/
-		//tableView.data = inputData;
+		
 		tableView.data = rowData;
 		listenerFunction = function(e) {
 			switch (e.row.id) {

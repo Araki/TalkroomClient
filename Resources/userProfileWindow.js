@@ -89,7 +89,7 @@ function createBgView(){
 		right: 0,
 		height: 110,
 		//backgroundImage: "images/bg/profile_photo_bg.png"
-		backgroundColor: _lightBlue
+		backgroundColor: _whiteBlue
 	});
 	return view;
 }
@@ -101,7 +101,7 @@ function createButtonBgView(){
 		right: 0,
 		height: 55,
 		//backgroundImage: "images/bg/profile_btn_bg.png"
-		backgroundColor: _lightBlue
+		backgroundColor: _whiteBlue
 	});
 	return view;
 }
@@ -207,7 +207,7 @@ function createReadPastTalkButton(){
 		left: 15,
 		top: 10,
 		color:_white,
-		backgroundColor:_vividPink,
+		backgroundColor:_mossGreen,
 		borderRadius:10
 	});
 	return view;

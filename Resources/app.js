@@ -365,7 +365,8 @@ function createWindow(titleName){
 	var win = Titanium.UI.createWindow({  
 		title: titleName,
 		backgroundColor:_white,
-		//barImage:'images/bg/navBar_bg.png',
+		backButtonTitle:'',
+		navTintColor: _white,
 		barColor:'#1CADC3',
 		titleControl: Ti.UI.createLabel({
 	        text: titleName,
@@ -383,7 +384,7 @@ function createActInd() {
 	var activityIndicator = Titanium.UI.createActivityIndicator({
 		height:'100%',
 		width:'100%',
-		font: {fontFamily: _font, fontSize:16, fontWeight:'bold'},
+		font: {fontFamily: _font, fontSize:16},
 		color: 'white',
 		backgroundColor:'black',
 		opacity: 0.3,

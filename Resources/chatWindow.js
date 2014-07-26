@@ -17,6 +17,7 @@ function chatWindow(sendfrom, sendto, textField) {
 		contentHeight: "auto",
 		top: 0,
 		bottom:0,
+		backgroundColor: _whiteBlue,
 		showVerticalScrollIndicator: true
 	});
 	
@@ -32,25 +33,34 @@ function chatWindow(sendfrom, sendto, textField) {
 		height: 35,
 		right:0,
 		left:0,
-		backgroundColor: "#999"
+		backgroundColor: _lightBlue
 	});
 	
 	var textField = Titanium.UI.createTextField({
-		height:32,
+		height:25,
 		left:5,
 		right:77,
-		backgroundImage:'inputfield.png',
-		font:{fontSize:13},
-		color:'#777',
-		paddingLeft:10,
-		borderStyle:Titanium.UI.INPUT_BORDERSTYLE_NONE
+		backgroundColor: _white,
+		borderRadius: 4,
+		borderColor: _darkBlue,
+		//backgroundImage:'inputfield.png',
+		font:{font:_font, fontSize:13},
+		color:_darkGray,
+		//paddingLeft:10,
+		//borderStyle:Titanium.UI.INPUT_BORDERSTYLE_NONE
 	});
 	
 	var sendButton = Titanium.UI.createButton({
-		backgroundImage:'send.png',
-		backgroundSelectedImage:'send_selected.png',
+		//backgroundImage:'send.png',
+		//backgroundSelectedImage:'send_selected.png',
+		title: "送信",
+		font:{fontFamily: _font, fontSize:14},
+		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+		backgroundColor: _mossGreen,
+		color: _white,
+		borderRadius: 4,
 		width:67,
-		height:32,
+		height:25,
 		right:5
 	});
 	
@@ -107,12 +117,15 @@ function chatWindow(sendfrom, sendto, textField) {
 		if(visibleTextField){//自分がチャットできるルームである場合
 			if(roomID != null){//ルームが既にある場合（メッセージが1通以上ある場合）
 				if(roomPublic == true){//ルームがパブリックであるときの処理
+					changePrivateButton.text = '非公開にする';
+					changePrivateButton.backgroundColor = _vividPink;
+					changePrivateButton.color = _white;
 					changePrivateButton.enabled = true;
 				}else{//ルームがプライベートであるときの処理
-					//ルームがプライベートのとき、「非公開ボタン」を「非公開中」などに変更して押せないようにする。
+					changePrivateButton.text = "非公開中";
+					changePrivateButton.backgroundColor = _lightGray;
+					changePrivateButton.color = _gray;
 					changePrivateButton.enabled = false;
-					//changePrivateButton.image = "";
-					
 				}
 			}
 		}
@@ -220,32 +233,45 @@ function chatWindow(sendfrom, sendto, textField) {
 		baseView.add(toolbarView);
 		
 		//非公開化ボタンの設置
-		var changePrivateButton = Titanium.UI.createButton({
-			font:{fontFamily: _font},
-			title:'非公開'
+		var changePrivateButton = Titanium.UI.createLabel({
+			font:{fontFamily: _font, fontSize:12},
+			//text:'非公開にする',
+			textAlign: 'center',
+			verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			borderRadius: 4,
+			height: 25,
+			width: 75,
+			//backgroundColor: _vividPink,
+			//color: _white
 		});
 		
 		//通信してroomIDがnullでなければenabledをtrueにする
 		changePrivateButton.enabled = false;
 		
 		self.setRightNavButton(changePrivateButton);
+		
 		changePrivateButton.addEventListener('click',function(){
-			consumePointDialog("private", function(data){
-				if (data.success){
-					var url = Ti.App.domain + "change_private_room.json?room_id=" + roomID + "&app_token=" + Ti.App.Properties.getString('app_token');
-					getData(url, function( data ){
-						if (data.success) {
-							// 通信に成功したら行う処理
-							changePrivateButton.enabled = false;
-							//changePrivateButton.image = "";//「非公開中」などのボタンに変更する
-							alert("ルームを非公開にしました！");
-						} else{
-							// 通信に失敗したら行う処理
-							alert("通信に失敗しました");
-						}
-					});
-				}
-			});
+			//ButtonのenabledがTRUEのときしか処理しない
+			if(changePrivateButton.enabled == true){
+				consumePointDialog("private", function(data){
+					if (data.success){
+						var url = Ti.App.domain + "change_private_room.json?room_id=" + roomID + "&app_token=" + Ti.App.Properties.getString('app_token');
+						getData(url, function( data ){
+							if (data.success) {
+								// 通信に成功したら行う処理
+								changePrivateButton.text = "非公開中";
+								changePrivateButton.backgroundColor = _lightGray;
+								changePrivateButton.color = _gray;
+								changePrivateButton.enabled = false;
+								alert("ルームを非公開にしました！");
+							} else{
+								// 通信に失敗したら行う処理
+								alert("通信に失敗しました");
+							}
+						});
+					}
+				});
+			}
 		});
 	}else{
 		scrollView.bottom = 0;
