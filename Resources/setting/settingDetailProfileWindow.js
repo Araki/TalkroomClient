@@ -60,12 +60,16 @@ function settingDetailProfileWindow() {
 		actInd.hide();
 	});
 	
-	var saveButton = Titanium.UI.createButton({
-		title:'保存',
-		font:{fontFamily: _font},
-		color: "#fff",
-		borderColor:"#fff",
-		borderRadius:5
+	var saveButton = Titanium.UI.createLabel({
+			font:{fontFamily: _font, fontSize:16},
+			text:'保存',
+			textAlign: 'center',
+			verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			borderRadius: 4,
+			height: 25,
+			width: 60,
+			backgroundColor: _mossGreen,
+			color: _white
 	});
 	self.rightNavButton = saveButton;
 	
@@ -96,22 +100,7 @@ function settingDetailProfileWindow() {
 			}).show();
 			return;
 		}
-		/*
-		Ti.UI.createAlertDialog({
-			title: 'customItem',
-		  	message: "ニックネーム：" + nicknameRow.children[1].value +
-		  			 "\n年代：" + ageRow.children[1].customItem +
-		  	         "\n目的：" + purposeRow.children[1].customItem +
-		  	         "\nエリア：" + areaRow.children[1].customItem +
-		  	         "\n身長：" + tallRow.children[1].customItem +
-		  	         "\n血液型：" + bloodRow.children[1].customItem +
-		  	         "\nスタイル：" + styleRow.children[1].customItem +
-		  	         "\n休日：" + holidayRow.children[1].customItem +
-		  	         "\nお酒：" + alcoholRow.children[1].customItem +
-		  	         "\nタバコ：" + cigaretteRow.children[1].customItem +
-		  	         "\n年収：" + salaryRow.children[1].customItem
-		}).show();
-		*/
+		
 		var url = Ti.App.domain + "update_detail_profile.json";
 		var message = {
 				//user_id: Ti.App.Properties.getString('my_id'),
@@ -155,6 +144,7 @@ function settingDetailProfileWindow() {
    	//==================================================
     var imageRow = Ti.UI.createTableViewRow({
         height:140,
+        backgroundColor: _whiteBlue,
     	selectionStyle : Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE
    	});
   
@@ -176,7 +166,7 @@ function settingDetailProfileWindow() {
     	left: 15,
     	width: 90,
     	height: 90,
-    	borderRadius:10
+    	borderRadius:9
     });
     
     profileImage1.addEventListener('click', function(e){
@@ -202,7 +192,7 @@ function settingDetailProfileWindow() {
     	left: 115,
     	width: 90,
     	height: 90,
-    	borderRadius:10
+    	borderRadius:9
     });
     profileImage2.addEventListener('click', function(e){
     	showOptionDialog("profile_image2");
@@ -227,7 +217,7 @@ function settingDetailProfileWindow() {
     	left: 215,
     	width: 90,
     	height: 90,
-    	borderRadius:45
+    	borderRadius:9
     });
     profileImage3.addEventListener('click', function(e){
     	showOptionDialog("profile_image3");
@@ -375,6 +365,7 @@ function createRow( labelText ) {
 	
 	var row = Ti.UI.createTableViewRow({
         height: 50,
+        backgroundColor: _whiteBlue,
         selectionStyle : Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE
    	});
    	
@@ -382,7 +373,7 @@ function createRow( labelText ) {
     	font:{fontFamily: _font, fontSize: 13}, 
     	text: labelText,
     	textAlign: 'right',
-    	color: 'black',
+    	color: _darkBlue,
     	top: 10, 
     	bottom: 10,
     	left: 20, 
@@ -393,7 +384,10 @@ function createRow( labelText ) {
     var textField = Titanium.UI.createTextField({
 		font:{fontSize: 13},
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-		color: 'black',
+		color: _darkBlue,
+		backgroundColor: _white,
+		borderRadius: 10,
+		borderColor: _darkBlue,
 		top: 10, 
     	bottom: 10,
     	right: 20, 

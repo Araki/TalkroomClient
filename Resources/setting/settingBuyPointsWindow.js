@@ -30,12 +30,12 @@ function settingBuyPointsWindow() {
 	
 	//alert("POINT" + _point);
 	var pointLabel = Ti.UI.createLabel({
-		font:{fontFamily: _font, fontSize:20},
+		font:{fontFamily: _font, fontSize:18},
 		textAlign: "left",
-        text: _point,
-       	color:'#000',
+        text: "所有ポイント: " + _point + "ポイント",
+       	color:_darkBlue,
        	top:10,
-       	left:20
+       	left:30
 	});
 	self.add(pointLabel);
  
@@ -145,13 +145,15 @@ function settingBuyPointsWindow() {
   	}
   	
   	var buy100points = Ti.UI.createButton({
-		title:'Buy ' + product100.title + ', ' + product100.formattedPrice,
-		font:{fontFamily: _font},
-		top:60, left:5,
-		right:5,
-		height:40,
-		borderColor:"#1E90FF",
-		borderRadius:5
+		title:product100.title + '  ' + product100.formattedPrice + 'で購入する',
+		font:{fontSize: 17, fontFamily: _font},
+		top:60, 
+		left:25,
+		right:25,
+		height:50,
+		color: _white,
+		backgroundColor: _vividPink,
+		borderRadius:10
 	});
 	buy100points.addEventListener('click', function () {
 		purchaseProduct(product100);
@@ -159,14 +161,15 @@ function settingBuyPointsWindow() {
 	self.add(buy100points);
   	
   	var buy300points = Ti.UI.createButton({
-		title:'Buy ' + product300.title + ', ' + product300.formattedPrice,
-		font:{fontFamily: _font},
-		top:110, 
-		left:5, 
-		right:5, 
-		height:40,
-		borderColor:"#1E90FF",
-		borderRadius:5
+		title:product300.title + '  ' + product300.formattedPrice + 'で購入する',
+		font:{fontSize: 17, fontFamily: _font},
+		top:130, 
+		left:25, 
+		right:25, 
+		height:50,
+		color: _white,
+		backgroundColor: _vividPink,
+		borderRadius:10
 	});
 	buy300points.addEventListener('click', function () {
 		purchaseProduct(product300);
@@ -174,14 +177,15 @@ function settingBuyPointsWindow() {
 	self.add(buy300points);
   
   	var buy500points = Ti.UI.createButton({
-		title:'Buy ' + product500.title + ', ' + product500.formattedPrice,
-		font:{fontFamily: _font},
-		top:160, 
-		left:5, 
-		right:5, 
-		height:40,
-		borderColor:"#1E90FF",
-		borderRadius:5
+		title:product500.title + '  ' + product500.formattedPrice + 'で購入する',
+		font:{fontSize: 17, fontFamily: _font},
+		top:200, 
+		left:25, 
+		right:25, 
+		height:50,
+		color: _white,
+		backgroundColor: _vividPink,
+		borderRadius:10
 	});
 	buy500points.addEventListener('click', function () {
 		purchaseProduct(product500);

@@ -4,7 +4,6 @@ function settingWindow() {
 	var self = createWindow("その他");
 	
 	var tableView = Titanium.UI.createTableView();
-	//tableView.style = Titanium.UI.iPhone.TableViewStyle.GROUPED;
 		
 	function loadTableViewView(){
 		var rowData = [];
@@ -12,10 +11,10 @@ function settingWindow() {
 			var headerRow = Ti.UI.createTableViewRow({
 				backgroundColor: _darkBlue,
 				selectionStyle : Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE,
-				height: 40				
+				height: 30			
 			});
 			var label = Titanium.UI.createLabel({
-		        color:'#fff',
+		        color: _white,
 		        textAlign:'left',
 		        font:{fontFamily: _font, fontSize:15},
 		        left: 15,
@@ -28,7 +27,8 @@ function settingWindow() {
 		}
 		function createDefaultRow( titleName, id ){
 			var defaultRow = Ti.UI.createTableViewRow({
-				font:{fontFamily: _font},
+				color: _darkGray,
+				font:{fontFamily: _font, fontSize:17},
 				hasChild: true,
 				title: titleName,
 				id: id
@@ -48,7 +48,7 @@ function settingWindow() {
 		var pointHeaderRow = createHeaderRow("ポイント");
 		var pointLabel = Titanium.UI.createLabel({
 			backgroundColor: _white,
-	        color: _darkBlue,
+	        color: _vividPink,
 	        textAlign:'left',
 	        right: 10,
 	        width:'auto',

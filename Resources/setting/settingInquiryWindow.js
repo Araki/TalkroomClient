@@ -1,13 +1,17 @@
 function settingInquiryWindow() {
 	
 	var self = createWindow("お問い合わせ");
-	
-	var submitButton = Titanium.UI.createButton({
-		title:'送信',
-		font:{fontFamily: _font},
-		color: "#fff",
-		borderColor:"#fff",
-		borderRadius:5
+
+	var submitButton = Titanium.UI.createLabel({
+			font:{fontFamily: _font, fontSize:16},
+			text:'送信',
+			textAlign: 'center',
+			verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			borderRadius: 4,
+			height: 25,
+			width: 60,
+			backgroundColor: _mossGreen,
+			color: _white
 	});
 	self.rightNavButton = submitButton;
 	
@@ -17,45 +21,46 @@ function settingInquiryWindow() {
 		left: 20,
 		right: 20,
 		height: 15,
+		color: _darkBlue,
 		font:{fontFamily: _font, fontSize: 12 }
 	});
 	
 	var mailTextField = Titanium.UI.createTextField({
-		//borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-		//value: "すべて",
-		//customItem: "",
+		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 		top: 30,
 		right: 20,
 		left: 20,
-		height: 20,
-		//enabled: false,
+		height: 30,
 		keyboardType:Titanium.UI.KEYBOARD_EMAIL,
 		returnKeyType:Titanium.UI.RETURNKEY_NEXT,
 		autocapitalization: false,
 		autocorrect:false,
-		//borderWidth:2,
-	    borderColor:'#bbb',
+	    borderColor:_darkBlue,
+	    color: _darkGray,
+	    backgroundColor: _white,
 	    borderRadius:5,
-	    font: { fontSize: 12 }
+	    font: { fontSize: 18 }
 	});
 	
 	var bodyLabel = Titanium.UI.createLabel({
 		text: 'お問い合わせ内容',
-		top: 60,
+		top: 70,
 		left: 20,
 		right: 20,
 		height: 15,
+		color: _darkBlue,
 		font:{fontFamily: _font, fontSize: 12 }
 	});
 	
 	var textArea = Titanium.UI.createTextArea({
 	        value:'',
-	        top:80,
-	        bottom:170,
+	        top:90,
+	        bottom:210,
 	        left:20,
 	        right:20,
-	        font:{fontSize:12, fontFamily: _font, fontWeight:''},
-	        color:'',
+	        font:{fontSize:18, fontFamily: _font },
+	        color:_darkGray,
+	        backgroundColor:_white,
 	        textAlign:'left',
 	        appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
 	        keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
@@ -63,9 +68,7 @@ function settingInquiryWindow() {
 	        suppressReturn: false,
 	        autocapitalization: false,
 	        autocorrect:false,
-	        //keyboardToolbar : [flexSpace, done],
-	        //borderWidth:2,
-	        borderColor:'#bbb',
+	        borderColor:_darkBlue,
 	        borderRadius:5
 	});
 	/*

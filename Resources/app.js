@@ -364,13 +364,13 @@ function createTabGroup(){
 function createWindow(titleName){
 	var win = Titanium.UI.createWindow({  
 		title: titleName,
-		backgroundColor:_white,
+		backgroundColor:_whiteBlue,
 		backButtonTitle:'',
 		navTintColor: _white,
 		barColor:'#1CADC3',
 		titleControl: Ti.UI.createLabel({
 	        text: titleName,
-	        color:'#fff',
+	        color: _white,
 	        font:{fontFamily: _font, fontSize:18},
 	        //shadowColor: 'gray',
 	        shadowOffset: {x: 1, y: 1}
@@ -917,9 +917,13 @@ function createPickerView( data, tf, win ){
 	var picker = Ti.UI.createPicker({
 		top: 43
 	});
+	Ti.API.info("INDEX:" + textField.customItem);
 	picker.selectionIndicator = true;
-	
 	picker.add(dataList);
+	
+	if(textField.value != "すべて"){
+		picker.setSelectedRow(0, textField.customItem, false);
+	}
 	
 	//Pickerのツールバーの完了ボタンが押された時の挙動
 	doneButton.addEventListener('click', function(e){

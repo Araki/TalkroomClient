@@ -16,7 +16,17 @@ function settingProfileWindow() {
 		actInd.hide();
 	});
 	
-	var saveButton = Titanium.UI.createButton({title:'保存', font:{fontFamily: _font}, borderColor:"#fff", borderRadius:5});
+	var saveButton = Titanium.UI.createLabel({
+			font:{fontFamily: _font, fontSize:16},
+			text:'保存',
+			textAlign: 'center',
+			verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			borderRadius: 4,
+			height: 25,
+			width: 60,
+			backgroundColor: _mossGreen,
+			color: _white
+	});
 	self.rightNavButton = saveButton;
 	
 	saveButton.addEventListener('click', function(){
@@ -38,6 +48,8 @@ function settingProfileWindow() {
 				  	//message: data.data
 				}).show();
 				
+				
+				
 			} else{
 				//通信に失敗したら行う処理
 				Ti.UI.createAlertDialog({
@@ -53,19 +65,24 @@ function settingProfileWindow() {
 	
 	var textArea = Titanium.UI.createTextArea({
 	        value:'',
-	        top:30,
+	        top:50,
 	        bottom:250,
 	        left:20,
 	        right:20,
 	        font:{fontSize:13,fontFamily:_font, fontWeight:''},
-	        color:'',
+	        color: _darkGray,
+	        backgroundColor:_white,
 	        textAlign:'left',
 	        appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
 	        keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
 	        returnKeyType:Titanium.UI.RETURNKEY_DONE,
 	        borderWidth:2,
-	        borderColor:'#bbb',
-	        borderRadius:5
+	        borderColor:_darkBlue,
+	        borderRadius:10
+	});
+	
+	self.addEventListener("open", function(){
+		textArea.focus();
 	});
 	
 	self.add(textArea);

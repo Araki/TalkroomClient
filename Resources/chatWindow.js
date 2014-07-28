@@ -47,7 +47,7 @@ function chatWindow(sendfrom, sendto, textField) {
 		font:{font:_font, fontSize:13},
 		color:_darkGray,
 		//paddingLeft:10,
-		//borderStyle:Titanium.UI.INPUT_BORDERSTYLE_NONE
+		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
 	});
 	
 	var sendButton = Titanium.UI.createButton({
@@ -153,6 +153,7 @@ function chatWindow(sendfrom, sendto, textField) {
 		  	sendButton.enabled = true;
 		  	
 		}else{
+			actInd.show();
 			var message = {
 				//sendfrom_list_id: Ti.App.Properties.getString('my_id'),
 				app_token: Ti.App.Properties.getString('app_token'),
@@ -213,6 +214,7 @@ function chatWindow(sendfrom, sendto, textField) {
 					sendButton.enabled = true;
 					
 				}
+				actInd.hide();
 			});	
 		}
 	});
