@@ -3,6 +3,8 @@
 //=============================================================
 var fb = require('facebook');
 var Storekit = require('ti.storekit');
+var Admob = require('ti.admob');
+var nend = require('net.nend');
 
 //=============================================================
 //Flurry初期設定
@@ -52,11 +54,15 @@ Ti.API.info("displayHeight" + displayHeight);
 Ti.API.info("==================app_token:::::::::" + Ti.App.Properties.getString('app_token'));
 Ti.API.info("==================my_id:::::::::" + Ti.App.Properties.getString('my_id'));
 
+if(Ti.App.Properties.getString('searchAge') == null){Ti.App.Properties.setString('searchAge', "");}
+if(Ti.App.Properties.getString('searchArea') == null){Ti.App.Properties.setString('searchAreae', "");}
+if(Ti.App.Properties.getString('searchGender') == null){Ti.App.Properties.setString('searchGender', "");}
+
 //=============================================================
 //グローバル変数の定義
 //=============================================================
 var _point;
-var _peepPoint = 5;
+var _peepPoint = 20;
 var _privatePoint = 100;
 var product100;
 var product300;
@@ -146,14 +152,14 @@ function getUserDataList() {
 						//通信に成功したら行う処理
 			            var obj = JSON.parse(data.data);
 			            rewardFlag = obj.reward_flag;
-			            alert("リワード:" + rewardFlag);
+			            //alert("リワード:" + rewardFlag);
 			            
 						if(obj.result == "true"){//既に登録済みのユーザーの処理
 							
 							var birth = birthday.split("/");
 							var current = new Date();
 							var age = current.getFullYear() - birth[2];
-							alert("名前：" + last_name + " " + first_name );
+							//alert("名前：" + last_name + " " + first_name );
 							Flurry.setAge(age);
 							Flurry.setUserId(String(uid));
 							if(gender == "male"){
@@ -580,11 +586,14 @@ function reloadImage(window, image){
 	//alert(window.children[0].data[0].rows[0].children[1].url);
 	switch(image){
 		case 'profile_image1':
+			/*
 			var url = window.children[0].data[0].rows[0].children[1].url;
 			var urlArray = url.split("?");
-			window.children[0].data[0].rows[0].children[1].image = urlArray[0] + "?" + new Date().getTime(); 
+			window.children[0].data[0].rows[0].children[1].image = urlArray[0]; 
+			*/
 	    	break;
 	    case 'profile_image2':
+	    	/*
 	    	var url = window.children[0].data[0].rows[0].children[3].url;
 	    	if(url != null){
 				var urlArray = url.split("?");
@@ -595,8 +604,10 @@ function reloadImage(window, image){
 				var urlArray = modifiedurl.split("?");
 				window.children[0].data[0].rows[0].children[3].image = urlArray[0] + "?" + new Date().getTime();
 			} 
+			*/
 	    	break;
 	    case 'profile_image3':
+	    	/*
 	    	var url = window.children[0].data[0].rows[0].children[5].url;
 	    	if(url != null){
 	    		var urlArray = url.split("?");	
@@ -606,7 +617,8 @@ function reloadImage(window, image){
 				var modifiedurl = url.replace("image1", "image3");
 				var urlArray = modifiedurl.split("?");
 				window.children[0].data[0].rows[0].children[5].image = urlArray[0] + "?" + new Date().getTime();
-	    	}			 
+	    	}
+	    	*/		 
 	    	break;
 	}
 }
@@ -614,11 +626,11 @@ function reloadImage(window, image){
 //=======================================================================================
 //ポイント消費確認ダイアログを表示するファンクション
 //=======================================================================================
-function consumePointDialog( type, callback ){
+function consumePointDialog( type, roomID, callback ){
 	var description;
 	var consumePoint;
 	if (type == "peep"){
-		description = _peepPoint + 'ポイント消費して、\nこのルームをのぞきますか？';
+		description = _peepPoint + 'ポイント消費して、\n公開中の過去トークをのぞきますか？';
 		consumePoint = _peepPoint;
 	}else if(type == "private"){
 		description = _privatePoint + 'ポイント消費して、\nこのルームを非公開にしますか？';
@@ -641,7 +653,7 @@ function consumePointDialog( type, callback ){
 	    if(event.index == 0){
 	        // "OK"時の処理
 	        if (_point >= consumePoint){
-		        var url = Ti.App.domain + "consume_point.json?consume_point=" + consumePoint + "&app_token=" + Ti.App.Properties.getString('app_token');
+		        var url = Ti.App.domain + "consume_point.json?consume_point=" + consumePoint + "&item_type=" + type + "&room_id=" + roomID + "&app_token=" + Ti.App.Properties.getString('app_token');
 				getData(url, function( data ){
 					if (data.success) {
 						// 通信に成功したら行う処理
@@ -747,7 +759,6 @@ function checkReceipt(callback){
 
   //verifyReceipt(receipt);
   var url = Ti.App.domain + "/verify_receipt.json";
-
   var client = Ti.Network.createHTTPClient({
     onload : function(e) {
       // 認証済み
@@ -1145,5 +1156,45 @@ function returnArray( arrayName ) {
 	return array;
 	
 }
+
+function createBannerAdView(){
+	
+	var rand = Math.floor(Math.random()*2);
+	switch(rand){
+		case 0:
+			var adview = Admob.createView({
+				bottom: 0,
+				left: 0,
+			    width: 320,
+			    height: 50,
+			    adUnitId: 'ca-app-pub-8392863952863215/5215089280',
+			    adBackgroundColor: 'black',
+			    // You can get your device's id for testDevices by looking in the console log after the app launched
+			    //testDevices: [Admob.SIMULATOR_ID],
+			    //dateOfBirth: new Date(1985, 10, 1, 12, 1, 1),
+			    //gender: 'male',
+			    //keywords: ''
+			});
+			break;
+			
+		case 1:
+			var adview = nend.createView({
+                spotId: '3174',//'218551',
+                apiKey: 'c5cb8bc474345961c6e7a9778c947957ed8e1e4f',//'4869c84c177df6f84ed62140cd3dd71da9b45e9a',
+                width:  320,
+                height: 50,
+                bottom: 0,
+                left:   0
+            });
+            break;
+ 
+        default:
+            var adview = null;
+            break;
+	}
+    return adview;
+}
+
+
 
 

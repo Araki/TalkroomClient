@@ -36,7 +36,7 @@ body{
 	
 img{
 	border:0;
-	virtical-align:bottom;
+	vertical-align:bottom;
 }
 		
 ul, ol{
@@ -54,16 +54,25 @@ ul, ol{
 #showcase .flipsnap {
   width: 1600px;/*----- 320px * 5 -----*/
 }
-#showcase .item {
+
+#showcase .item4 {
   width: 320px;
-  height:180px;
+  height: 350px;
   float: left;
 }
-
-
-#showcase .item img{
+#showcase .item4 img{
   width: 320px;
-  height:180px;
+  height: 350px;
+}
+
+#showcase .item5 {
+  width: 320px;
+  height: 440px;
+  float: left;
+}
+#showcase .item5 img{
+  width: 320px;
+  height: 440px;
 }
 
 
@@ -76,8 +85,9 @@ ul, ol{
   width: 8px;
   height: 8px;
   border-radius: 8px;
-  border: 1px solid #000;
+  background: #6FD3D8;
+  border: 0px solid #000;
 }
 #showcase .pointer span.current {
-  background: #FC0;
+  background: #EB3B86;
 }

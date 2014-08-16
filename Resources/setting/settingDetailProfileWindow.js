@@ -14,27 +14,30 @@ function settingDetailProfileWindow() {
 		if (data.success) {
 			// 通信に成功したら行う処理
 			var json = data.data;
-			
-			profileImage1.image = json[0].profile_image1 + "?" + new Date().getTime();
-			profileImage1.url = json[0].profile_image1 + "?" + new Date().getTime();
-			if(json[0].profile_image2 != null){
-				profileImage2.image = json[0].profile_image2 + "?" + new Date().getTime();
-				profileImage2.url = json[0].profile_image2 + "?" + new Date().getTime();
+			if(json[0].profile_image1 != null){
+				profileImage1.image = json[0].profile_image1;// + "?" + new Date().getTime();
+				profileImage1.url = json[0].profile_image1;// + "?" + new Date().getTime();
 			}else{
-				profileImage2.image = "images/choice_image.png";
+				profileImage1.image = '/images/no_image_camera.png';
+			}
+			if(json[0].profile_image2 != null){
+				profileImage2.image = json[0].profile_image2;// + "?" + new Date().getTime();
+				profileImage2.url = json[0].profile_image2;// + "?" + new Date().getTime();
+			}else{
+				profileImage2.image = '/images/no_image_camera.png';
 			}
 			if(json[0].profile_image3 != null){
-				profileImage3.image = json[0].profile_image3 + "?" + new Date().getTime();
-				profileImage3.url = json[0].profile_image3 + "?" + new Date().getTime();
+				profileImage3.image = json[0].profile_image3;// + "?" + new Date().getTime();
+				profileImage3.url = json[0].profile_image3;// + "?" + new Date().getTime();
 			}else{
-				profileImage3.image = "images/choice_image.png";
+				profileImage3.image = '/images/no_image_camera.png';
 			}
 			
 			nicknameRow.children[1].value = json[0].nickname;
 			ageRow.children[1].value = exchangeFromNumber( json[0].age, "age" );
 			ageRow.children[1].customItem = json[0].age;
-			purposeRow.children[1].value = exchangeFromNumber( json[0].purpose, "purpose" );
-			purposeRow.children[1].customItem = json[0].purpose;
+			//purposeRow.children[1].value = exchangeFromNumber( json[0].purpose, "purpose" );
+			//purposeRow.children[1].customItem = json[0].purpose;
 			areaRow.children[1].value = exchangeFromNumber( json[0].area, "area" );
 			areaRow.children[1].customItem = json[0].area;
 			tallRow.children[1].value = exchangeFromNumber( json[0].tall, "tall" );
@@ -85,9 +88,9 @@ function settingDetailProfileWindow() {
 		if( ageRow.children[1].customItem == ''){
 			alertMessage = alertMessage + "年代を入力してください。\n";
 		}
-		if( purposeRow.children[1].customItem == ''){
-			alertMessage = alertMessage + "目的を入力してください。\n";
-		}
+		//if( purposeRow.children[1].customItem == ''){
+		//	alertMessage = alertMessage + "目的を入力してください。\n";
+		//}
 		if( areaRow.children[1].customItem == ''){
 			alertMessage = alertMessage + "エリアを入力してください。\n";
 		}
@@ -107,7 +110,7 @@ function settingDetailProfileWindow() {
 				app_token: Ti.App.Properties.getString('app_token'),
 				nickname: nicknameRow.children[1].value,
 			    age: ageRow.children[1].customItem,
-			    purpose: purposeRow.children[1].customItem,
+			    //purpose: purposeRow.children[1].customItem,
 			    area: areaRow.children[1].customItem,
 			    tall: tallRow.children[1].customItem,
 			    blood: bloodRow.children[1].customItem,
@@ -153,7 +156,7 @@ function settingDetailProfileWindow() {
     	font:{fontFamily: _font, fontSize:14}, 
     	textAlign:'center',
     	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
-    	color:'#000',
+    	color: _darkBlue,
     	top:5,
     	height:20, 
     	left:15, 
@@ -166,6 +169,7 @@ function settingDetailProfileWindow() {
     	left: 15,
     	width: 90,
     	height: 90,
+    	backgroundColor: _white,
     	borderRadius:9
     });
     
@@ -179,7 +183,7 @@ function settingDetailProfileWindow() {
     	font:{fontFamily: _font, fontSize:14}, 
     	textAlign:'center',
     	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
-    	color:'#000',
+    	color: _darkBlue,
     	top:5,
     	height:20, 
     	left:115, 
@@ -192,6 +196,7 @@ function settingDetailProfileWindow() {
     	left: 115,
     	width: 90,
     	height: 90,
+    	backgroundColor: _white,
     	borderRadius:9
     });
     profileImage2.addEventListener('click', function(e){
@@ -204,7 +209,7 @@ function settingDetailProfileWindow() {
     	font:{fontFamily: _font, fontSize:14}, 
     	textAlign:'center',
     	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
-    	color:'#000',
+    	color: _darkBlue,
     	top:5,
     	height:20, 
     	left:215, 
@@ -217,6 +222,7 @@ function settingDetailProfileWindow() {
     	left: 215,
     	width: 90,
     	height: 90,
+    	backgroundColor: _white,
     	borderRadius:9
     });
     profileImage3.addEventListener('click', function(e){
@@ -233,9 +239,9 @@ function settingDetailProfileWindow() {
    	setPickerView(ageRow, 'age');
 	tableViewRowData.push(ageRow);
 	
-   	var purposeRow = createRow("目的");
-   	setPickerView(purposeRow, 'purpose');
-   	tableViewRowData.push(purposeRow);
+   	//var purposeRow = createRow("目的");
+   	//setPickerView(purposeRow, 'purpose');
+   	//tableViewRowData.push(purposeRow);
  	
    	var areaRow = createRow("エリア");
    	setPickerView(areaRow, 'area');

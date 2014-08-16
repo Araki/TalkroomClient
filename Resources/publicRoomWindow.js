@@ -3,24 +3,44 @@ function publicRoomWindow() {
 	var dataList;
 	
 	var self = createWindow("のぞく");
-	
 	var actInd = createActInd();
 	
-	var tableView = Titanium.UI.createTableView({separatorStyle:'NONE'});
+	var tableView = Titanium.UI.createTableView({top:0, bottom:50, separatorStyle:'NONE'});
+	
 	tableView.addEventListener('click', function(e) {
 		actInd.show();
-		consumePointDialog("peep", function(data){
-			if (data.success){
+		//consumePointDialog("peep", e.row.roomID, function(data){
+			//if (data.success){
 				var cWindow = require('chatWindow');
 				var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, false);
 				tabGroup.activeTab.open(chatWindow);
 				actInd.hide();
-			}else{
-				actInd.hide();
-			}
-		});
-	});	
+			//}else{
+				//actInd.hide();
+			//}
+		//});
+	});
 	
+	var reloadButton = Titanium.UI.createLabel({
+			font:{fontFamily: _font, fontSize:16},
+			text:'更新',
+			textAlign: 'center',
+			verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			borderRadius: 4,
+			height: 25,
+			width: 60,
+			backgroundColor: _mossGreen,
+			color: _white
+	});
+	self.rightNavButton = reloadButton;
+	
+	reloadButton.addEventListener('click', function(){
+		loadTableView();
+	});
+	
+	var adView = createBannerAdView();
+	
+	self.add(adView);
 	self.add(tableView);
 	self.add(actInd);
 	
@@ -87,46 +107,84 @@ function publicRoomWindow() {
 		
 		var tableViewRowData = [];
 		for (var i=0; i<json.length; i++){
-	    
-	    	var labelSendFromMessage = Titanium.UI.createLabel({
-	        	font:{fontFamily: _font,fontSize:13}, 
+	    	/*
+	    	var sendfromColor;
+	    	var sendtoColor;
+	    	if( json[i].sendfrom_gender == "male"){sendfromColor = _darkBlue;}
+	    	else{sendfromColor = _vividPink;}
+	    	if( json[i].sendto_gender == "male"){sendtoColor = _darkBlue;}
+	    	else{sendtoColor = _vividPink;}
+	    	
+	    	var labelSendFromNickname = Titanium.UI.createLabel({
+	        	font:{fontFamily: _font,fontSize:11}, 
 	        	textAlign:'left',
-	        	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
-	        	color:_darkBlue,
-	        	bottom:30, 
+	        	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+	        	color:sendfromColor,
+	        	top:5, 
+	        	width:100, 
+	        	left:55, 
+		        height:15,
+		        text:json[i].sendfrom_nickname
+		    });
+		    
+		    var labelSendToNickname = Titanium.UI.createLabel({
+	        	font:{fontFamily: _font,fontSize:11}, 
+	        	textAlign:'left',
+	        	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+	        	color:sendtoColor,
+	        	top:50, 
+	        	width:100, 
+	        	left:55, 
+		        height:15,
+		        text:json[i].sendto_nickname
+		    });
+	    	
+	    	var sendfromMessage;
+	    	var sendtoMessage;
+	    	if( json[i].sendfrom_message == null){sendfromMessage = "ー";}
+	    	else{ sendfromMessage = json[i].sendfrom_message;}
+	    	if( json[i].sendto_message == null){sendtoMessage = "ー";}
+	    	else{ sendtoMessage = json[i].sendto_message;}
+	    	
+	    	var labelSendFromMessage = Titanium.UI.createLabel({
+	        	font:{fontFamily: _font,fontSize:16}, 
+	        	textAlign:'left',
+	        	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+	        	color:sendfromColor,
+	        	bottom:50, 
 	        	right:0, 
-	        	left:137, 
+	        	left:55, 
 		        height:20,
-		        text:json[i].sendfrom_message
+		        text:sendfromMessage
 		    });
 	    
 		    var labelSendToMessage = Titanium.UI.createLabel({
-		        font:{fontFamily: _font,fontSize:13}, 
+		        font:{fontFamily: _font,fontSize:16}, 
 		        textAlign:'left',
-		        verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
-		        color:_vividPink,
-		        bottom:10, 
+		        verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+		        color:sendtoColor,
+		        bottom:5, 
 		        right:0, 
-		        left:137, 
+		        left:55, 
 		        height:20,
-		        text: json[i].sendto_message
+		        text: sendtoMessage
 		    });
 	    
 		    var sendFromImage = Titanium.UI.createImageView({
 		    	top: 5,
 		    	left: 5,
-		    	width: 60,
-		    	height: 60,
-		    	borderRadius:6,
+		    	width: 40,
+		    	height: 40,
+		    	borderRadius:4,
 		    	image: json[i].sendfrom_image
 		    });
 	   
 		   var sendToImage = Titanium.UI.createImageView({
-		    	top: 5,
-		    	left: 70,
-		    	width: 60,
-		    	height: 60,
-		    	borderRadius:6,
+		    	top: 50,
+		    	left: 5,
+		    	width: 40,
+		    	height: 40,
+		    	borderRadius:4,
 		    	image: json[i].sendto_image
 		    });
 		    
@@ -137,30 +195,165 @@ function publicRoomWindow() {
 		        color:_darkGray,
 		        top:5, 
 		        right:0,
-		        text: json[i].updated_at
+		        text: json[i].message_number + "トーク / " + json[i].updated_at
 		    });
 		    
 		   var row = Ti.UI.createTableViewRow({
 		        hasChild: true,
-		        height:70,
+		        height:95,
 		        backgroundImage: '',
 		        sendfrom: json[i].sendfrom_id,
 		        sendto: json[i].sendto_id
 		   });
 		   
-		   if(i%2 == 0){
+		   	if(i%2 == 0){
 		   		row.backgroundColor = _white;
 		   	}else{
 		   		row.backgroundColor = _whiteGray;
 		   	}
-	   	
-		   row.add(sendFromImage);
-		   row.add(sendToImage);
-		   row.add(labelSendFromMessage);
-		   row.add(labelSendToMessage);
-		   row.add(timeLabel);
-	
-		   tableViewRowData.push(row);
+		   	row.add(labelSendFromNickname);
+		   	row.add(labelSendToNickname);
+		    row.add(sendFromImage);
+		    row.add(sendToImage);
+		    row.add(labelSendFromMessage);
+		    row.add(labelSendToMessage);
+		    row.add(timeLabel);
+			*/
+			var leftBalloonImage = Ti.UI.createView({
+				left: 70,
+				right: 75,
+				top: 20,
+				height: 25,
+		    	backgroundLeftCap: 21,
+				backgroundRightCap: 8,
+				backgroundTopCap: 8,
+				backgroundBottomCap: 8,
+				backgroundImage: 'blue_balloon_left.png',
+			});
+			
+			var rightBalloonImage = Ti.UI.createView({
+				left: 75,
+				right: 70,
+				top: 55,
+				height: 25,
+		    	backgroundLeftCap: 8,
+				backgroundRightCap: 21,
+				backgroundTopCap: 8,
+				backgroundBottomCap: 8,
+				backgroundImage: 'green_balloon_right.png',
+			});
+			
+			var labelSendFromMessage = Titanium.UI.createLabel({
+				font:{fontFamily: _font, fontSize:13},
+				textAlign: "left",
+				verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+		       	color:_white,
+		       	//backgroundColor: 'red',
+		       	left: 18,
+		       	right: 5,
+		       	height: 13,//Ti.UI.SIZE,//"auto",
+		       	center: 0,//top:10,
+		    	/*
+		    	font:{fontFamily: _font, fontSize:13}, 
+		    	textAlign:'left',
+		    	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
+		    	color:_darkBlue,
+		    	top:25, 
+		    	right:80, 
+		    	left: 80, 
+		        height:20,
+		        */
+		        text: json[i].sendfrom_message
+		    });
+		
+		    var labelSendToMessage = Titanium.UI.createLabel({
+		    	font:{fontFamily: _font, fontSize:13},
+				textAlign: "right",
+				verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+		       	color:_white,
+		       	//backgroundColor: 'red',
+		       	left: 5,
+		       	right: 18,
+		       	height: 13,//Ti.UI.SIZE,//"auto",
+		       	center: 0,//top:10,
+		    	/*
+		        font:{fontFamily: _font, fontSize:13}, 
+		        textAlign:'left',
+		        verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
+		        color:_vividPink,
+		        bottom:5, 
+		        right:80, 
+		        left: 80, 
+		        height:20,
+		        */
+		        text: json[i].sendto_message
+			});
+		    
+			var sendFromImage = Titanium.UI.createImageView({
+			 	top: 20,
+			   	left: 5,
+			   	width: 60,
+			   	height: 60,
+			   	borderRadius: 6,
+			   	image: json[i].sendfrom_image
+			});
+		   
+			var sendToImage = Titanium.UI.createImageView({
+			   	top: 20,
+			   	right: 0,
+			   	width: 60,
+			   	height: 60,
+			   	borderRadius: 6,
+			   	image: json[i].sendto_image
+			});
+			    
+			var timeLabel = Titanium.UI.createLabel({
+			    font:{fontFamily: _font, fontSize:10}, 
+			    textAlign:'right',
+			    verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+				color:_darkGray,
+				top:0,
+				height:20,
+				right:0,
+				text: json[i].updated_at
+		    });
+		    
+		    var countLabel = Titanium.UI.createLabel({
+			    font:{fontFamily: _font, fontSize:10}, 
+			    textAlign:'left',
+			    verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+				color:_darkGray,
+				top:0,
+				height:20,
+				left: 5,
+				text: "トーク数: " + json[i].message_number
+		    });
+		    
+		   var row = Ti.UI.createTableViewRow({
+		        hasChild: true,
+		        height:90,
+		        backgroundImage: '',
+		        sendfrom: json[i].sendfrom_id,
+		        sendto: json[i].sendto_id,
+		        roomID: json[i].room_id
+		   });
+		   
+		   	if(i%2 == 0){
+		   		row.backgroundColor = _white;
+		   	}else{
+		   		row.backgroundColor = _whiteGray;
+		   	}
+		   	
+			row.add(leftBalloonImage);
+			row.add(rightBalloonImage);
+		    leftBalloonImage.add(labelSendFromMessage);
+		    rightBalloonImage.add(labelSendToMessage);
+		    row.add(sendFromImage);
+		    row.add(sendToImage);
+		    row.add(timeLabel);
+		    row.add(countLabel);
+		    
+		   	tableViewRowData.push(row);
 		}
 	
 		tableView.data = tableViewRowData;		
@@ -175,4 +368,5 @@ function publicRoomWindow() {
 }
 
 module.exports = publicRoomWindow;
+
 

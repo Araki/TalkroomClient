@@ -3,8 +3,8 @@ function tabGroup() {
 	//==================================================================
 	// 「探す」ウィンドウ
 	//==================================================================
-	var searchWindow = require('searchWindow');
-	var win1 = new searchWindow();
+	var searchTableWindow = require('searchTableWindow');
+	var win1 = new searchTableWindow("","","");
 	
 	var tab1 = Titanium.UI.createTab({ 
 	    icon:'/images/tabbar_icon_user.png',

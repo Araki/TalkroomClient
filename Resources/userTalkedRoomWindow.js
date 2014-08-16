@@ -34,16 +34,16 @@ function userTalkedRoomWindow( user_id ) {
 	
 	tableView.addEventListener('click', function(e) {
 		actInd.show();
-		consumePointDialog("peep", function(data){
-			if (data.success){
+		//consumePointDialog("peep", e.row.id, function(data){
+			//if (data.success){
 				var cWindow = require('chatWindow');
 				var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, false);
 				tabGroup.activeTab.open(chatWindow);
 				actInd.hide();
-			}else{
-				actInd.hide();
-			}
-		});
+			//}else{
+				//actInd.hide();
+			//}
+		//});
 	});	
 
 	self.add(tableView);
@@ -65,32 +65,78 @@ module.exports = userTalkedRoomWindow;
 
 function createRow(room_id, sendfrom_image, sendto_image, sendfrom_message, sendto_message, time, sendfrom_id, sendto_id, backgroundType){
 	
+	var leftBalloonImage = Ti.UI.createView({
+		left: 70,
+		right: 75,
+		top: 20,
+		height: 25,
+    	backgroundLeftCap: 21,
+		backgroundRightCap: 8,
+		backgroundTopCap: 8,
+		backgroundBottomCap: 8,
+		backgroundImage: 'blue_balloon_left.png',
+	});
+	
+	var rightBalloonImage = Ti.UI.createView({
+		left: 75,
+		right: 70,
+		top: 55,
+		height: 25,
+    	backgroundLeftCap: 8,
+		backgroundRightCap: 21,
+		backgroundTopCap: 8,
+		backgroundBottomCap: 8,
+		backgroundImage: 'green_balloon_right.png',
+	});
+	
 	var labelSendFromMessage = Titanium.UI.createLabel({
+		font:{fontFamily: _font, fontSize:13},
+		textAlign: "left",
+		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+       	color:_white,
+       	//backgroundColor: 'red',
+       	left: 18,
+       	right: 5,
+       	height: 13,//Ti.UI.SIZE,//"auto",
+       	center: 0,//top:10,
+    	/*
     	font:{fontFamily: _font, fontSize:13}, 
     	textAlign:'left',
     	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
     	color:_darkBlue,
-    	bottom:30, 
-    	right:0, 
-    	left: 137, 
+    	top:25, 
+    	right:80, 
+    	left: 80, 
         height:20,
+        */
         text: sendfrom_message
     });
 
     var labelSendToMessage = Titanium.UI.createLabel({
+    	font:{fontFamily: _font, fontSize:13},
+		textAlign: "right",
+		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+       	color:_white,
+       	//backgroundColor: 'red',
+       	left: 5,
+       	right: 18,
+       	height: 13,//Ti.UI.SIZE,//"auto",
+       	center: 0,//top:10,
+    	/*
         font:{fontFamily: _font, fontSize:13}, 
         textAlign:'left',
         verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
         color:_vividPink,
-        bottom:10, 
-        right:0, 
-        left: 137, 
+        bottom:5, 
+        right:80, 
+        left: 80, 
         height:20,
+        */
         text: sendto_message
 	});
     
 	var sendFromImage = Titanium.UI.createImageView({
-	 	top: 5,
+	 	top: 20,
 	   	left: 5,
 	   	width: 60,
 	   	height: 60,
@@ -99,8 +145,8 @@ function createRow(room_id, sendfrom_image, sendto_image, sendfrom_message, send
 	});
    
 	var sendToImage = Titanium.UI.createImageView({
-	   	top: 5,
-	   	left: 70,
+	   	top: 20,
+	   	right: 0,
 	   	width: 60,
 	   	height: 60,
 	   	borderRadius: 6,
@@ -110,16 +156,17 @@ function createRow(room_id, sendfrom_image, sendto_image, sendfrom_message, send
 	var timeLabel = Titanium.UI.createLabel({
 	    font:{fontFamily: _font, fontSize:10}, 
 	    textAlign:'right',
-	    verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+	    verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
 		color:_darkGray,
-		top:5, 
+		top:0,
+		height:20,
 		right:0,
 		text: time
     });
     
    var row = Ti.UI.createTableViewRow({
    		hasChild: true,
-        height:70,
+        height:90,
         id: room_id,
         sendfrom: sendfrom_id,
         sendto: sendto_id
@@ -130,12 +177,14 @@ function createRow(room_id, sendfrom_image, sendto_image, sendfrom_message, send
 	}else{
    		row.backgroundColor = _whiteGray;
    	}
-
-   row.add(labelSendFromMessage);
-   row.add(labelSendToMessage);
-   row.add(sendFromImage);
-   row.add(sendToImage);
-   row.add(timeLabel);
+   	
+	row.add(leftBalloonImage);
+	row.add(rightBalloonImage);
+    leftBalloonImage.add(labelSendFromMessage);
+    rightBalloonImage.add(labelSendToMessage);
+    row.add(sendFromImage);
+    row.add(sendToImage);
+    row.add(timeLabel);
 	
 	return row;
 }

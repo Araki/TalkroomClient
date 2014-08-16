@@ -21,20 +21,20 @@ function userProfileWindow( userID, type ) {
 			var json = data.data;
 			self.id = userID;
 			self.titleControl.text = json[0].nickname;
-			profileImage1.image = json[0].profile_image1;
-			profileImage2.image = json[0].profile_image2;
-			profileImage3.image = json[0].profile_image3;
+			if(json[0].profile_image1 != null){profileImage1.image = json[0].profile_image1;}
+			if(json[0].profile_image2 != null){profileImage2.image = json[0].profile_image2;}
+			if(json[0].profile_image3 != null){profileImage3.image = json[0].profile_image3;}
 			tableViewRowData[0] = createTableRow("年代", exchangeFromNumber(json[0].age, "age"), 0);
 			tableViewRowData[1] = createTableRow("エリア", exchangeFromNumber(json[0].area, "area"), 1);
-			tableViewRowData[2] = createTableRow("目的", exchangeFromNumber(json[0].purpose, "purpose"), 0);
-			tableViewRowData[3] = createTableRow("一言", json[0].profile, 1);
-			tableViewRowData[4] = createTableRow("身長", exchangeFromNumber(json[0].tall, "tall"), 0);
-			tableViewRowData[5] = createTableRow("血液型", exchangeFromNumber(json[0].blood, "blood"), 1);
-			tableViewRowData[6] = createTableRow("体型", exchangeFromNumber(json[0].style, "style"), 0);
-			tableViewRowData[7] = createTableRow("休日", exchangeFromNumber(json[0].holiday, "holiday"), 1);
-			tableViewRowData[8] = createTableRow("お酒", exchangeFromNumber(json[0].alcohol, "alcohol"), 0);
-			tableViewRowData[9] = createTableRow("タバコ", exchangeFromNumber(json[0].cigarette, "cigarette"), 1);
-			tableViewRowData[10] = createTableRow("給料", exchangeFromNumber(json[0].salary, "salary"), 0);
+			//tableViewRowData[2] = createTableRow("目的", exchangeFromNumber(json[0].purpose, "purpose"), 0);
+			tableViewRowData[2] = createTableRow("一言", json[0].profile, 0);
+			tableViewRowData[3] = createTableRow("身長", exchangeFromNumber(json[0].tall, "tall"), 1);
+			tableViewRowData[4] = createTableRow("血液型", exchangeFromNumber(json[0].blood, "blood"), 0);
+			tableViewRowData[5] = createTableRow("体型", exchangeFromNumber(json[0].style, "style"), 1);
+			tableViewRowData[6] = createTableRow("休日", exchangeFromNumber(json[0].holiday, "holiday"), 0);
+			tableViewRowData[7] = createTableRow("お酒", exchangeFromNumber(json[0].alcohol, "alcohol"), 1);
+			tableViewRowData[8] = createTableRow("タバコ", exchangeFromNumber(json[0].cigarette, "cigarette"), 0);
+			tableViewRowData[9] = createTableRow("給料", exchangeFromNumber(json[0].salary, "salary"), 1);
 			tableView.data = tableViewRowData;
 		} else{
 			// 通信に失敗したら行う処理
@@ -42,10 +42,18 @@ function userProfileWindow( userID, type ) {
 		actInd.hide();	
 	});
 	
-	readPastTalkButton.addEventListener('click', function() {	
-		var utWindow = require('userTalkedRoomWindow');
-		var userTalkedRoomWindow = new utWindow( self.id );
-		tabGroup.activeTab.open(userTalkedRoomWindow);
+	readPastTalkButton.addEventListener('click', function() {
+		actInd.show();
+		consumePointDialog("peep", userID, function(data){
+			if (data.success){
+				var utWindow = require('userTalkedRoomWindow');
+				var userTalkedRoomWindow = new utWindow( self.id );
+				tabGroup.activeTab.open(userTalkedRoomWindow);
+				actInd.hide();
+			}else{
+				actInd.hide();
+			}
+		});
 	});
 	
 	if( type != "myProfile"){
@@ -112,6 +120,7 @@ function createProfileImage1(){
 		left: 15,
 		width: 90,
 		height: 90,
+		image: '/images/no_image.png',
 		borderRadius:9,
 	});
 	return view;
@@ -123,6 +132,7 @@ function createProfileImage2(){
 		left: 115,
 		width: 90,
 		height: 90,
+		image: '/images/no_image.png',
 		borderRadius:9,
 	});
 	return view;
@@ -134,6 +144,7 @@ function createProfileImage3(){
 		right: 15,
 		width: 90,
 		height: 90,
+		image: '/images/no_image.png',
 		borderRadius:9,
 	});
 	return view;
@@ -150,7 +161,7 @@ function createTableView( top, bottom ){
 }
 
 function createTableRow(title, data, backgroundType){
-	for (var i=0; i<11; i++){
+	for (var i=0; i<10; i++){
     
     	var titleLabel = Titanium.UI.createLabel({
         	font:{fontFamily: _font, fontSize:15}, 
@@ -207,7 +218,7 @@ function createReadPastTalkButton(){
 		left: 15,
 		top: 10,
 		color:_white,
-		backgroundColor:_mossGreen,
+		backgroundColor:_vividPink,
 		borderRadius:10
 	});
 	return view;
@@ -222,7 +233,7 @@ function createTalkButton(){
 		right: 15,
 		top: 10,
 		color: _white,
-		backgroundColor:_vividPink,
+		backgroundColor:_mossGreen,
 		borderRadius:10
 	});
 	return view;

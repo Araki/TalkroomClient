@@ -38,48 +38,73 @@ function registrationWindow(){
 	
 	var self = Ti.UI.createWindow({backgroundColor: 'white'});
 	
+	var scrollView = Titanium.UI.createScrollView({
+		contentWidth: "auto",
+		contentHeight: "auto",
+		top: 0,
+		backgroundColor: _whiteBlue,
+		showVerticalScrollIndicator: true
+	});
+	self.add(scrollView);
+	
+	var view = Titanium.UI.createView({
+		height: 500,
+		backgroundColor: _whiteBlue
+	});
+	scrollView.add(view);
+	
 	//ニックネーム
 	var nicknameLabel = Titanium.UI.createLabel({
 		text: 'ニックネーム',
-		top: 30,
+		top: 20,
 		left: 40,
-		width: 40,
-		height: 30,
-		font:{fontFamily: _font, fontSize: 12 }
+		right: 40,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 15 }
 	});
-	self.add(nicknameLabel);
+	view.add(nicknameLabel);
 	
 	var nicknameTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-		top: 30,
+		top: 45,
 		right: 40,
-		left: 85,
+		left: 40,
 		height: 30,
+		borderRadius: 10,
+		borderColor: _darkBlue,
+		color: _darkBlue,
+		backgroundColor: _white,
+		font:{fontFamily: _font, fontSize: 15 },
 		keyboardToolbar: false
 	});
-	self.add(nicknameTextField);
+	view.add(nicknameTextField);
 
 	//年齢
 	var ageLabel = Titanium.UI.createLabel({
 		text: '年齢',
-		top: 80,
+		top: 90,
 		left: 40,
-		width: 40,
-		height: 30,
-		font:{fontFamily: _font, fontSize: 12 }
+		right: 40,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 15 }
 	});
-	self.add(ageLabel);
+	view.add(ageLabel);
 	
 	var ageTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-		top: 80,
+		top: 115,
 		right: 40,
-		left: 85,
+		left: 40,
 		height: 30,
+		borderRadius: 10,
+		borderColor: _darkBlue,
+		color: _darkBlue,
+		backgroundColor: _white,
+		font:{fontFamily: _font, fontSize: 15 },
 		enabled: false,
 		keyboardToolbar: false
 	});
-	self.add(ageTextField);
+	view.add(ageTextField);
 	
 	//テキストフィールドがタップされたときの挙動
 	ageTextField.addEventListener('click', function(){
@@ -97,24 +122,29 @@ function registrationWindow(){
 	//居住地
 	var areaLabel = Titanium.UI.createLabel({
 		text: '居住地',
-		top: 130,
+		top: 160,
 		left: 40,
-		width: 40,
-		height: 30,
-		font:{fontFamily: _font, fontSize: 12 }
+		right: 40,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 15 }
 	});
-	self.add(areaLabel);
+	view.add(areaLabel);
 	
 	var areaTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-		top: 130,
+		top: 185,
 		right: 40,
-		left: 85,
+		left: 40,
 		height: 30,
+		borderRadius: 10,
+		borderColor: _darkBlue,
+		color: _darkBlue,
+		backgroundColor: _white,
+		font:{fontFamily: _font, fontSize: 15 },
 		enabled: false,
 		keyboardToolbar: false
 	});
-	self.add(areaTextField);
+	view.add(areaTextField);
 	
 	//テキストフィールドがタップされたときの挙動
 	areaTextField.addEventListener('click', function(){
@@ -132,24 +162,29 @@ function registrationWindow(){
 	//目的
 	var purposeLabel = Titanium.UI.createLabel({
 		text: '目的',
-		top: 180,
+		top: 230,
 		left: 40,
-		width: 40,
-		height: 30,
-		font:{fontFamily: _font, fontSize: 12 }
+		right: 40,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 15 }
 	});
-	self.add(purposeLabel);
+	view.add(purposeLabel);
 	
 	var purposeTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-		top: 180,
+		top: 255,
 		right: 40,
-		left: 85,
+		left: 40,
 		height: 30,
+		borderRadius: 10,
+		borderColor: _darkBlue,
+		color: _darkBlue,
+		backgroundColor: _white,
+		font:{fontFamily: _font, fontSize: 15 },
 		enabled: false,
 		keyboardToolbar: false
 	});
-	self.add(purposeTextField);
+	view.add(purposeTextField);
 	
 	//テキストフィールドがタップされたときの挙動
 	purposeTextField.addEventListener('click', function(){
@@ -167,43 +202,47 @@ function registrationWindow(){
 	//一言
 	var profileLabel = Titanium.UI.createLabel({
 		text: '一言',
-		top: 230,
+		top: 300,
 		left: 40,
-		width: 40,
-		height: 30,
-		font:{fontFamily: _font, fontSize: 12 }
+		right: 40,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 15 }
 	});
-	self.add(profileLabel);
+	view.add(profileLabel);
 	
 	var profileTextField = Titanium.UI.createTextArea({
         value:'',
-        top:260,
-        height:80,
+        top:325,
+        height:90,
         left:40,
         right:40,
         textAlign:'left',
-        font:{fontFamily: _font},
+        borderRadius: 10,
+		borderColor: _darkBlue,
+		color: _darkBlue,
+		backgroundColor: _white,
+        font:{fontFamily: _font, fontSize: 15 },
+        borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
         appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
         keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
         returnKeyType:Titanium.UI.RETURNKEY_DONE,
-        borderWidth:2,
-        borderColor:'#bbb',
-        borderRadius:5
 	});
-	self.add(profileTextField);
+	view.add(profileTextField);
 
 	
 	var submitButton = Ti.UI.createButton({
 		title: '決定',
-		font:{fontFamily: _font},
-		bottom: 50,
-		right: 20,
-		left: 20,
-		height: 50,
-		borderColor:"#1E90FF",
-		borderRadius:5
+		font:{fontFamily: _font, fontSize: 18},
+		top: 435,
+		right: 65,
+		left: 65,
+		height: 35,
+		//borderColor:"#1E90FF",
+		color: _white,
+		backgroundColor: _mossGreen,
+		borderRadius:10
 	});
-	self.add( submitButton );
+	view.add( submitButton );
 	
 	submitButton.addEventListener('click', function() {
 		var errorMessage = "";

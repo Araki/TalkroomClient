@@ -17,7 +17,10 @@
 					ev.preventDefault();
 				}, false);
 				
-				var flipsnap = Flipsnap("#showcase .flipsnap");
+				var flipsnap = Flipsnap("#showcase .flipsnap", {
+					distance: 320,//スライド時に何ピクセル移動させるか。
+					point: 4//何回スライドできるか。画像枚数 - 1を設定する
+				});
 					
 				flipsnap.element.addEventListener('flipsnap.moveend', function() {
 					$("#showcase .pointer span").filter('.current').removeClass('current');
@@ -39,11 +42,28 @@
 	<body>
 		<section id="showcase">
 			<ul class="flipsnap">
-				<li class="item"><img src="images/introductionWindow/1.jpg"></li>
-				<li class="item"><img src="images/introductionWindow/2.jpg"></li>
-				<li class="item"><img src="images/introductionWindow/3.jpg"></li>
-				<li class="item"><img src="images/introductionWindow/4.jpg"></li>
-				<li class="item"><img src="images/introductionWindow/5.jpg"></li>
+				<script>
+					var i = 1;
+				  	if (navigator.userAgent.search('iPhone') !== -1) {
+			      		if (window.screen.height === 568) {
+			      			document.write('<li class="item5"><img src="images/introductionWindow/1@2x.png"></li>');
+							document.write('<li class="item5"><img src="images/introductionWindow/2@2x.png"></li>');
+							document.write('<li class="item5"><img src="images/introductionWindow/3@2x.png"></li>');
+							document.write('<li class="item5"><img src="images/introductionWindow/4@2x.png"></li>');
+							document.write('<li class="item5"><img src="images/introductionWindow/5@2x.png"></li>');
+			        		//alert('iPhone5');
+			        	} else if (window.devicePixelRatio > 1) {
+			            	document.write('<li class="item4"><img src="images/introductionWindow/1.png"></li>');
+							document.write('<li class="item4"><img src="images/introductionWindow/2.png"></li>');
+							document.write('<li class="item4"><img src="images/introductionWindow/3.png"></li>');
+							document.write('<li class="item4"><img src="images/introductionWindow/4.png"></li>');
+							document.write('<li class="item4"><img src="images/introductionWindow/5.png"></li>');
+			        		//alert('iPhone4-4S');
+			        	} else {
+			            	//alert('iPhone3-3GS');
+			        	}
+			   	 	}
+				</script>
 			</ul>
 			<div class="pointer">
 				<span class="current"></span>

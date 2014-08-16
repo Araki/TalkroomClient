@@ -426,7 +426,9 @@ function createFootprintTableRow(id, name, profile_image, profile, area, purpose
 		color:_darkGray,
 		bottom:5, 
 		right:0,
-        text: exchangeFromNumber( area, "area" ) + " | " + exchangeFromNumber( purpose, "purpose" ) + " | " + time
+        text: exchangeFromNumber( area, "area" ) + 
+        	  //" | " + exchangeFromNumber( purpose, "purpose" ) + 
+        	  " | " + time
     });
     
     var row = Ti.UI.createTableViewRow({

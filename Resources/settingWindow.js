@@ -65,13 +65,16 @@ function settingWindow() {
 			var rewardRow = createDefaultRow("無料でポイントGET", "reward");
 			rowData.push(rewardRow);
 		}
+		/*
 		var inviteFriendsRow = createDefaultRow("友達招待してポイントGET", "invite_friends");
 		rowData.push(inviteFriendsRow);
-		
+		*/
 		var anotherHeaderRow = createHeaderRow("その他");
 		rowData.push(anotherHeaderRow);
+		/*
 		var howtoRow = createDefaultRow("使い方", "how_to");
 		rowData.push(howtoRow);
+		*/
 		var tosRow = createDefaultRow("利用規約", "tos");
 		rowData.push(tosRow);
 		var inquiryRow = createDefaultRow("お問い合わせ", "inquiry");
@@ -113,7 +116,14 @@ function settingWindow() {
 					tabGroup.activeTab.open(settingRewardWindow);
 					*/
 					var car = require('ti.car');
-					var param = ["3344", Ti.App.Properties.getString('my_id'), "ncIdX3la", "477538846cd8ed2f", "TITLE", "BACK", "http://car.mobadme.jp/spg/spnew/702/3344/index.php"];
+					var param = ["3344", 
+						Ti.App.Properties.getString('my_id'), 
+						"ncIdX3la", 
+						"477538846cd8ed2f", 
+						"無料でポイントGET", 
+						"戻る", 
+						"http://car.mobadme.jp/spg/spnew/702/3344/index.php"
+					];
 					car.showMediaView(param);
 		  			break;
 		  			
@@ -123,9 +133,14 @@ function settingWindow() {
 					tabGroup.activeTab.open(settingVideoWindow);
 		  			break;
 		  		case "invite_friends": 
+		  			/*
 		  			var sifWindow = require('setting/settingInviteFriendsWindow');
 					var settingInviteFriendsWindow = new sifWindow();
 					tabGroup.activeTab.open(settingInviteFriendsWindow);
+					*/
+					var registWindow = require('facebookWindow');
+					var registrationWindow = new registWindow();
+					tabGroup.activeTab.open(registrationWindow);
 		  			break;
 		  		case "how_to": 
 		  			var shtWindow = require('setting/settingHowToWindow');

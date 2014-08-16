@@ -16,7 +16,7 @@ function chatWindow(sendfrom, sendto, textField) {
 		contentWidth: "auto",
 		contentHeight: "auto",
 		top: 0,
-		bottom:0,
+		bottom:50,
 		backgroundColor: _whiteBlue,
 		showVerticalScrollIndicator: true
 	});
@@ -27,6 +27,8 @@ function chatWindow(sendfrom, sendto, textField) {
 		top: 0,
 		showVerticalScrollIndicator: true
 	});
+	
+	var adView = createBannerAdView();
 	
 	var toolbarView = Titanium.UI.createView({
 		bottom: 0,
@@ -255,7 +257,7 @@ function chatWindow(sendfrom, sendto, textField) {
 		changePrivateButton.addEventListener('click',function(){
 			//ButtonのenabledがTRUEのときしか処理しない
 			if(changePrivateButton.enabled == true){
-				consumePointDialog("private", function(data){
+				consumePointDialog("private", roomID, function(data){
 					if (data.success){
 						var url = Ti.App.domain + "change_private_room.json?room_id=" + roomID + "&app_token=" + Ti.App.Properties.getString('app_token');
 						getData(url, function( data ){
@@ -283,6 +285,7 @@ function chatWindow(sendfrom, sendto, textField) {
 	
 	//baseView.add(scrollView);
 	self.add(baseView);
+	self.add(adView);
 	self.add(actInd);
 	return self;
 }

@@ -5,7 +5,7 @@ function searchWindow() {
 	var baseView = Titanium.UI.createView({
 		top: 0,
 		bottom: 0,
-		backgroundColor: _whiteBlue
+		backgroundColor: _white
 	});
 	var ageData = [];
 	var areaData = [];
@@ -55,7 +55,7 @@ function searchWindow() {
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 		font:{fontFamily: _font, fontSize: 17},
 		value: "すべて",
-		customItem: 0,
+		customItem: "",
 		textAlign: "center",
 		top: 30,
 		right: 30,
@@ -100,7 +100,7 @@ function searchWindow() {
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 		font:{fontFamily: _font, fontSize: 17},
 		value: "すべて",
-		customItem: 0,
+		customItem: "",
 		textAlign: "center",
 		top: 80,
 		right: 30,
@@ -144,7 +144,7 @@ function searchWindow() {
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 		font:{fontFamily: _font, fontSize: 17},
 		value: "すべて",
-		customItem: 0,
+		customItem: "",
 		textAlign: "center",
 		top: 130,
 		right: 30,
@@ -189,7 +189,9 @@ function searchWindow() {
 	});
 	
 	searchButton.addEventListener('click', function(){
-		
+		Ti.API.info("age:" + ageTextField.customItem);
+		Ti.API.info("area:" + areaTextField.customItem);
+		Ti.API.info("purpose:" + purposeTextField.customItem);
 		var stWindow = require('searchTableWindow');
 		var searchTableWindow = new stWindow(
 			ageTextField.customItem,

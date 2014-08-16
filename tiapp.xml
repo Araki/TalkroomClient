@@ -47,6 +47,8 @@
         <module platform="iphone">com.onecowstanding.flurry</module>
         <module platform="android">com.onecowstanding.flurry</module>
         <module platform="iphone" version="1.3.0">ti.car</module>
+        <module platform="iphone">ti.admob</module>
+        <module platform="iphone">net.nend</module>
     </modules>
     <deployment-targets>
         <target device="android">true</target>
