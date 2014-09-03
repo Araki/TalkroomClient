@@ -30,6 +30,7 @@ function settingProfileWindow() {
 	self.rightNavButton = saveButton;
 	
 	saveButton.addEventListener('click', function(){
+		Flurry.logEvent('SettingProfileWindow Push SaveButton');
 		actInd.show();
 		var url = Ti.App.domain + "update_profile.json";
 		var message = {
@@ -40,8 +41,9 @@ function settingProfileWindow() {
 		
 		sendData( url, message, function( data ){
 			if (data.success){
+				Flurry.logEvent('SettingProfileWindow Saved');
 				//通信に成功したら行う処理
-				Ti.API.info("戻り値:" + data.data);
+				//Ti.API.info("戻り値:" + data.data);
 				
 				Ti.UI.createAlertDialog({
 					title: '一言を更新しました',
@@ -53,7 +55,7 @@ function settingProfileWindow() {
 			} else{
 				//通信に失敗したら行う処理
 				Ti.UI.createAlertDialog({
-					title: 'エラー',
+					title: '一言の更新に失敗しました',
 				  	message: data.data
 				}).show();
 				

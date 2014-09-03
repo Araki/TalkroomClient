@@ -25,7 +25,7 @@
 				flipsnap.element.addEventListener('flipsnap.moveend', function() {
 					$("#showcase .pointer span").filter('.current').removeClass('current');
 					$("#showcase .pointer span").eq(flipsnap.currentPoint).addClass('current');
-					Ti.API.info(flipsnap.currentPoint);
+					//Ti.API.info(flipsnap.currentPoint);
 					if(flipsnap.currentPoint == 4){
 						Titanium.App.fireEvent('webview:sent', {value:"TRUE"});
 					}else{

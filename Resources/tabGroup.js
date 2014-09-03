@@ -8,7 +8,7 @@ function tabGroup() {
 	
 	var tab1 = Titanium.UI.createTab({ 
 	    icon:'/images/tabbar_icon_user.png',
-	    title:'探す',
+	    title:'ユーザー',
 	    window:win1
 	});
 
@@ -23,7 +23,7 @@ function tabGroup() {
 	
 	var tab2 = Titanium.UI.createTab({ 
 	    icon:'/images/tabbar_icon_room.png',
-	    title:'のぞく',
+	    title:'ルーム',
 	    window:win2
 	});
 	

@@ -86,24 +86,28 @@ function settingWindow() {
 		listenerFunction = function(e) {
 			switch (e.row.id) {
 		  		case "profile":
+		  			Flurry.logEvent('SettingWindow Go To Profile');
 		  			var spWindow = require('setting/settingProfileWindow');
 					var settingProfileWindow = new spWindow();
 					tabGroup.activeTab.open(settingProfileWindow);
 		  			break;
 		  			
 		  		case "detail_profile": 
+		  			Flurry.logEvent('SettingWindow Go To DetailProfile');
 		  			var sdpWindow = require('setting/settingDetailProfileWindow');
 					var settingDetailProfileWindow = new sdpWindow();
 					tabGroup.activeTab.open(settingDetailProfileWindow);
 		  			break;
 		  			
 		  		case "my_profile":
+		  			Flurry.logEvent('SettingWindow Go To MyProfile');
 					var upWindow = require('userProfileWindow');
 					var userProfileWindow = new upWindow(Ti.App.Properties.getString('my_id'), "myProfile");
 					tabGroup.activeTab.open( userProfileWindow );
 		  			break;
 		  			
 		  		case "buy_points": 
+		  			Flurry.logEvent('SettingWindow Go To BuyPoints');
 		  			var sbpWindow = require('setting/settingBuyPointsWindow');
 					var settingBuyPointsWindow = new sbpWindow();
 					tabGroup.activeTab.open(settingBuyPointsWindow);
@@ -115,6 +119,7 @@ function settingWindow() {
 					var settingRewardWindow = new srWindow();
 					tabGroup.activeTab.open(settingRewardWindow);
 					*/
+					Flurry.logEvent('SettingWindow Go To Reward');
 					var car = require('ti.car');
 					var param = ["3344", 
 						Ti.App.Properties.getString('my_id'), 
@@ -143,17 +148,20 @@ function settingWindow() {
 					tabGroup.activeTab.open(registrationWindow);
 		  			break;
 		  		case "how_to": 
+		  			/*
 		  			var shtWindow = require('setting/settingHowToWindow');
 					var settingHowToWindow = new shtWindow();
 					tabGroup.activeTab.open(settingHowToWindow);
+					*/
 		  			break;
-		  		case "tos": 
+		  		case "tos":
+		  			Flurry.logEvent('SettingWindow Go To TOS');
 		  			var stosWindow = require('setting/settingTOSWindow');
 					var settingTOSWindow = new stosWindow();
 					tabGroup.activeTab.open(settingTOSWindow);
 		  			break;
 		  		case "inquiry": 
-		  			
+		  			Flurry.logEvent('SettingWindow Go To Inquiry');
 		  			var siWindow = require('setting/settingInquiryWindow');
 					var settingInquiryWindow = new siWindow();
 					tabGroup.activeTab.open(settingInquiryWindow);
@@ -171,8 +179,13 @@ function settingWindow() {
 					logout_alert.addEventListener('click', function(e){
 						switch (e.index){
 							case 0:
+								Flurry.logEvent('SettingWindow LogOut');
 								fb.logout();
-								alert('Logged out');
+								//alert('Logged out');
+								Ti.UI.createAlertDialog({
+									title: 'ログアウトしました',
+								  	//message: data.data
+								}).show();
 								facebookWindow.open();
 						}
 					});

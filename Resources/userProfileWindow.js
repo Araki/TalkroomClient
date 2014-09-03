@@ -43,6 +43,7 @@ function userProfileWindow( userID, type ) {
 	});
 	
 	readPastTalkButton.addEventListener('click', function() {
+		Flurry.logEvent('UserProfileWindow Push ReadPastButton');	
 		actInd.show();
 		consumePointDialog("peep", userID, function(data){
 			if (data.success){
@@ -60,6 +61,7 @@ function userProfileWindow( userID, type ) {
 		var talkButton = createTalkButton();
 		buttonBgView.add(talkButton);
 		talkButton.addEventListener('click', function() {
+			Flurry.logEvent('UserProfileWindow Push TalkButton');	
 			var cWindow = require('chatWindow');
 			var chatWindow = new cWindow(Ti.App.Properties.getString('my_id'), self.id, true);
 			tabGroup.activeTab.open(chatWindow);

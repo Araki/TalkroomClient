@@ -7,7 +7,7 @@ var Admob = require('ti.admob');
 var nend = require('net.nend');
 
 //=============================================================
-//Flurry初期設定
+//初期設定
 //=============================================================
 var Flurry = require('com.onecowstanding.flurry');
 
@@ -22,20 +22,19 @@ Flurry.crashReportingEnabled = true;
 
 switch(Ti.Platform.osname){
     case 'iphone':
-        Ti.API.info("Flurry iPhoneスタート");
+        //Ti.API.info("Flurry iPhoneスタート");
         Flurry.startSession('F5NQXW4FTH444BFF9939');
         break;
     case 'ipad':
-        Ti.API.info("Flurry iPadスタート");
+        //Ti.API.info("Flurry iPadスタート");
         break;
     case 'android':
-        Ti.API.info("Flurry Androidスタート");
+        //Ti.API.info("Flurry Androidスタート");
 		Flurry.startSession();
         break;
 }
 
 Flurry.logAllPageViews();
-Flurry.logEvent('test');
 
 //=============================================================
 //Ti.Appの初期化
@@ -49,13 +48,13 @@ var displayWidth = Titanium.Platform.displayCaps.platformWidth;
 var displayHeight = Titanium.Platform.displayCaps.platformHeight;
 Ti.App.navBarHeight = 44;
 
-Ti.API.info("displayWidth" + displayWidth);
-Ti.API.info("displayHeight" + displayHeight);
-Ti.API.info("==================app_token:::::::::" + Ti.App.Properties.getString('app_token'));
-Ti.API.info("==================my_id:::::::::" + Ti.App.Properties.getString('my_id'));
+//Ti.API.info("displayWidth" + displayWidth);
+//Ti.API.info("displayHeight" + displayHeight);
+//Ti.API.info("==================app_token:::::::::" + Ti.App.Properties.getString('app_token'));
+//Ti.API.info("==================my_id:::::::::" + Ti.App.Properties.getString('my_id'));
 
 if(Ti.App.Properties.getString('searchAge') == null){Ti.App.Properties.setString('searchAge', "");}
-if(Ti.App.Properties.getString('searchArea') == null){Ti.App.Properties.setString('searchAreae', "");}
+if(Ti.App.Properties.getString('searchArea') == null){Ti.App.Properties.setString('searchArea', "");}
 if(Ti.App.Properties.getString('searchGender') == null){Ti.App.Properties.setString('searchGender', "");}
 
 //=============================================================
@@ -64,9 +63,17 @@ if(Ti.App.Properties.getString('searchGender') == null){Ti.App.Properties.setStr
 var _point;
 var _peepPoint = 20;
 var _privatePoint = 100;
+/*
 var product100;
 var product300;
 var product500;
+*/
+var product100;
+var product600;
+var product1200;
+var product3000;
+var product6000;
+
 var rewardFlag;
 
 var _white = '#FFFFFF';
@@ -110,10 +117,17 @@ fb.addEventListener('login', function(e) {
         getUserDataList();
         
     } else if (e.error) {
-    	alert( e.error );
+    	//alert( e.error );
+    	Ti.UI.createAlertDialog({
+			title: 'Facebookログインに失敗しました',
+		  	//message: data.data
+		}).show();
 		
     } else if ( e.cancelled ) {
-    	alert( e.cancelled );
+    	Ti.UI.createAlertDialog({
+			title: 'Facebookログインがキャンセルされました',
+		  	//message: data.data
+		}).show();
     	var fbWindow = require('facebookWindow');
 		facebookWindow = new fbWindow();
 		facebookWindow.open();
@@ -155,7 +169,7 @@ function getUserDataList() {
 			            //alert("リワード:" + rewardFlag);
 			            
 						if(obj.result == "true"){//既に登録済みのユーザーの処理
-							
+							Flurry.logEvent('App Login');
 							var birth = birthday.split("/");
 							var current = new Date();
 							var age = current.getFullYear() - birth[2];
@@ -185,12 +199,13 @@ function getUserDataList() {
 							actInd.hide();
 							
 						}else{//まだ未登録のユーザーの処理
-							
+							Flurry.logEvent('App SignUp');
+							/*
 							Ti.UI.createAlertDialog({
 								title: 'まだ未登録のユーザー',
 							  	message: data.data
 							}).show();
-							
+							*/
 							var registWindow = require('registrationWindow');
 							var registrationWindow = new registWindow();
 							
@@ -215,25 +230,29 @@ function getUserDataList() {
 										 birth[1]);
 							
 							//registrationWindowの各要素にデータを格納
-							registrationWindow.children[1].value = name;
-							registrationWindow.children[3].value = ageText;
-							registrationWindow.children[3].customItem = ageNum;
-							registrationWindow.children[5].customItem = 0;
-							registrationWindow.children[7].customItem = 0;
+							registrationWindow.children[0].children[0].children[1].value = name;
+							//registrationWindow.children[0].children[0].children[3].value = ageText;
+							//registrationWindow.children[0].children[0].children[3].customItem = ageNum;
+							//registrationWindow.children[0].children[0].children[5].customItem = 0;
+							//registrationWindow.children[7].customItem = 0;
 							registrationWindow.uid = uid;
 							registrationWindow.gender = gender;
 							registrationWindow.email = email;
+							Ti.API.info("Name:" + name);
 							
+							Ti.API.info("ageText:" + ageText + "(" + current.getFullYear() + current.getMonth() + current.getDate() + ")(" + birth[0] + birth[1] + birth[2] + ")");
+							Ti.API.info("ageNum:" + ageNum);
 							registrationWindow.open();
-							self.close();
+							//self.close();
 							actInd.hide();
 						}
 					} else{
 						//通信に失敗したら行う処理
 						Ti.UI.createAlertDialog({
-							title: 'エラー',
-						  	message: data.data
+							title: '通信に失敗しました',
+						  	//message: data.data
 						}).show();
+						actInd.hide();
 					}
 				});
 	        }
@@ -283,7 +302,7 @@ function calculateAge(cY, cM, cD, bY, bM, bD){
 	var ageYear = currentYear - birthdayYear;
 	var ageMonth = currentMonth - birthdayMonth;
 	var ageDate = currentDate - birthdayDate;
-	
+	//Ti.API.info(birthMonth)
 	if (ageYear > 0){
 		if (ageMonth > 0 ){//既に誕生月が過ぎている場合
 			age = ageYear;
@@ -302,10 +321,14 @@ function calculateAge(cY, cM, cD, bY, bM, bD){
 		//0歳以下なのでありえない
 	}
 	
-	Ti.API.info("AGE+++: " + age);
+	//Ti.API.info("AGE+++: " + age);
 	
 	if(age < 18){
-		alert("本サービスは18歳未満の方はご利用できません。");
+		//alert("本サービスは18歳未満の方はご利用できません。");
+		Ti.UI.createAlertDialog({
+			title: '本サービスは18歳未満の方はご利用できません',
+		  	//message: data.data
+		}).show();
 	}else{
 		//年齢から年齢番号を判別
 		if(age < 20){
@@ -405,6 +428,7 @@ function createActInd() {
 //カメラを起動するファンクション
 //=======================================================================================
 function showCamera(win, whichImage){
+	Flurry.logEvent('App Show Camera');
 	var currentWindow = win;
 	Titanium.Media.showCamera({
 		success:function(event)
@@ -426,7 +450,7 @@ function showCamera(win, whichImage){
 		error:function(error)
 		{
 			// create alert
-			var a = Titanium.UI.createAlertDialog({title:'Camera'});
+			var a = Titanium.UI.createAlertDialog({title:'カメラ'});
 	
 			// set message
 			if (error.code == Titanium.Media.NO_CAMERA)
@@ -435,7 +459,7 @@ function showCamera(win, whichImage){
 			}
 			else
 			{
-				a.setMessage('Unexpected error: ' + error.code);
+				a.setMessage('エラー\n' + error.code);
 			}
 	
 			// show alert
@@ -451,6 +475,7 @@ function showCamera(win, whichImage){
 //アルバムを起動するファンクション
 //=======================================================================================
 function showGallery(win, whichImage){
+	Flurry.logEvent('App Show Gallery');
 	var currentWindow = win;
 	Titanium.Media.openPhotoGallery({
 		success: function(event) {
@@ -480,6 +505,7 @@ function showGallery(win, whichImage){
 //画像をアップロードするファンクション
 //=======================================================================================
 function uploadImage(image, win, whichImage){
+	Flurry.logEvent('App Upload Image');
 	var currentWindow = win;
 	var ind = Titanium.UI.createProgressBar({
 		height:'100%',
@@ -523,18 +549,29 @@ function uploadImage(image, win, whichImage){
 	
 	xhr.onload = function(){
 		ind.hide();
+		var obj = JSON.parse(this.responseText);
 		//alert("レスポンス" + xhr.responseText);
-		if(xhr.responseText == "success"){
-			reloadImage(currentWindow, whichImage);
-			alert("アップロード成功");
+		if(obj.success == "success"){
+			reloadImage(currentWindow, whichImage, obj.image);
+			Ti.UI.createAlertDialog({
+				title: '写真を更新しました',
+			  	//message: data.data
+			}).show();
 		}else{
-			alert("アップロードに失敗しました");
+			//alert("アップロードに失敗しました");
+			Ti.UI.createAlertDialog({
+				title: '写真の更新に失敗しました',
+			  	//message: data.data
+			}).show();
 		}
-		//var json = JSON.parse(xhr.responseText);
 	};
 	xhr.onerror = function(){
 		ind.hide();
-		alert("アップロードに失敗しました");
+		//alert("アップロードに失敗しました");
+		Ti.UI.createAlertDialog({
+			title: '写真の更新に失敗しました',
+		  	//message: data.data
+		}).show();
 	};
 }
 
@@ -568,57 +605,44 @@ function registFBProfileImage( win ){
 		ind.hide();
 		if(xhr.responseText == "success"){
 			reloadImage(currentWindow, "profile_image1");
-			alert("アップロード成功");
+			//alert("アップロード成功");
+			Ti.UI.createAlertDialog({
+				title: '写真を更新しました',
+			  	//message: data.data
+			}).show();
 		}else{
-			alert("アップロードに失敗しました");
+			//alert("アップロードに失敗しました");
+			Ti.UI.createAlertDialog({
+				title: '写真の更新に失敗しました',
+			  	//message: data.data
+			}).show();
 		}
 	};
 	xhr.onerror = function(){
 		ind.hide();
-		alert("アップロードに失敗しました");
+		//alert("アップロードに失敗しました");
+		Ti.UI.createAlertDialog({
+			title: '写真の更新に失敗しました',
+		  	//message: data.data
+		}).show();
 	};
 }
 
 //=======================================================================================
 //アプリ側に画像キャッシュが残るので即時反映したい場合のリロードファンクション
 //=======================================================================================
-function reloadImage(window, image){
+function reloadImage(window, image, image_url){
 	//alert(window.children[0].data[0].rows[0].children[1].url);
 	switch(image){
 		case 'profile_image1':
-			/*
-			var url = window.children[0].data[0].rows[0].children[1].url;
-			var urlArray = url.split("?");
-			window.children[0].data[0].rows[0].children[1].image = urlArray[0]; 
-			*/
+			window.children[0].data[0].rows[0].children[1].image = image_url;
+			
 	    	break;
 	    case 'profile_image2':
-	    	/*
-	    	var url = window.children[0].data[0].rows[0].children[3].url;
-	    	if(url != null){
-				var urlArray = url.split("?");
-				window.children[0].data[0].rows[0].children[3].image = urlArray[0] + "?" + new Date().getTime();
-			}else{
-				var url = window.children[0].data[0].rows[0].children[1].url;
-				var modifiedurl = url.replace("image1", "image2");
-				var urlArray = modifiedurl.split("?");
-				window.children[0].data[0].rows[0].children[3].image = urlArray[0] + "?" + new Date().getTime();
-			} 
-			*/
+			window.children[0].data[0].rows[0].children[3].image = image_url;
 	    	break;
 	    case 'profile_image3':
-	    	/*
-	    	var url = window.children[0].data[0].rows[0].children[5].url;
-	    	if(url != null){
-	    		var urlArray = url.split("?");	
-	    		window.children[0].data[0].rows[0].children[5].image = urlArray[0] + "?" + new Date().getTime();
-	    	}else{
-	    		var url = window.children[0].data[0].rows[0].children[1].url;
-				var modifiedurl = url.replace("image1", "image3");
-				var urlArray = modifiedurl.split("?");
-				window.children[0].data[0].rows[0].children[5].image = urlArray[0] + "?" + new Date().getTime();
-	    	}
-	    	*/		 
+			window.children[0].data[0].rows[0].children[5].image = image_url;
 	    	break;
 	}
 }
@@ -630,9 +654,11 @@ function consumePointDialog( type, roomID, callback ){
 	var description;
 	var consumePoint;
 	if (type == "peep"){
+		Flurry.logEvent('App ConsumePoint Peep');
 		description = _peepPoint + 'ポイント消費して、\n公開中の過去トークをのぞきますか？';
 		consumePoint = _peepPoint;
 	}else if(type == "private"){
+		Flurry.logEvent('App ConsumePoint Private');
 		description = _privatePoint + 'ポイント消費して、\nこのルームを非公開にしますか？';
 		consumePoint = _privatePoint;
 	}
@@ -661,12 +687,20 @@ function consumePointDialog( type, roomID, callback ){
 						callback({success: true});
 					} else{
 						// 通信に失敗したら行う処理
-						alert("通信に失敗しました");
+						//alert("通信に失敗しました");
+						Ti.UI.createAlertDialog({
+							title: '通信に失敗しました',
+						  	//message: data.data
+						}).show();
 						callback({success: false});
 					}
 				});
 			}else{
-				alert("ポイントが足りません");
+				//alert("ポイントが足りません");
+				Ti.UI.createAlertDialog({
+					title: 'ポイントが不足しています',
+				  	//message: data.data
+				}).show();
 				callback({success: false});
 			}
 
@@ -687,7 +721,7 @@ function requestProduct(identifier, success)
 			//alert('ERROR: We failed to talk to Apple!');
 		}
 		else if (evt.invalid) {
-			alert('ERROR: We requested an invalid product!');
+			//alert('ERROR: We requested an invalid product!');
 		}
 		else {
 			success(evt.products[0]);
@@ -696,8 +730,9 @@ function requestProduct(identifier, success)
 }
 
 if (!Storekit.canMakePayments)
-	alert('通信またはその他の原因で現在購入の操作ができません。\nもう一度購入手続きをしてください。');
+	alert('通信またはその他の原因で現在購入の操作ができません。\n電波の良いところでアプリを起動してください。');
 else {
+	/*
 	requestProduct('jp.shiftage.talkroom.testpoint100', function (product) {
 		product100 = product;
 	});
@@ -708,6 +743,22 @@ else {
 	
 	requestProduct('jp.shiftage.talkroom.testpoint500', function (product) {
 		product500 = product;
+	});
+	*/
+	requestProduct('jp.shiftage.talkroom.100point', function (product) {
+		product100 = product;
+	});
+	requestProduct('jp.shiftage.talkroom.600point', function (product) {
+		product600 = product;
+	});
+	requestProduct('jp.shiftage.talkroom.1200point', function (product) {
+		product1200 = product;
+	});
+	requestProduct('jp.shiftage.talkroom.3000point', function (product) {
+		product3000 = product;
+	});
+	requestProduct('jp.shiftage.talkroom.6000point', function (product) {
+		product6000 = product;
 	});
 }
 
@@ -756,11 +807,14 @@ function checkReceipt(callback){
   	callback();
     return;
   }
-
+  
+  //以下の処理はなんらかが原因でレシート情報が端末内に残されていたときに実行される
+  Flurry.logEvent('App CheckReceipt VerifyReceipt');
   //verifyReceipt(receipt);
   var url = Ti.App.domain + "/verify_receipt.json";
   var client = Ti.Network.createHTTPClient({
     onload : function(e) {
+      Flurry.logEvent('App CheckReceipt Success');
       // 認証済み
       _point = parseInt(this.responseText);
       //Ti.API.info("Received text: " + _point);
@@ -773,8 +827,9 @@ function checkReceipt(callback){
 	  alert(_point + 'ポイントになりました');
     },
     onerror : function(e) {
-      Ti.API.debug(e.error);
-      alert('error' + this.responseText);
+      Flurry.logEvent('App CheckReceipt Error');
+      //Ti.API.debug(e.error);
+      //alert('error' + this.responseText);
       callback({
 		success: false
 	  });
@@ -793,7 +848,7 @@ function checkReceipt(callback){
 
 
 //=======================================================================================
-// 未処理のレシートがないか確認し，あれば処理を再開する
+// ポイントを読み込む
 //=======================================================================================
 function readPoint(){
   	var url = Ti.App.domain + "/get_point.json?app_token=" + Ti.App.Properties.getString('app_token');
@@ -829,8 +884,8 @@ function　getData(val ,callback) {
 	
 	//通信が完了した場合の処理
 	xhr.onload = function(){
-		Ti.API.info("パース前：" + this.responseText);
-		Ti.API.info("パース後：" + JSON.parse(this.responseText));
+		//Ti.API.info("パース前：" + this.responseText);
+		//Ti.API.info("パース後：" + JSON.parse(this.responseText));
 		callback({
 			success: true,
 			data: JSON.parse(this.responseText)
@@ -870,7 +925,7 @@ function sendData( val, data, callback ){
 	xhr.open('POST', url);
 		
 	xhr.onload = function(){
-		Ti.API.info("返って来たデータ:" + this.responseText);
+		//Ti.API.info("返って来たデータ:" + this.responseText);
 		callback({
 			success: true,
 			data: this.responseText
@@ -928,7 +983,7 @@ function createPickerView( data, tf, win ){
 	var picker = Ti.UI.createPicker({
 		top: 43
 	});
-	Ti.API.info("INDEX:" + textField.customItem);
+	//Ti.API.info("INDEX:" + textField.customItem);
 	picker.selectionIndicator = true;
 	picker.add(dataList);
 	
@@ -1168,7 +1223,7 @@ function createBannerAdView(){
 			    width: 320,
 			    height: 50,
 			    adUnitId: 'ca-app-pub-8392863952863215/5215089280',
-			    adBackgroundColor: 'black',
+			    adBackgroundColor: _whiteBlue,
 			    // You can get your device's id for testDevices by looking in the console log after the app launched
 			    //testDevices: [Admob.SIMULATOR_ID],
 			    //dateOfBirth: new Date(1985, 10, 1, 12, 1, 1),
@@ -1179,8 +1234,8 @@ function createBannerAdView(){
 			
 		case 1:
 			var adview = nend.createView({
-                spotId: '3174',//'218551',
-                apiKey: 'c5cb8bc474345961c6e7a9778c947957ed8e1e4f',//'4869c84c177df6f84ed62140cd3dd71da9b45e9a',
+                spotId: '218551',//'3174',
+                apiKey: '4869c84c177df6f84ed62140cd3dd71da9b45e9a',//'c5cb8bc474345961c6e7a9778c947957ed8e1e4f',
                 width:  320,
                 height: 50,
                 bottom: 0,

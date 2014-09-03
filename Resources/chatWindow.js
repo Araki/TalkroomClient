@@ -74,7 +74,7 @@ function chatWindow(sendfrom, sendto, textField) {
 			var json = data.data;
 			roomID = json.room_id;
 			roomPublic = json.public;
-			Ti.API.info("######PUBLIC:" + roomPublic);
+			//Ti.API.info("######PUBLIC:" + roomPublic);
 			roomMessageCount = json.message_count;
 			
 			for (var i=json.messages.length-1; i>=0; i--){
@@ -101,8 +101,8 @@ function chatWindow(sendfrom, sendto, textField) {
 				var chatView = new cbView(chatArray[i]["id"], chatArray[i]["side"], chatArray[i]["message"], chatArray[i]["image"], chatArray[i]["time"], scrollViewHeight);
 				scrollView.add(chatView);
 				scrollViewHeight = scrollViewHeight + chatView.height;
-				Ti.API.info("chatView.height:" + chatView.height);
-				Ti.API.info("SCROLLVIEWHEIGHT:" + scrollViewHeight);
+				//Ti.API.info("chatView.height:" + chatView.height);
+				//Ti.API.info("SCROLLVIEWHEIGHT:" + scrollViewHeight);
 			}		
 		} else{
 			// 通信に失敗したら行う処理
@@ -141,6 +141,7 @@ function chatWindow(sendfrom, sendto, textField) {
 	
 	
 	sendButton.addEventListener('click', function(){
+		Flurry.logEvent('ChatWindow Push SendButton');
 		//２回押されないようにsendButtonを一旦無効に
 		sendButton.enabled = false;
 		
@@ -167,16 +168,17 @@ function chatWindow(sendfrom, sendto, textField) {
 			sendData( url, message, function( data ){
 				if (data.success){
 					//通信に成功したら行う処理
-					Ti.API.info("戻り値:" + data.data);
+					Flurry.logEvent('ChatWindow Sent Chat');
+					//Ti.API.info("戻り値:" + data.data);
 					
 					var json = JSON.parse(data.data);
 					var time = json[0].year + "/" + json[0].month + "/" + json[0].day + " " + json[0].hour + ":" + json[0].min;
 					
 					
-					Ti.API.info("json[0].body:" + json[0].body);
-					Ti.API.info("json[0].sendfrom_image:" + json[0].sendfrom_image);
-					Ti.API.info("％％％ScrollViewHeight:" + scrollViewHeight);
-					Ti.API.info("％％％Time:" + time);
+					//Ti.API.info("json[0].body:" + json[0].body);
+					//Ti.API.info("json[0].sendfrom_image:" + json[0].sendfrom_image);
+					//Ti.API.info("％％％ScrollViewHeight:" + scrollViewHeight);
+					//Ti.API.info("％％％Time:" + time);
 					var cbView = require('chatBalloonView');
 					var chatView = new cbView(json[0].sendfrom_list_id, "right", json[0].body, json[0].sendfrom_image,　time, scrollViewHeight);
 					scrollView.add(chatView);
@@ -186,30 +188,30 @@ function chatWindow(sendfrom, sendto, textField) {
 					//Ti.API.info("scrollViewHeight:" + scrollViewHeight);
 					
 					//scrollViewHeight = scrollViewHeight + chatView.height;
-					Ti.API.info("chatView.height:" + chatView.height);
+					//Ti.API.info("chatView.height:" + chatView.height);
 					bottomPosition = bottomPosition + chatView.height;
 					
 					//スクロールして表示する
 					if(scrollViewHeight > 420){
 						scrollView.setContentOffset({x:0, y:scrollViewHeight - 420}, {animated:true});
-						Ti.API.info("++++ScrollViewHeight:" + scrollViewHeight);
+						//Ti.API.info("++++ScrollViewHeight:" + scrollViewHeight);
 					}
 					//scrollView.setContentOffset({x:0, y:bottomPosition}, {animated:true});
 					textField.value ="";
-					
+					/*
 					Ti.UI.createAlertDialog({
 						title: 'データ送信成功',
 					  	message: data.data
 					}).show();
-					
+					*/
 					//sendButtonを有効に
 					sendButton.enabled = true;
 					
 				} else{
 					//通信に失敗したら行う処理
 					Ti.UI.createAlertDialog({
-						title: 'エラー',
-					  	message: data.data
+						title: 'トークが送信できませんでした',
+					  	//message: data.data
 					}).show();	
 					
 					//sendButtonを有効に
@@ -223,7 +225,7 @@ function chatWindow(sendfrom, sendto, textField) {
 
 	var bottomPosition = scrollView.toImage().height - 455;
 		scrollView.addEventListener("scroll",function(e){
-        // Ti.API.info("scroll y=" + e.y);
+        //Ti.API.info("scroll y=" + e.y);
     });
     
 	//visibleTextFieldがTRUEならテキストフィールドを表示
@@ -257,6 +259,7 @@ function chatWindow(sendfrom, sendto, textField) {
 		changePrivateButton.addEventListener('click',function(){
 			//ButtonのenabledがTRUEのときしか処理しない
 			if(changePrivateButton.enabled == true){
+				Flurry.logEvent('ChatWindow Push PrivateButton');
 				consumePointDialog("private", roomID, function(data){
 					if (data.success){
 						var url = Ti.App.domain + "change_private_room.json?room_id=" + roomID + "&app_token=" + Ti.App.Properties.getString('app_token');
@@ -267,10 +270,18 @@ function chatWindow(sendfrom, sendto, textField) {
 								changePrivateButton.backgroundColor = _lightGray;
 								changePrivateButton.color = _gray;
 								changePrivateButton.enabled = false;
-								alert("ルームを非公開にしました！");
+								//alert("ルームを非公開にしました！");
+								Ti.UI.createAlertDialog({
+									title: 'ルームが非公開になりました',
+								  	//message: data.data
+								}).show();
 							} else{
 								// 通信に失敗したら行う処理
-								alert("通信に失敗しました");
+								//alert("通信に失敗しました");
+								Ti.UI.createAlertDialog({
+									title: '通信に失敗しました',
+								  	//message: data.data
+								}).show();
 							}
 						});
 					}

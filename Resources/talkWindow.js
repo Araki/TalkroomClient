@@ -13,7 +13,7 @@ function talkWindow() {
 	});
 	
 	statusButtonBar.addEventListener('click', function(e){
-		Ti.API.info("押されたボタンID：" + e.index);
+		//Ti.API.info("押されたボタンID：" + e.index);
 		
 		statusID = e.index;
 		
@@ -21,14 +21,17 @@ function talkWindow() {
 			
 			//アタック中ボタンが押されたときの処理
 	   		case 0:
+				Flurry.logEvent('TalkWindow Push NewTalk');
 				loadAttackData( tableView );
 		    	break;
 		    //トーク中ボタンが押されたときの処理
 		  	case 1:
+		  		Flurry.logEvent('TalkWindow Push MutualTalk');
 				loadTalkData( tableView );
 		    	break;
 		    //足あとボタンが押されたときの処理
 		  	case 2:
+		  		Flurry.logEvent('TalkWindow Push FootStamp');
 	   			loadFootprintData( tableView );
 		    	break;
 		}
@@ -43,16 +46,18 @@ function talkWindow() {
 		data: createNewTalkTableView()
 	});
 	*/
-	loadAttackData(tableView);
+	//loadAttackData(tableView);
 	
 	tableView.addEventListener('click', function(e) {
-		Ti.API.info(e.row.id);
-		Ti.API.info("クリック");
+		//Ti.API.info(e.row.id);
+		//Ti.API.info("クリック");
 		if (statusID == 0 || statusID == 1){
+			Flurry.logEvent('TalkWindow Go To ChatWindow From New and Mutual');	
 			var cWindow = require('chatWindow');
 			var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, true);
 			tabGroup.activeTab.open(chatWindow);
-		}else{			
+		}else{
+			Flurry.logEvent('TalkWindow Go To UserProfile From FootStamp');	
 			createUserProfileWindow(e.row.id);
 			//Ti.API.info("UPWindow" + userProfileWindow);
 		}
@@ -94,7 +99,7 @@ function loadAttackData( tableView ){
 		if (data.success) {
 			// 通信に成功したら行う処理
 			var json = data.data;
-			Ti.API.info("アタック中テーブル");
+			//Ti.API.info("アタック中テーブル");
 			for (var i=0; i<json.length; i++){
 				var row = createNewTalkTableRow(
 					json[i].user_id,
@@ -242,7 +247,7 @@ function loadTalkData( tableView ){
 		if (data.success) {
 			// 通信に成功したら行う処理
 			var json = data.data;
-			Ti.API.info("トーク中テーブル");
+			//Ti.API.info("トーク中テーブル");
 			for (var i=0; i<json.length; i++){
 				var row = createTalkTableRow(
 					json[i].sendto_id,

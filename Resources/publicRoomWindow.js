@@ -2,12 +2,13 @@ function publicRoomWindow() {
 	
 	var dataList;
 	
-	var self = createWindow("のぞく");
+	var self = createWindow("ルーム");
 	var actInd = createActInd();
 	
 	var tableView = Titanium.UI.createTableView({top:0, bottom:50, separatorStyle:'NONE'});
 	
 	tableView.addEventListener('click', function(e) {
+		Flurry.logEvent('PublicRoomWindow Go To ChatWindow');
 		actInd.show();
 		//consumePointDialog("peep", e.row.roomID, function(data){
 			//if (data.success){
@@ -35,6 +36,7 @@ function publicRoomWindow() {
 	self.rightNavButton = reloadButton;
 	
 	reloadButton.addEventListener('click', function(){
+		Flurry.logEvent('PublicRoomWindow Reload');
 		loadTableView();
 	});
 	

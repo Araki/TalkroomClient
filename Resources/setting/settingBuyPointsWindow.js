@@ -19,7 +19,7 @@ function settingBuyPointsWindow() {
   	// レシート処理
   	showLoading();
   	checkReceipt(function(){hideLoading();});
-  	alert(Ti.App.Properties.getString('Receipt', ''));
+  	//alert(Ti.App.Properties.getString('Receipt', ''));
 	
 	var self = createWindow("ポイント購入");
 	
@@ -83,17 +83,17 @@ function settingBuyPointsWindow() {
 		    	// レシート検証
 		    	checkReceipt(function(data){
 		    		if(data.success){
-		    			pointLabel.text = _point;
+		    			pointLabel.text = "所有ポイント: " + _point + "ポイント";
 		    			hideLoading();
-						alert('購入が完了しました');
+						//alert('購入が完了しました');
 		    		}
 		    	});
 				break;
 			case Storekit.TRANSACTION_STATE_PURCHASING:
-				Ti.API.info('Purchasing ' + evt.productIdentifier);
+				//Ti.API.info('Purchasing ' + evt.productIdentifier);
 				break;
 			case Storekit.TRANSACTION_STATE_RESTORED:
-				Ti.API.info('Restored ' + evt.productIdentifier);
+				//Ti.API.info('Restored ' + evt.productIdentifier);
 				break;
 		}
 	};
@@ -103,7 +103,7 @@ function settingBuyPointsWindow() {
 	function purchaseProduct(product)
 	{
 		if (product.downloadable) {
-			Ti.API.info('Purchasing a product that is downloadable');
+			//Ti.API.info('Purchasing a product that is downloadable');
 		}
 		showLoading();
 		Storekit.purchase({
@@ -116,17 +116,17 @@ function settingBuyPointsWindow() {
 	if (IOS7) {
 		self.addEventListener('open', function() {
 			function validate() {
-				Ti.API.info('Validating receipt.');
-				Ti.API.info('Receipt is Valid: ' + Storekit.validateReceipt());
+				//Ti.API.info('Validating receipt.');
+				//Ti.API.info('Receipt is Valid: ' + Storekit.validateReceipt());
 			}
 
 			if (!Storekit.receiptExists) {
-				Ti.API.info('Receipt does not exist yet. Refreshing to get one.');
+				//Ti.API.info('Receipt does not exist yet. Refreshing to get one.');
 				Storekit.refreshReceipt(null, function(){
 					validate();
 				});
 			} else {
-				Ti.API.info('Receipt does exist.');
+				//Ti.API.info('Receipt does exist.');
 				validate();
 			}
 		});
@@ -137,8 +137,8 @@ function settingBuyPointsWindow() {
     	receiptSignature = Ti.Utils.base64encode(receipt).text;
     	Ti.App.Properties.setString('Receipt', receiptSignature); 
 
-    	Ti.API.info('***** Changed receipt *****');
-    	Ti.API.debug(receipt);
+    	//Ti.API.info('***** Changed receipt *****');
+    	//Ti.API.debug(receipt);
 
     	// レシート検証
     	checkReceipt(function(){});
@@ -146,51 +146,88 @@ function settingBuyPointsWindow() {
   	
   	var buy100points = Ti.UI.createButton({
 		title:product100.title + '  ' + product100.formattedPrice + 'で購入する',
-		font:{fontSize: 17, fontFamily: _font},
-		top:60, 
+		font:{fontSize: 16, fontFamily: _font},
+		top:50, 
 		left:25,
 		right:25,
-		height:50,
+		height:40,
 		color: _white,
 		backgroundColor: _vividPink,
 		borderRadius:10
 	});
 	buy100points.addEventListener('click', function () {
+		Flurry.logEvent('SettingBuyPointsWindow Push Buy100Points');
 		purchaseProduct(product100);
 	});
 	self.add(buy100points);
   	
-  	var buy300points = Ti.UI.createButton({
-		title:product300.title + '  ' + product300.formattedPrice + 'で購入する',
-		font:{fontSize: 17, fontFamily: _font},
-		top:130, 
+  	var buy600points = Ti.UI.createButton({
+		title:product600.title + '  ' + product600.formattedPrice + 'で購入する',
+		font:{fontSize: 16, fontFamily: _font},
+		top:110, 
 		left:25, 
 		right:25, 
-		height:50,
+		height:40,
 		color: _white,
 		backgroundColor: _vividPink,
 		borderRadius:10
 	});
-	buy300points.addEventListener('click', function () {
-		purchaseProduct(product300);
+	buy600points.addEventListener('click', function () {
+		Flurry.logEvent('SettingBuyPointsWindow Push Buy600Points');
+		purchaseProduct(product600);
 	});
-	self.add(buy300points);
+	self.add(buy600points);
   
-  	var buy500points = Ti.UI.createButton({
-		title:product500.title + '  ' + product500.formattedPrice + 'で購入する',
-		font:{fontSize: 17, fontFamily: _font},
-		top:200, 
+  	var buy1200points = Ti.UI.createButton({
+		title:product1200.title + '  ' + product1200.formattedPrice + 'で購入する',
+		font:{fontSize: 16, fontFamily: _font},
+		top:170, 
 		left:25, 
 		right:25, 
-		height:50,
+		height:40,
 		color: _white,
 		backgroundColor: _vividPink,
 		borderRadius:10
 	});
-	buy500points.addEventListener('click', function () {
-		purchaseProduct(product500);
+	buy1200points.addEventListener('click', function () {
+		Flurry.logEvent('SettingBuyPointsWindow Push Buy1200Points');
+		purchaseProduct(product1200);
 	});
-	self.add(buy500points);
+	self.add(buy1200points);
+	
+	var buy3000points = Ti.UI.createButton({
+		title:product3000.title + '  ' + product3000.formattedPrice + 'で購入する',
+		font:{fontSize: 16, fontFamily: _font},
+		top:230, 
+		left:25, 
+		right:25, 
+		height:40,
+		color: _white,
+		backgroundColor: _vividPink,
+		borderRadius:10
+	});
+	buy3000points.addEventListener('click', function () {
+		Flurry.logEvent('SettingBuyPointsWindow Push Buy3000Points');
+		purchaseProduct(product3000);
+	});
+	self.add(buy3000points);
+	
+	var buy6000points = Ti.UI.createButton({
+		title:product6000.title + '  ' + product6000.formattedPrice + 'で購入する',
+		font:{fontSize: 16, fontFamily: _font},
+		top:290, 
+		left:25, 
+		right:25, 
+		height:40,
+		color: _white,
+		backgroundColor: _vividPink,
+		borderRadius:10
+	});
+	buy6000points.addEventListener('click', function () {
+		Flurry.logEvent('SettingBuyPointsWindow Push Buy6000Points');
+		purchaseProduct(product6000);
+	});
+	self.add(buy6000points);
   
   	self.add(loading);
 	return self;

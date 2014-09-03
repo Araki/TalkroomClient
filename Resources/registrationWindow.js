@@ -3,10 +3,11 @@ function registrationWindow(){
 	//年齢番号とエリア番号と目的番号の取得
 	var ageData = [];
 	var areaData = [];
-	var purposeData = [];
+	//var purposeData = [];
 	
 	var iWindow = require('introductionWindow');
 	var introductionWindow = new iWindow();
+	var actInd = createActInd();
 	
 	var ageArray = returnArray("age");
 	for (var i=0; i<ageArray.length; i++){
@@ -25,7 +26,7 @@ function registrationWindow(){
 			areaData[i] = Ti.UI.createPickerRow({title:areaArray[i],custom_item:i});
 		}
 	}
-	
+	/*
 	var purposeArray = returnArray("purpose");
 	for (var i=0; i<purposeArray.length; i++){
 		if(i == 0){
@@ -34,7 +35,7 @@ function registrationWindow(){
 			purposeData[i] = Ti.UI.createPickerRow({title:purposeArray[i],custom_item:i});
 		}
 	}
-	
+	*/
 	
 	var self = Ti.UI.createWindow({backgroundColor: 'white'});
 	
@@ -45,28 +46,28 @@ function registrationWindow(){
 		backgroundColor: _whiteBlue,
 		showVerticalScrollIndicator: true
 	});
-	self.add(scrollView);
+	self.add(scrollView);//0
 	
 	var view = Titanium.UI.createView({
 		height: 500,
 		backgroundColor: _whiteBlue
 	});
-	scrollView.add(view);
+	scrollView.add(view);//0-0
 	
 	//ニックネーム
 	var nicknameLabel = Titanium.UI.createLabel({
 		text: 'ニックネーム',
-		top: 20,
+		top: 40,
 		left: 40,
 		right: 40,
 		color: _darkBlue,
 		font:{fontFamily: _font, fontSize: 15 }
 	});
-	view.add(nicknameLabel);
+	view.add(nicknameLabel);//0-0-0
 	
 	var nicknameTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-		top: 45,
+		top: 65,
 		right: 40,
 		left: 40,
 		height: 30,
@@ -77,22 +78,22 @@ function registrationWindow(){
 		font:{fontFamily: _font, fontSize: 15 },
 		keyboardToolbar: false
 	});
-	view.add(nicknameTextField);
+	view.add(nicknameTextField);//0-0-1
 
 	//年齢
 	var ageLabel = Titanium.UI.createLabel({
 		text: '年齢',
-		top: 90,
+		top: 110,
 		left: 40,
 		right: 40,
 		color: _darkBlue,
 		font:{fontFamily: _font, fontSize: 15 }
 	});
-	view.add(ageLabel);
+	view.add(ageLabel);//0-0-2
 	
 	var ageTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-		top: 115,
+		top: 135,
 		right: 40,
 		left: 40,
 		height: 30,
@@ -104,7 +105,7 @@ function registrationWindow(){
 		enabled: false,
 		keyboardToolbar: false
 	});
-	view.add(ageTextField);
+	view.add(ageTextField);//0-0-3
 	
 	//テキストフィールドがタップされたときの挙動
 	ageTextField.addEventListener('click', function(){
@@ -122,17 +123,17 @@ function registrationWindow(){
 	//居住地
 	var areaLabel = Titanium.UI.createLabel({
 		text: '居住地',
-		top: 160,
+		top: 180,
 		left: 40,
 		right: 40,
 		color: _darkBlue,
 		font:{fontFamily: _font, fontSize: 15 }
 	});
-	view.add(areaLabel);
+	view.add(areaLabel);//0-0-4
 	
 	var areaTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-		top: 185,
+		top: 205,
 		right: 40,
 		left: 40,
 		height: 30,
@@ -144,7 +145,7 @@ function registrationWindow(){
 		enabled: false,
 		keyboardToolbar: false
 	});
-	view.add(areaTextField);
+	view.add(areaTextField);//0-0-5
 	
 	//テキストフィールドがタップされたときの挙動
 	areaTextField.addEventListener('click', function(){
@@ -158,7 +159,7 @@ function registrationWindow(){
     			break;
 		}
 	});
-	
+	/*
 	//目的
 	var purposeLabel = Titanium.UI.createLabel({
 		text: '目的',
@@ -198,21 +199,21 @@ function registrationWindow(){
     			break;
 		}
 	});
-	
-	//一言
+	*/
+	//自己紹介
 	var profileLabel = Titanium.UI.createLabel({
 		text: '一言',
-		top: 300,
+		top: 245,
 		left: 40,
 		right: 40,
 		color: _darkBlue,
 		font:{fontFamily: _font, fontSize: 15 }
 	});
-	view.add(profileLabel);
+	view.add(profileLabel);//0-0-6
 	
 	var profileTextField = Titanium.UI.createTextArea({
         value:'',
-        top:325,
+        top:270,
         height:90,
         left:40,
         right:40,
@@ -227,22 +228,22 @@ function registrationWindow(){
         keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
         returnKeyType:Titanium.UI.RETURNKEY_DONE,
 	});
-	view.add(profileTextField);
+	view.add(profileTextField);//0-0-7
 
 	
 	var submitButton = Ti.UI.createButton({
 		title: '決定',
-		font:{fontFamily: _font, fontSize: 18},
-		top: 435,
-		right: 65,
-		left: 65,
-		height: 35,
+		font:{fontFamily: _font, fontSize: 19},
+		top: 390,
+		right: 40,
+		left: 40,
+		height: 50,
 		//borderColor:"#1E90FF",
 		color: _white,
 		backgroundColor: _mossGreen,
 		borderRadius:10
 	});
-	view.add( submitButton );
+	view.add( submitButton );//0-0-8
 	
 	submitButton.addEventListener('click', function() {
 		var errorMessage = "";
@@ -255,13 +256,21 @@ function registrationWindow(){
 		if ( areaTextField.customItem == "" ){
 			errorMessage = errorMessage + "居住地を入力してください。\n";
 		}
+		/*
 		if ( purposeTextField.customItem == "" ){
 			errorMessage = errorMessage + "目的を入力してください。\n";
 		}
+		*/
 		
 		if ( errorMessage != "" ){
-			alert(errorMessage);
+			//alert(errorMessage);
+			Ti.UI.createAlertDialog({
+				title: 'エラー',
+			  	message: errorMessage
+			}).show();
 		}else{
+			
+			actInd.show();
 			var url = Ti.App.domain + "create_account.json";
 			var message = {
 				channel: "facebook",
@@ -270,11 +279,11 @@ function registrationWindow(){
 				gender: self.gender,
 				email: self.email,
 				age: ageTextField.customItem,
-				purpose: purposeTextField.customItem,
+				//purpose: purposeTextField.customItem,
 				area: areaTextField.customItem,
 				profile_image1: "http://graph.facebook.com/" + self.uid + "/picture",
 				profile: profileTextField.value,
-				point: 0,
+				//point: 0,
       			access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(self.uid))
 				//Facebook Friendsを取得し知り合いが検索に出ないようにする機能は必要になったときに実装し初期バージョンでは実装しない
 				//friends_list: self.friends_list
@@ -282,12 +291,13 @@ function registrationWindow(){
 			
 			sendData( url, message, function( data ){
 				if (data.success){
+					Flurry.logEvent('Registration Window SignUp Finish');
 					//通信に成功したら行う処理
-					Ti.API.info("戻り値:" + data.data);
+					//Ti.API.info("戻り値:" + data.data);
 					
 					Ti.UI.createAlertDialog({
-						title: 'データ送信成功',
-					  	message: data.data
+						title: '登録完了',
+					  	//message: data.data
 					}).show();
 					
           
@@ -299,23 +309,25 @@ function registrationWindow(){
 					//イントロダクションウィンドウを開く
 					introductionWindow.open();
 					//登録に成功したらウィンドウを閉じる
+					actInd.hide();
 					self.close();
 					
 					
 				} else{
 					//通信に失敗したら行う処理
 					Ti.UI.createAlertDialog({
-						title: 'エラー',
-					  	message: data.data
+						title: '登録に失敗しました',
+					  	//message: data.data
 					}).show();
-					
+					actInd.hide();
 				}
 			});
 			
 		}
 	});
 	
-
+	self.add(actInd);
+	
 	return self;
 }
 

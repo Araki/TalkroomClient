@@ -1,5 +1,5 @@
 function introductionWindow(){
-
+	Flurry.logEvent('IntroductionWindow Open');
 	// windowの作成
 	var self = Titanium.UI.createWindow({
 		title: '',
@@ -24,16 +24,17 @@ function introductionWindow(){
 	// buttonの生成
 	var button = Titanium.UI.createButton({
 		title: '始める',
-		font:{fontFamily: _font},
-		bottom: '10dp',
-		left: '60dp',
-		right: '60dp',
-		height: '40dp',
-		enabled: true //リリース版ではfalseにする。デバッグの際に面倒なのでtrueにしているだけ
+		font:{fontFamily: _font, fontSize: 19},
+		bottom: 10,
+		left: 40,
+		right: 40,
+		height: 50,
+		enabled: false
 	});
 	view.add(button);
 	
 	button.addEventListener('click', function(){
+		Flurry.logEvent('IntroductionWindow Finish');
 		createTabGroup();
 		self.close();
 	});

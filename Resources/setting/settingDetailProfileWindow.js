@@ -80,6 +80,7 @@ function settingDetailProfileWindow() {
    	//保存ボタンが押されたときの挙動
    	//==================================================
 	saveButton.addEventListener('click', function(){
+		Flurry.logEvent('SettingDetailProfileWindow Push SaveButton');
 		actInd.show();
 		var alertMessage = "";
 		if( nicknameRow.children[1].value == ''){
@@ -125,7 +126,8 @@ function settingDetailProfileWindow() {
 			
 			if (data.success){
 				//通信に成功したら行う処理
-				Ti.API.info("戻り値:" + data.data);
+				Flurry.logEvent('SettingDetailProfileWindow Saved');
+				//Ti.API.info("戻り値:" + data.data);
 				Ti.UI.createAlertDialog({
 					title: 'プロフィールを更新しました',
 				  	//message: data.data
@@ -281,21 +283,30 @@ function settingDetailProfileWindow() {
 	function showOptionDialog( whichImage ){	
 		if(whichImage == "profile_image1" ){
 			var sourceSelect = Titanium.UI.createOptionDialog({
-			    options: ['Facebook写真を設定する', 'アルバムから選ぶ', 'カメラで撮影する', 'キャンセル'],
-			    cancel:3
+			    //options: ['Facebook写真を設定する', 'アルバムから選ぶ', 'カメラで撮影する', 'キャンセル'],
+			    options: ['アルバムから選ぶ', 'カメラで撮影する', 'キャンセル'],
+			    cancel:2//3
 			});
 			sourceSelect.addEventListener('click',function(e)
 			{
 			    switch( e.index ) {
-			    case 0:
-			    	registFBProfileImage(self);
-			    	break;
-			    case 1:
-			        showGallery(self, whichImage);
-			        break;
-			    case 2:
-			        showCamera(self, whichImage);
-			        break;
+			    	/*
+				    case 0:
+				    	registFBProfileImage(self);
+				    	break;
+				    case 1:
+				        showGallery(self, whichImage);
+				        break;
+				    case 2:
+				        showCamera(self, whichImage);
+				        break;
+				    */
+				   case 0:
+				        showGallery(self, whichImage);
+				        break;
+				    case 1:
+				        showCamera(self, whichImage);
+				        break;
 			    }
 			});
 			sourceSelect.show();

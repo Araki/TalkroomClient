@@ -1,7 +1,9 @@
 function settingInquiryWindow() {
 	
 	var self = createWindow("お問い合わせ");
-
+	
+	var actInd = createActInd();
+	
 	var submitButton = Titanium.UI.createLabel({
 			font:{fontFamily: _font, fontSize:16},
 			text:'送信',
@@ -84,7 +86,8 @@ function settingInquiryWindow() {
 	});
 	*/
 	submitButton.addEventListener('click', function(){
-		
+		actInd.show();
+		Flurry.logEvent('SettingInquiryWindow Push SubmitButton');
 		var url = Ti.App.domain + "send_mail.json";
 		var message = {
 				app_token: Ti.App.Properties.getString('app_token'),
@@ -98,21 +101,22 @@ function settingInquiryWindow() {
 		
 		sendData( url, message, function( data ){
 			if (data.success){
+				Flurry.logEvent('SettingInquiryWindow Sent Inquiry');
 				//通信に成功したら行う処理
-				Ti.API.info("戻り値:" + data.data);
-				
+				//Ti.API.info("戻り値:" + data.data);
 				Ti.UI.createAlertDialog({
-					title: 'データ送信成功',
-				  	message: data.data
+					title: 'お問い合わせを送信致しました',
+				  	//message: data.data
 				}).show();
 				
+				actInd.hide();
 			} else{
 				//通信に失敗したら行う処理
 				Ti.UI.createAlertDialog({
-					title: 'エラー',
-				  	message: data.data
+					title: 'お問い合わせが正常に完了しませんでした',
+				  	//message: data.data
 				}).show();
-				
+				actInd.hide();
 			}
 		});		
 	});
@@ -129,7 +133,7 @@ function settingInquiryWindow() {
 	self.add(mailTextField);
 	self.add(bodyLabel);
 	self.add(textArea);
-	//self.add(submitButton);
+	self.add(actInd);
 	
 	return self;
 }

@@ -1,8 +1,9 @@
 function userTalkedRoomWindow( user_id ) {
 	
 	var self = createWindow("過去のトーク");
-	var tableView = Titanium.UI.createTableView({separatorStyle:'NONE'});
+	var tableView = Titanium.UI.createTableView({top:0, bottom:50, separatorStyle:'NONE'});
 	var tableViewRowData = [];
+	var adView = createBannerAdView();
 	var actInd = createActInd();
 	actInd.show();
 	
@@ -33,6 +34,7 @@ function userTalkedRoomWindow( user_id ) {
 	});
 	
 	tableView.addEventListener('click', function(e) {
+		Flurry.logEvent('UserTalkedRoomWindow Go To ChatWindow');
 		actInd.show();
 		//consumePointDialog("peep", e.row.id, function(data){
 			//if (data.success){
@@ -45,8 +47,9 @@ function userTalkedRoomWindow( user_id ) {
 			//}
 		//});
 	});	
-
+	
 	self.add(tableView);
+	self.add(adView);
 	self.add(actInd);	
 	return self;
 }

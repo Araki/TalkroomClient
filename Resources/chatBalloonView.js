@@ -51,8 +51,8 @@ function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whatTime,
        	center: 0//top:10,
 	});
 	
-	Ti.API.info(time + "WIDTH:" + messageLabel.toImage().width);
-	Ti.API.info(time + "HEIGHT:" + messageLabel.toImage().height);
+	//Ti.API.info(time + "WIDTH:" + messageLabel.toImage().width);
+	//Ti.API.info(time + "HEIGHT:" + messageLabel.toImage().height);
 	
 	//テキストラベルの横幅がリミット値を超えた場合、ラベルを複数行にする処理
 	if (messageLabel.toImage().width > limitLabelWidth){
@@ -63,7 +63,7 @@ function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whatTime,
 			messageLabel.width = limitLabelWidth + 10;
 			labelHeight = (messageLabel.toImage().width / limitLabelWidth) * ( messageLabel.font.fontSize + 6 );
 		}
-		Ti.API.info(time + "Label:" + labelHeight);
+		//Ti.API.info(time + "Label:" + labelHeight);
 		//Ti.API.info("FontSize:" + messageLabel.font.fontSize);
 		//messageLabelの縦、横サイズを指定
 		//messageLabel.width = limitLabelWidth + 10;
@@ -75,15 +75,15 @@ function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whatTime,
 	//テキストラベルの横幅がリミット値を超えなかった場合、ラベルを1行にする処理
 	else if (messageLabel.toImage().width <= limitLabelWidth){
 		labelHeight = messageLabel.font.fontSize + 6;
-		Ti.API.info("messageLabel.font.fontSize:" + messageLabel.font.fontSize);
+		//Ti.API.info("messageLabel.font.fontSize:" + messageLabel.font.fontSize);
 		messageLabel.width = messageLabel.toImage().width + 10;
 		messageLabel.height = labelHeight;
 		balloonImage.height = labelHeight + 20;
 		balloonImage.width = limitLabelWidth + 30;
 	}
 
-	Ti.API.info(time + "balloonImage.height:" + balloonImage.height);
-	Ti.API.info(time + "balloonImage.width:" + balloonImage.width);
+	//Ti.API.info(time + "balloonImage.height:" + balloonImage.height);
+	//Ti.API.info(time + "balloonImage.width:" + balloonImage.width);
 	
 	
 	balloonImage.width = messageLabel.width + 30;

@@ -2,7 +2,6 @@ var tableView;
 var actInd; 
 
 function searchTableWindow() {
-
 	var self = createWindow("ユーザー");
 	//var sWindow = require('searchWindow');
 	//var searchWindow = new sWindow();
@@ -10,6 +9,7 @@ function searchTableWindow() {
 	tableView = Titanium.UI.createTableView({top:0, bottom:50, separatorStyle:'NONE'});
 	
 	tableView.addEventListener('click', function(e) {
+		Flurry.logEvent('SearchTableWindow Go To UserProfile');
 		var userID = e.row.id;
 		var upWindow = require('userProfileWindow');
 		var userProfileWindow = new upWindow(userID);
@@ -63,7 +63,7 @@ function loadTableView(){
 	actInd.show();
 	var tableViewRowData = [];
 	
-	Ti.API.info("searchGender" + Ti.App.Properties.getString('searchGender'));
+	//Ti.API.info("searchGender" + Ti.App.Properties.getString('searchGender'));
 	
 	var url = Ti.App.domain + "get_search_users.json?age=" + 
 				  Ti.App.Properties.getString('searchAge') +
@@ -75,7 +75,7 @@ function loadTableView(){
 				  //Ti.App.Properties.getString('searchPurpose')  +
 				  "&app_token=" +
 				  Ti.App.Properties.getString('app_token');
-				  
+	//Ti.API.info("###URL:" + url);			  
 	getData(url, function( data ){
 		
 		if (data.success) {
@@ -237,7 +237,7 @@ function createSearchView( win ){
 		index:0 
 	});
 	
-	var genderValue;
+	var genderValue = Ti.App.Properties.getString('searchGender');
 	genderButtonBar.addEventListener('click', function(e){
 		switch (e.index){
 	   		case 0:
@@ -418,6 +418,7 @@ function createSearchView( win ){
 	});
 	
 	searchButton.addEventListener('click', function(){
+		Flurry.logEvent('SearchTableWindow Search Users');
 		/*
 		var stWindow = require('searchTableWindow');
 		var searchTableWindow = new stWindow(
@@ -430,6 +431,9 @@ function createSearchView( win ){
 		Ti.App.Properties.setString('searchArea', areaTextField.customItem);
 		//Ti.App.Properties.setString('searchPurpose', purposeTextField.customItem);
 		Ti.App.Properties.setString('searchGender', genderValue);
+		//Ti.API.info("gender:" + genderValue);
+		//Ti.API.info("age:" + ageTextField.customItem);
+		//Ti.API.info("area:" + areaTextField.customItem);
 		loadTableView();
 		
 		win.remove(view);
@@ -450,6 +454,7 @@ function createSearchView( win ){
 	});
 	
 	cancelButton.addEventListener('click', function(){
+		Flurry.logEvent('SearchTableWindow Cancel Search');
 		win.remove(view);
 		initialize();
 	});
@@ -478,20 +483,23 @@ function createSearchView( win ){
 		*/
 		if (Ti.App.Properties.getString('searchGender') == "" || Ti.App.Properties.getString('searchGender') == null){
 			genderButtonBar.index = 0;
+			genderValue = "";
 		}else{
 			switch(Ti.App.Properties.getString('searchGender')){
 				case "male":
 					genderButtonBar.index = 1;
+					genderValue = "male";
 					break;
 				case "female":
 					genderButtonBar.index = 2;
+					genderValue = "female";
 					break;
 			}
 		}
 	}
 	
 	initialize();
-	
+	//Ti.API.info("Gender.index:" + genderButtonBar.index);
 	view.add(genderLabel);
 	view.add(ageLabel);
 	view.add(areaLabel);

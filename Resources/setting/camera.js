@@ -63,7 +63,7 @@ function uploadCameraImage(image){
 		media:image
 	});
 	xhr.onload = function(){
-		alert("レスポンス" + xhr.responseText);
+		//alert("レスポンス" + xhr.responseText);
 		if(xhr.responseText == "success"){
 			alert("アップロード成功");
 		}else{
