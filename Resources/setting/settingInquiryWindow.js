@@ -41,7 +41,7 @@ function settingInquiryWindow() {
 	    color: _darkGray,
 	    backgroundColor: _white,
 	    borderRadius:5,
-	    font: { fontSize: 18 }
+	    font: { fontFamily: _font, fontSize: 18 }
 	});
 	
 	var bodyLabel = Titanium.UI.createLabel({

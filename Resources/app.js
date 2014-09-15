@@ -39,6 +39,11 @@ Flurry.logAllPageViews();
 //=============================================================
 //Ti.Appの初期化
 //=============================================================
+//var iOSUniqueID = require('com.joseandro.uniqueids');
+//alert("UUID : " + iOSUniqueID.getUUID + "\n");
+
+
+
 
 Ti.App.domain = "https://api.talkroom.co/";
 //Ti.App.domain = "http://localhost:3000/";

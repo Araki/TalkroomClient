@@ -11,6 +11,21 @@ function userProfileWindow( userID, type ) {
 	var tableView = createTableView(profileBgView.height, buttonBgView.height);
 	var tableViewRowData = [];
 	var readPastTalkButton = createReadPastTalkButton();
+	var reportBGView = createReportBGView();
+	var reportView = createReportView();
+	var reportButton = Titanium.UI.createLabel({
+		font:{fontFamily: _font, fontSize:12},
+		text:'通報する',
+		textAlign: 'center',
+		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+		borderRadius: 4,
+		height: 25,
+		width: 75,
+		backgroundColor: _mossGreen,
+		color: _white
+	});
+	var cancelButtonOnReport = reportView.children[2];
+	var reportButtonOnReport = reportView.children[3];
 	
 	actInd.show();
 
@@ -68,13 +83,57 @@ function userProfileWindow( userID, type ) {
 		});
 	}
 	
+	reportButton.addEventListener('click', function() {
+		reportView.show();
+		reportBGView.show();
+	});
+	
+	cancelButtonOnReport.addEventListener('click', function() {
+		reportView.hide();
+		reportBGView.hide();
+	});
+	
+	reportButtonOnReport.addEventListener('click', function() {
+		actInd.show();
+		Flurry.logEvent('UserProfile Send Report');
+		var url = Ti.App.domain + "send_report.json";
+		var message = {
+				app_token: Ti.App.Properties.getString('app_token'),
+				reported_id: userID,
+				platform: Ti.Platform.name,
+				version: Ti.Platform.version,
+				manufacturer: Ti.Platform.manufacturer,
+				model: Ti.Platform.model,
+				body: reportView.children[1].value
+		};
+		sendData( url, message, function( data ){
+			if (data.success) {
+				reportView.hide();
+				reportBGView.hide();
+				Ti.UI.createAlertDialog({
+					title: '通報を送信しました'
+				}).show();
+				actInd.hide();
+			} else{
+				// 通信に失敗したら行う処理
+				Ti.UI.createAlertDialog({
+					title: '通報の送信に失敗しました'
+				}).show();
+				actInd.hide();
+			}
+		});
+	});
+	
 	profileBgView.add(profileImage1);
 	profileBgView.add(profileImage2);
 	profileBgView.add(profileImage3);
-	buttonBgView.add(readPastTalkButton);	
+	buttonBgView.add(readPastTalkButton);
+	self.setRightNavButton(reportButton);	
 	self.add(tableView);
 	self.add(profileBgView);
 	self.add(buttonBgView);
+	self.add(reportBGView);
+	self.add(reportView);
 	self.add(actInd);
 	return self;
 
@@ -238,6 +297,93 @@ function createTalkButton(){
 		backgroundColor:_mossGreen,
 		borderRadius:10
 	});
+	return view;
+}
+
+function createReportBGView(){
+	
+	Ti.API.info("!!!!!!!!!!!!!!!!!!");
+	
+	var view = Titanium.UI.createView({
+		bottom: 0,
+		left: 0,
+		right: 0,
+		top: 0,
+		backgroundColor:'black',
+		opacity: 0.3,
+		visible: false
+	});
+	return view;
+}
+
+function createReportView(){
+	var view = Titanium.UI.createView({
+		bottom: 30,
+		left: 30,
+		right: 30,
+		top: 30,
+		backgroundColor:_white,
+		borderRadius:10,
+		visible: false
+	});
+	
+	var title = Titanium.UI.createLabel({
+		top: 10,
+		right: 10,
+		left: 10,
+		text: '通報内容を具体的にご記入ください',
+		textAlign:'center',
+		font:{fontFamily: _font, fontSize:14},
+		color: _vividPink
+	});
+	
+	var textField = Titanium.UI.createTextField({
+		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+		top: 40,
+		right: 10,
+		left: 10,
+		bottom: 50,
+		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+		keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
+		returnKeyType:Titanium.UI.RETURNKEY_DONE,
+		autocapitalization: false,
+		autocorrect:false,
+	    borderColor:_darkBlue,
+	    color: _darkGray,
+	    backgroundColor: _white,
+	    borderRadius:5,
+	    font: {fontFamily: _font, fontSize: 14 }
+	});
+	
+	cancelButton = Ti.UI.createButton({
+		title: 'キャンセル',
+		font:{fontFamily: _font, fontSize:18},
+		height: 30,
+		width: 110,
+		left: 10,
+		bottom: 10,
+		color: _white,
+		backgroundColor:_mossGreen,
+		borderRadius:10
+	});
+	
+	reportButton = Ti.UI.createButton({
+		title: '通報',
+		font:{fontFamily: _font, fontSize:18},
+		height: 30,
+		width: 110,
+		right: 10,
+		bottom: 10,
+		color: _white,
+		backgroundColor: _vividPink,
+		borderRadius:10
+	});
+	
+	view.add(title);
+	view.add(textField);
+	view.add(cancelButton);
+	view.add(reportButton);
+		
 	return view;
 }
 
