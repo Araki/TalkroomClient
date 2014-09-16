@@ -2,7 +2,7 @@
 <ti:app xmlns:ti="http://ti.appcelerator.org">
     <id>jp.shiftage.talkroom</id>
     <name>talkroom</name>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <publisher>Shiftage Inc.</publisher>
     <url>http://shiftage.myinstapage.com/</url>
     <description>not specified</description>
