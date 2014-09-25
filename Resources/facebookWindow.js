@@ -15,7 +15,7 @@ function facebookWindow() {
 		right: 0//'0dp'
 	});
 	self.add(webview);
-
+	/*
 	var messageLabel = Titanium.UI.createLabel({
 		text: 'Facebookで登録してもプロフィール写真やニックネームは自由に変更できます。また、本サービスがFacebookに投稿するようなことはありません。',
 		bottom: 10,
@@ -25,14 +25,14 @@ function facebookWindow() {
 		font:{fontFamily: _font, fontSize: 10 }
 	});
 	self.add(messageLabel);
-	
+	*/
 	var facebookBtn = Titanium.UI.createButton({ 
 	    //backgroundImage: 'facebook_login_button.png',
 	    //top : 10,
 	    font:{fontFamily: _font, fontSize: 20},
 	    right: 20,
 	    left: 20,
-	    bottom: 62,
+	    bottom: 10,
 	    height: 40,
 	    backgroundColor: '#3b5998',
 	    color: _white,
@@ -42,6 +42,23 @@ function facebookWindow() {
 	    title: "Facebookで登録・ログイン"
 	});
 	self.add(facebookBtn);
+	
+	var normalBtn = Titanium.UI.createButton({ 
+	    //backgroundImage: 'facebook_login_button.png',
+	    //top : 10,
+	    font:{fontFamily: _font, fontSize: 20},
+	    right: 20,
+	    left: 20,
+	    bottom: 60,
+	    height: 40,
+	    backgroundColor: _vividPink,
+	    color: _white,
+	    textAlign: 'center',
+	    verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+	    borderRadius: 10,
+	    title: "登録・ログイン"
+	});
+	self.add(normalBtn);
 	 
 	facebookBtn.addEventListener('click', function (e) {
 		if(fb.getLoggedIn()){
@@ -50,30 +67,20 @@ function facebookWindow() {
 	        fb.authorize();
 	    }
 	});
-	 
+	/* 
 	fb.addEventListener('login', function(e) {
 		//facebookBtn.setBackgroundImage('facebook_logout_button.png');
 		facebookBtn.title = "ログイン中･･･";
 	});
-	 
+	
 	fb.addEventListener('logout', function(e) {
 		//facebookBtn.setBackgroundImage('facebook_login_button.png');
 		facebookBtn.title = "Facebookで登録・ログイン";
 	});
-
-	
-	//HTML(flipsnap.js)からデータを受信
-	/*
-	Ti.App.addEventListener('webview:sent', function(e) {
-		//Ti.API.info(e.value);
-		if(e.value == "TRUE"){
-			button.enabled = true;
-		}else if(e.value == "FALSE"){
-			button.enabled = false;
-		}
-	});
 	*/
-	
+	normalBtn.addEventListener('click', function(e) {
+		normalLogin();	
+	});
 	
 	
 	

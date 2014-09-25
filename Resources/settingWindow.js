@@ -170,7 +170,6 @@ function settingWindow() {
 		  			
 					var logout_alert = Ti.UI.createAlertDialog({
 						title: 'ログアウトしますか？',
-						//message: 'Are you sure?',//ダイアログの本文
 						buttonNames: ['ログアウト', 'キャンセル'],
 						cancel: 1
 					}); 
@@ -181,10 +180,11 @@ function settingWindow() {
 							case 0:
 								Flurry.logEvent('SettingWindow LogOut');
 								fb.logout();
-								//alert('Logged out');
+								Ti.App.Properties.setString('app_token', "");
+								Ti.App.Properties.setString('my_id', "");
+								Ti.App.Properties.setString('channel', "");			
 								Ti.UI.createAlertDialog({
 									title: 'ログアウトしました',
-								  	//message: data.data
 								}).show();
 								facebookWindow.open();
 						}

@@ -39,8 +39,8 @@ Flurry.logAllPageViews();
 //=============================================================
 //Ti.Appの初期化
 //=============================================================
-//var iOSUniqueID = require('com.joseandro.uniqueids');
-//alert("UUID : " + iOSUniqueID.getUUID + "\n");
+var iOSUniqueID = require('com.joseandro.uniqueids');
+alert("UUID : " + iOSUniqueID.getUUID + "\n");
 
 
 
@@ -117,8 +117,8 @@ fb.appid = '349815825157641';
 fb.permissions = ['email', 'user_birthday', 'read_friendlists'];
 fb.forceDialogAuth = false;
 fb.addEventListener('login', function(e) {
-   
     if (e.success) {
+    	
         getUserDataList();
         
     } else if (e.error) {
@@ -133,11 +133,60 @@ fb.addEventListener('login', function(e) {
 			title: 'Facebookログインがキャンセルされました',
 		  	//message: data.data
 		}).show();
-    	var fbWindow = require('facebookWindow');
-		facebookWindow = new fbWindow();
-		facebookWindow.open();
+    	//var fbWindow = require('facebookWindow');
+		//facebookWindow = new fbWindow();
+		//facebookWindow.open();
     }
 });
+
+if (Ti.App.Properties.getString('channel') == 'normal'){
+	//check_loginはfb_idをチェックしているが、同様のことをuuidで行う処理を加える
+	//check_loginを叩き、trueかfalseが返ってくる
+	//trueの場合はloginProcess()を実行し自動ログイン
+	//falseの場合はローカルストレージにnormalが入っており、IDがないということになる
+	//実際そのようなことは起こらないはずだが、一旦ローカルストレージのデータを削除した方が良さそう
+	normalLogin();
+}
+
+function normalLogin(){
+	var actInd = createActInd();
+	facebookWindow.add(actInd);
+	actInd.show();
+	var url = Ti.App.domain + "check_login.json";
+	var message = {channel: "normal",
+				   uid: iOSUniqueID.getUUID, 
+				   access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(iOSUniqueID.getUUID))};
+	sendData( url, message, function( data ){
+		
+		var obj = JSON.parse(data.data);
+        rewardFlag = obj.reward_flag;
+        
+		if (data.success){
+			//通信に成功したら行う処理
+            
+			if(obj.result == "true"){//既に登録済みのユーザーの処理
+				Flurry.logEvent('App Login');
+              　loginProcess(obj);
+				actInd.hide();
+			}else{
+				//Ti.App.Properties.setString('app_token', "");
+				//Ti.App.Properties.setString('my_id', "");
+				//Ti.App.Properties.setString('channel', "");
+				var nrWindow = require('normalRegistWindow');
+				var normalRegistWindow = new nrWindow();
+				normalRegistWindow.open();
+				actInd.hide();
+			}
+		}else{
+			//通信に失敗したら行う処理
+			Ti.UI.createAlertDialog({
+				title: '通信に失敗しました',
+			  	//message: data.data
+			}).show();
+			actInd.hide();
+		}
+	});
+}
 
 function getUserDataList() {
 	var actInd = createActInd();
@@ -164,21 +213,23 @@ function getUserDataList() {
 				var birthday = obj.birthday;
 				
 				var url = Ti.App.domain + "check_login.json";
-				var message = {fb_uid: uid, access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(uid))};
-				
+				var message = {channel: "facebook",
+							   uid: uid, 
+							   access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(uid))};
 				sendData( url, message, function( data ){
+					
+					var obj = JSON.parse(data.data);
+			        rewardFlag = obj.reward_flag;
+			        
 					if (data.success){
 						//通信に成功したら行う処理
-			            var obj = JSON.parse(data.data);
-			            rewardFlag = obj.reward_flag;
-			            //alert("リワード:" + rewardFlag);
 			            
 						if(obj.result == "true"){//既に登録済みのユーザーの処理
 							Flurry.logEvent('App Login');
+							/*
 							var birth = birthday.split("/");
 							var current = new Date();
 							var age = current.getFullYear() - birth[2];
-							//alert("名前：" + last_name + " " + first_name );
 							Flurry.setAge(age);
 							Flurry.setUserId(String(uid));
 							if(gender == "male"){
@@ -186,38 +237,20 @@ function getUserDataList() {
 							}else{
 								Flurry.setGender('f');
 							}
-							/*
 							Ti.UI.createAlertDialog({
 								title: '既にログイン済みのユーザー',
 							  	message: data.data
 							}).show();
 							*/
             
-			                // app_token を保存する
-			                Ti.App.Properties.setString('app_token', obj.app_token);
-							Ti.App.Properties.setString('my_id', obj.user_id);
-							
-							//tabGroupを開く
-							createTabGroup();
-							//このウィンドウを閉じる
-							facebookWindow.close();
+			              　loginProcess(obj);
 							actInd.hide();
 							
 						}else{//まだ未登録のユーザーの処理
 							Flurry.logEvent('App SignUp');
-							/*
-							Ti.UI.createAlertDialog({
-								title: 'まだ未登録のユーザー',
-							  	message: data.data
-							}).show();
-							*/
+							
 							var registWindow = require('registrationWindow');
 							var registrationWindow = new registWindow();
-							
-							/*Facebook Friendsを取得し知り合いが検索に出ないようにする機能は必要になったときに実装し初期バージョンでは実装しない
-							//Facebook Friendsを全件取得
-							getFbFriendsList();
-							*/
 							
 							//first_nameとlast_nameの最初の文字を取得し連結する
 							last_name_initial = last_name.substring(0,1);
@@ -263,6 +296,17 @@ function getUserDataList() {
 	        }
 	    }
 	);
+}
+
+function loginProcess(obj){
+	 // app_token を保存する
+    Ti.App.Properties.setString('app_token', obj.app_token);
+	Ti.App.Properties.setString('my_id', obj.user_id);
+	Ti.App.Properties.setString('channel', obj.channel);
+	//tabGroupを開く
+	createTabGroup();
+	//このウィンドウを閉じる
+	facebookWindow.close();
 }
 
 
