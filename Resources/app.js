@@ -1,10 +1,34 @@
 //=============================================================
+//アクセスするサーバーを選択
+//=============================================================
+
+//Ti.App.environment = "production";
+//Ti.App.environment = "staging";
+Ti.App.domain = "https://api.talkroom.co/";
+//=============================================================
+//API URLの設定
+//=============================================================
+if (Ti.App.environment == "production"){
+	//本番環境URL
+	Ti.App.domain = "https://api.talkroom.co/";
+}
+if (Ti.App.environment == "staging"){
+	//ステージング環境URL
+	Ti.App.domain = "https://talkrooms-stg.herokuapp.com/"
+	
+}
+//ローカル環境
+//Ti.App.domain = "http://localhost:3000/";
+
+//=============================================================
 //REQUIRE
 //=============================================================
 var fb = require('facebook');
 var Storekit = require('ti.storekit');
 var Admob = require('ti.admob');
 var nend = require('net.nend');
+var iOSUniqueID = require('com.joseandro.uniqueids');
+//alert("UUID : " + iOSUniqueID.getUUID + "\n");
 
 //=============================================================
 //初期設定
@@ -22,8 +46,8 @@ Flurry.crashReportingEnabled = true;
 
 switch(Ti.Platform.osname){
     case 'iphone':
-        //Ti.API.info("Flurry iPhoneスタート");
-        Flurry.startSession('F5NQXW4FTH444BFF9939');
+        Flurry.startSession('F5NQXW4FTH444BFF9939');//本番環境用
+        //Flurry.startSession('692X3KPJHTB3YR6QHD57');//開発環境用
         break;
     case 'ipad':
         //Ti.API.info("Flurry iPadスタート");
@@ -36,17 +60,10 @@ switch(Ti.Platform.osname){
 
 Flurry.logAllPageViews();
 
+
 //=============================================================
 //Ti.Appの初期化
 //=============================================================
-var iOSUniqueID = require('com.joseandro.uniqueids');
-alert("UUID : " + iOSUniqueID.getUUID + "\n");
-
-
-
-
-Ti.App.domain = "https://api.talkroom.co/";
-//Ti.App.domain = "http://localhost:3000/";
 
 //画面サイズの取得
 var displayWidth = Titanium.Platform.displayCaps.platformWidth;
@@ -61,18 +78,14 @@ Ti.App.navBarHeight = 44;
 if(Ti.App.Properties.getString('searchAge') == null){Ti.App.Properties.setString('searchAge', "");}
 if(Ti.App.Properties.getString('searchArea') == null){Ti.App.Properties.setString('searchArea', "");}
 if(Ti.App.Properties.getString('searchGender') == null){Ti.App.Properties.setString('searchGender', "");}
-
+if(Ti.App.Properties.getString('deviceToken') == null){Ti.App.Properties.setString('deviceToken', "");}
 //=============================================================
 //グローバル変数の定義
 //=============================================================
 var _point;
 var _peepPoint = 20;
 var _privatePoint = 100;
-/*
-var product100;
-var product300;
-var product500;
-*/
+
 var product100;
 var product600;
 var product1200;
@@ -109,10 +122,18 @@ Titanium.UI.setBackgroundColor('#000');
 
 var tabGroup;
 
+Ti.App.addEventListener('resumed',function(){
+	var number = Ti.UI.iPhone.getAppBadge();
+	if(tabGroup != null){
+		addBadgeToTab( number );
+	}
+	
+});
+
 var fbWindow = require('facebookWindow');
 var facebookWindow = new fbWindow();
 facebookWindow.open();
-
+/*
 fb.appid = '349815825157641';
 fb.permissions = ['email', 'user_birthday', 'read_friendlists'];
 fb.forceDialogAuth = false;
@@ -138,6 +159,8 @@ fb.addEventListener('login', function(e) {
 		//facebookWindow.open();
     }
 });
+*/
+
 
 if (Ti.App.Properties.getString('channel') == 'normal'){
 	//check_loginはfb_idをチェックしているが、同様のことをuuidで行う処理を加える
@@ -155,6 +178,7 @@ function normalLogin(){
 	var url = Ti.App.domain + "check_login.json";
 	var message = {channel: "normal",
 				   uid: iOSUniqueID.getUUID, 
+				   version: Ti.App.version,
 				   access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(iOSUniqueID.getUUID))};
 	sendData( url, message, function( data ){
 		
@@ -163,20 +187,80 @@ function normalLogin(){
         
 		if (data.success){
 			//通信に成功したら行う処理
-            
-			if(obj.result == "true"){//既に登録済みのユーザーの処理
-				Flurry.logEvent('App Login');
-              　loginProcess(obj);
-				actInd.hide();
-			}else{
-				//Ti.App.Properties.setString('app_token', "");
-				//Ti.App.Properties.setString('my_id', "");
-				//Ti.App.Properties.setString('channel', "");
-				var nrWindow = require('normalRegistWindow');
-				var normalRegistWindow = new nrWindow();
-				normalRegistWindow.open();
-				actInd.hide();
-			}
+			//alert(Ti.App.version);
+            if(obj.version == "development"){
+            	
+            	alert("ステージング環境");
+            	
+            	Ti.App.domain = "https://talkrooms-stg.herokuapp.com/";
+            	
+            	//開発環境にリダイレクト
+            	url = Ti.App.domain + "check_login.json";
+				message = {channel: "normal",
+						   uid: iOSUniqueID.getUUID, 
+						   version: Ti.App.version,
+						   access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(iOSUniqueID.getUUID))};
+				
+				sendData( url, message, function( data ){
+					if (data.success){
+						obj = JSON.parse(data.data);
+				        rewardFlag = obj.reward_flag;
+				        
+				        if(obj.result == "true"){//既に登録済みのユーザーの処理
+							Flurry.logEvent('App Login');
+			              　loginProcess(obj);
+							actInd.hide();
+						}else{
+							//Ti.App.Properties.setString('app_token', "");
+							//Ti.App.Properties.setString('my_id', "");
+							//Ti.App.Properties.setString('channel', "");
+							var nrWindow = require('normalRegistWindow');
+							var normalRegistWindow = new nrWindow();
+							normalRegistWindow.open();
+							actInd.hide();
+						}
+					}else{
+						//通信に失敗したら行う処理
+						Ti.UI.createAlertDialog({
+							title: '通信に失敗しました',
+						  	//message: data.data
+						}).show();
+						actInd.hide();
+					}
+				});           	
+            	
+            }else if(obj.version == "update"){
+            	
+            	var alertDialog = Ti.UI.createAlertDialog({
+					//title: '',
+				  	message: 'アプリを最新版にアップデートしてください',
+				  	buttonNames: ['アップデート']
+				});
+				
+				alertDialog.addEventListener('click',function(e){
+					if(e.index == 0){
+						//App Store へ移動
+          				Ti.Platform.openURL(obj.update_url);
+					}
+				});
+				
+				alertDialog.show();
+				
+            }else{
+            	if(obj.result == "true"){//既に登録済みのユーザーの処理
+					Flurry.logEvent('App Login');
+	              　loginProcess(obj);
+					actInd.hide();
+				}else{
+					//Ti.App.Properties.setString('app_token', "");
+					//Ti.App.Properties.setString('my_id', "");
+					//Ti.App.Properties.setString('channel', "");
+					var nrWindow = require('normalRegistWindow');
+					var normalRegistWindow = new nrWindow();
+					normalRegistWindow.open();
+					actInd.hide();
+				}
+            }
 		}else{
 			//通信に失敗したら行う処理
 			Ti.UI.createAlertDialog({
@@ -186,6 +270,80 @@ function normalLogin(){
 			actInd.hide();
 		}
 	});
+}
+
+function addBadgeToTab( number ){
+	var tabs = tabGroup.tabs;
+	if (number <= 0){
+		tabs[2].setBadge( null );
+	}else{
+		tabs[2].setBadge( number );
+	}
+}
+
+function submitDeviceToken( dt ){
+	var message = {
+		app_token: Ti.App.Properties.getString('app_token'),
+		device_token: dt
+	};
+	
+	url = Ti.App.domain + "update_device_token.json";
+	sendData( url, message, function( data ){
+		if (data.success){
+			Ti.App.Properties.setString('deviceToken', "true");
+		} else{}
+	});
+}
+
+function pushNotification(){
+	// Check if the device is running iOS 8 or later
+	if (Ti.Platform.name == "iPhone OS" && parseInt(Ti.Platform.version.split(".")[0]) >= 8) {
+	    function registerForPush() {
+	        Ti.Network.registerForPushNotifications({
+	            success: function(e) {
+			        submitDeviceToken(e.deviceToken);
+			    },
+	            error: function(e) {
+			    },
+	            callback: function(e) {
+			        addBadgeToTab( e.data.aps.badge );
+			    }
+	        });
+	        // Remove event listener once registered for push notifications
+	        Ti.App.iOS.removeEventListener('usernotificationsettings', registerForPush); 
+	    };
+	 
+	    // Wait for user settings to be registered before registering for push notifications
+	    Ti.App.iOS.addEventListener('usernotificationsettings', registerForPush);
+	 
+	    // Register notification types to use
+	    Ti.App.iOS.registerUserNotificationSettings({
+	        types: [
+	            Ti.App.iOS.USER_NOTIFICATION_TYPE_ALERT,
+	            Ti.App.iOS.USER_NOTIFICATION_TYPE_SOUND,
+	            Ti.App.iOS.USER_NOTIFICATION_TYPE_BADGE
+	        ]
+	    });
+	 
+	} else {
+	    // For iOS 7 and earlier
+	    Ti.Network.registerForPushNotifications({
+	        // Specifies which notifications to receive
+	        types: [
+	            Ti.Network.NOTIFICATION_TYPE_BADGE,
+	            Ti.Network.NOTIFICATION_TYPE_ALERT,
+	            Ti.Network.NOTIFICATION_TYPE_SOUND
+	        ],
+	        success: function(e) {
+		        submitDeviceToken(e.deviceToken);
+		    },
+	        error: function(e) {
+		    },
+	        callback: function(e) {
+		        addBadgeToTab( e.data.aps.badge );
+		    }
+	    });
+	}
 }
 
 function getUserDataList() {
@@ -215,6 +373,7 @@ function getUserDataList() {
 				var url = Ti.App.domain + "check_login.json";
 				var message = {channel: "facebook",
 							   uid: uid, 
+							   version: Ti.App.version,
 							   access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(uid))};
 				sendData( url, message, function( data ){
 					
@@ -225,7 +384,7 @@ function getUserDataList() {
 						//通信に成功したら行う処理
 			            
 						if(obj.result == "true"){//既に登録済みのユーザーの処理
-							Flurry.logEvent('App Login');
+							Flurry.logEvent('App Login Facebook');
 							/*
 							var birth = birthday.split("/");
 							var current = new Date();
@@ -247,7 +406,7 @@ function getUserDataList() {
 							actInd.hide();
 							
 						}else{//まだ未登録のユーザーの処理
-							Flurry.logEvent('App SignUp');
+							Flurry.logEvent('App SignUp Facebook');
 							
 							var registWindow = require('registrationWindow');
 							var registrationWindow = new registWindow();
@@ -305,6 +464,7 @@ function loginProcess(obj){
 	Ti.App.Properties.setString('channel', obj.channel);
 	//tabGroupを開く
 	createTabGroup();
+	addBadgeToTab();
 	//このウィンドウを閉じる
 	facebookWindow.close();
 }
@@ -373,10 +533,9 @@ function calculateAge(cY, cM, cD, bY, bM, bD){
 	//Ti.API.info("AGE+++: " + age);
 	
 	if(age < 18){
-		//alert("本サービスは18歳未満の方はご利用できません。");
+		
 		Ti.UI.createAlertDialog({
-			title: '本サービスは18歳未満の方はご利用できません',
-		  	//message: data.data
+			title: '本サービスは18歳未満の方はご利用できません'
 		}).show();
 	}else{
 		//年齢から年齢番号を判別
@@ -421,6 +580,9 @@ function createTabGroup(){
 	tabGroup.addEventListener('open', function(){
 		//レシート処理
 		checkReceipt(function(){});
+		
+		number = Ti.UI.iPhone.getAppBadge();
+		addBadgeToTab( number );
 	});
 	
 	tabGroup.open();
@@ -974,7 +1136,7 @@ function sendData( val, data, callback ){
 	xhr.open('POST', url);
 		
 	xhr.onload = function(){
-		//Ti.API.info("返って来たデータ:" + this.responseText);
+		//alert("返って来たデータ:" + this.responseText);
 		callback({
 			success: true,
 			data: this.responseText

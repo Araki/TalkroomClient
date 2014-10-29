@@ -41,16 +41,16 @@ function facebookWindow() {
 	    borderRadius: 10,
 	    title: "Facebookで登録・ログイン"
 	});
-	self.add(facebookBtn);
+	//self.add(facebookBtn);
 	
 	var normalBtn = Titanium.UI.createButton({ 
 	    //backgroundImage: 'facebook_login_button.png',
 	    //top : 10,
-	    font:{fontFamily: _font, fontSize: 20},
+	    font:{fontFamily: _font, fontSize: 23},
 	    right: 20,
 	    left: 20,
-	    bottom: 60,
-	    height: 40,
+	    bottom: 30,
+	    height: 60,
 	    backgroundColor: _vividPink,
 	    color: _white,
 	    textAlign: 'center',

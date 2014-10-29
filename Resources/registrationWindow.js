@@ -308,8 +308,8 @@ function registrationWindow(){
 			        Ti.App.Properties.setString('channel', obj.channel);
           
 					//イントロダクションウィンドウを開く
-					introductionWindow.open();
-					
+					//introductionWindow.open();
+					createTabGroup();
 					facebookWindow.close();
 					
 					//登録に成功したらウィンドウを閉じる

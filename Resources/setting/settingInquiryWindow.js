@@ -35,6 +35,7 @@ function settingInquiryWindow() {
 		height: 30,
 		keyboardType:Titanium.UI.KEYBOARD_EMAIL,
 		returnKeyType:Titanium.UI.RETURNKEY_NEXT,
+		appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
 		autocapitalization: false,
 		autocorrect:false,
 	    borderColor:_darkBlue,
@@ -66,59 +67,54 @@ function settingInquiryWindow() {
 	        textAlign:'left',
 	        appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
 	        keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
-	        returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,
+	        returnKeyType:Titanium.UI.RETURNKEY_DONE,
 	        suppressReturn: false,
 	        autocapitalization: false,
 	        autocorrect:false,
 	        borderColor:_darkBlue,
 	        borderRadius:5
 	});
-	/*
-	var submitButton = Ti.UI.createButton({
-		title: '送信',
-		font:{fontFamily: _font},
-		bottom: 180,
-		right: 40,
-		left: 40,
-		height: 40,
-		borderColor:"#1E90FF",
-		borderRadius:5
-	});
-	*/
+	
 	submitButton.addEventListener('click', function(){
-		actInd.show();
-		Flurry.logEvent('SettingInquiryWindow Push SubmitButton');
-		var url = Ti.App.domain + "send_mail.json";
-		var message = {
-				app_token: Ti.App.Properties.getString('app_token'),
-				platform: Ti.Platform.name,
-				version: Ti.Platform.version,
-				manufacturer: Ti.Platform.manufacturer,
-				model: Ti.Platform.model,
-				mail: mailTextField.value,
-				body: textArea.value
-		};
-		
-		sendData( url, message, function( data ){
-			if (data.success){
-				Flurry.logEvent('SettingInquiryWindow Sent Inquiry');
-				//通信に成功したら行う処理
-				//Ti.API.info("戻り値:" + data.data);
-				Ti.UI.createAlertDialog({
-					title: 'お問い合わせを送信致しました',
-				  	//message: data.data
-				}).show();
-				
-				actInd.hide();
-			} else{
-				//通信に失敗したら行う処理
-				Ti.UI.createAlertDialog({
-					title: 'お問い合わせが正常に完了しませんでした',
-				  	//message: data.data
-				}).show();
-				actInd.hide();
-			}
-		});		
+		if(textArea.value == ""){
+			Ti.UI.createAlertDialog({
+				title: 'お問い合わせ内容を\nご記入ください',
+			}).show();
+		}else{
+			actInd.show();
+			Flurry.logEvent('SettingInquiryWindow Push SubmitButton');
+			var url = Ti.App.domain + "send_mail.json";
+			var message = {
+					app_token: Ti.App.Properties.getString('app_token'),
+					platform: Ti.Platform.name,
+					version: Ti.Platform.version,
+					manufacturer: Ti.Platform.manufacturer,
+					model: Ti.Platform.model,
+					mail: mailTextField.value,
+					body: textArea.value
+			};
+			
+			sendData( url, message, function( data ){
+				if (data.success){
+					Flurry.logEvent('SettingInquiryWindow Sent Inquiry');
+					//通信に成功したら行う処理
+					//Ti.API.info("戻り値:" + data.data);
+					Ti.UI.createAlertDialog({
+						title: 'お問い合わせを送信致しました',
+					  	//message: data.data
+					}).show();
+					
+					actInd.hide();
+				} else{
+					//通信に失敗したら行う処理
+					Ti.UI.createAlertDialog({
+						title: 'お問い合わせが正常に完了しませんでした',
+					  	//message: data.data
+					}).show();
+					actInd.hide();
+				}
+			});
+		}		
 	});
 	
 	self.addEventListener("open", function(){

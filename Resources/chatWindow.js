@@ -48,7 +48,9 @@ function chatWindow(sendfrom, sendto, textField) {
 		//backgroundImage:'inputfield.png',
 		font:{font:_font, fontSize:13},
 		color:_darkGray,
-		//paddingLeft:10,
+		appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
+	    keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
+	    returnKeyType:Titanium.UI.RETURNKEY_DONE,
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
 	});
 	
@@ -66,7 +68,7 @@ function chatWindow(sendfrom, sendto, textField) {
 		right:5
 	});
 	
-	var url = Ti.App.domain + "get_room_message.json?sendfrom=" + sendfrom + "&sendto=" + sendto + "&app_token=" + Ti.App.Properties.getString('app_token');
+	var url = Ti.App.domain + "get_room_message.json?sendfrom=" + sendfrom + "&sendto=" + sendto + "&tf_flag=" + visibleTextField + "&app_token=" + Ti.App.Properties.getString('app_token');
 	getData(url, function( data ){
 		if (data.success) {
 			
@@ -95,10 +97,11 @@ function chatWindow(sendfrom, sendto, textField) {
 				chatArray[i]["id"] = json.messages[i].sendfrom_list_id;
 				chatArray[i]["message"] = json.messages[i].body;
 				chatArray[i]["image"] = json.messages[i].sendfrom_image;
+				chatArray[i]["gender"] = json.messages[i].sendfrom_gender;
 				chatArray[i]["time"] = json.messages[i].year + "/" + json.messages[i].month + "/" + json.messages[i].day + " " + json.messages[i].hour + ":" + json.messages[i].min;
 				
 				var cbView = require('chatBalloonView');
-				var chatView = new cbView(chatArray[i]["id"], chatArray[i]["side"], chatArray[i]["message"], chatArray[i]["image"], chatArray[i]["time"], scrollViewHeight);
+				var chatView = new cbView(chatArray[i]["id"], chatArray[i]["side"], chatArray[i]["message"], chatArray[i]["image"], chatArray[i]["gender"], chatArray[i]["time"], scrollViewHeight);
 				scrollView.add(chatView);
 				scrollViewHeight = scrollViewHeight + chatView.height;
 				//Ti.API.info("chatView.height:" + chatView.height);
@@ -180,7 +183,7 @@ function chatWindow(sendfrom, sendto, textField) {
 					//Ti.API.info("％％％ScrollViewHeight:" + scrollViewHeight);
 					//Ti.API.info("％％％Time:" + time);
 					var cbView = require('chatBalloonView');
-					var chatView = new cbView(json[0].sendfrom_list_id, "right", json[0].body, json[0].sendfrom_image,　time, scrollViewHeight);
+					var chatView = new cbView(json[0].sendfrom_list_id, "right", json[0].body, json[0].sendfrom_image,　json[0].sendfrom_gender, time, scrollViewHeight);
 					scrollView.add(chatView);
 					scrollViewHeight = scrollViewHeight + chatView.height;
 					

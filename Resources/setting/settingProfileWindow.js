@@ -80,7 +80,8 @@ function settingProfileWindow() {
 	        returnKeyType:Titanium.UI.RETURNKEY_DONE,
 	        borderWidth:2,
 	        borderColor:_darkBlue,
-	        borderRadius:10
+	        borderRadius:10,
+	        keyboardToolbar: true
 	});
 	
 	self.addEventListener("open", function(){

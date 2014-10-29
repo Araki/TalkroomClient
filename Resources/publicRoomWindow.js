@@ -109,118 +109,7 @@ function publicRoomWindow() {
 		
 		var tableViewRowData = [];
 		for (var i=0; i<json.length; i++){
-	    	/*
-	    	var sendfromColor;
-	    	var sendtoColor;
-	    	if( json[i].sendfrom_gender == "male"){sendfromColor = _darkBlue;}
-	    	else{sendfromColor = _vividPink;}
-	    	if( json[i].sendto_gender == "male"){sendtoColor = _darkBlue;}
-	    	else{sendtoColor = _vividPink;}
-	    	
-	    	var labelSendFromNickname = Titanium.UI.createLabel({
-	        	font:{fontFamily: _font,fontSize:11}, 
-	        	textAlign:'left',
-	        	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
-	        	color:sendfromColor,
-	        	top:5, 
-	        	width:100, 
-	        	left:55, 
-		        height:15,
-		        text:json[i].sendfrom_nickname
-		    });
-		    
-		    var labelSendToNickname = Titanium.UI.createLabel({
-	        	font:{fontFamily: _font,fontSize:11}, 
-	        	textAlign:'left',
-	        	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
-	        	color:sendtoColor,
-	        	top:50, 
-	        	width:100, 
-	        	left:55, 
-		        height:15,
-		        text:json[i].sendto_nickname
-		    });
-	    	
-	    	var sendfromMessage;
-	    	var sendtoMessage;
-	    	if( json[i].sendfrom_message == null){sendfromMessage = "ー";}
-	    	else{ sendfromMessage = json[i].sendfrom_message;}
-	    	if( json[i].sendto_message == null){sendtoMessage = "ー";}
-	    	else{ sendtoMessage = json[i].sendto_message;}
-	    	
-	    	var labelSendFromMessage = Titanium.UI.createLabel({
-	        	font:{fontFamily: _font,fontSize:16}, 
-	        	textAlign:'left',
-	        	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
-	        	color:sendfromColor,
-	        	bottom:50, 
-	        	right:0, 
-	        	left:55, 
-		        height:20,
-		        text:sendfromMessage
-		    });
-	    
-		    var labelSendToMessage = Titanium.UI.createLabel({
-		        font:{fontFamily: _font,fontSize:16}, 
-		        textAlign:'left',
-		        verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
-		        color:sendtoColor,
-		        bottom:5, 
-		        right:0, 
-		        left:55, 
-		        height:20,
-		        text: sendtoMessage
-		    });
-	    
-		    var sendFromImage = Titanium.UI.createImageView({
-		    	top: 5,
-		    	left: 5,
-		    	width: 40,
-		    	height: 40,
-		    	borderRadius:4,
-		    	image: json[i].sendfrom_image
-		    });
-	   
-		   var sendToImage = Titanium.UI.createImageView({
-		    	top: 50,
-		    	left: 5,
-		    	width: 40,
-		    	height: 40,
-		    	borderRadius:4,
-		    	image: json[i].sendto_image
-		    });
-		    
-		    var timeLabel = Titanium.UI.createLabel({
-		        font:{fontFamily: _font, fontSize:10}, 
-		        textAlign:'right',
-		        verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
-		        color:_darkGray,
-		        top:5, 
-		        right:0,
-		        text: json[i].message_number + "トーク / " + json[i].updated_at
-		    });
-		    
-		   var row = Ti.UI.createTableViewRow({
-		        hasChild: true,
-		        height:95,
-		        backgroundImage: '',
-		        sendfrom: json[i].sendfrom_id,
-		        sendto: json[i].sendto_id
-		   });
-		   
-		   	if(i%2 == 0){
-		   		row.backgroundColor = _white;
-		   	}else{
-		   		row.backgroundColor = _whiteGray;
-		   	}
-		   	row.add(labelSendFromNickname);
-		   	row.add(labelSendToNickname);
-		    row.add(sendFromImage);
-		    row.add(sendToImage);
-		    row.add(labelSendFromMessage);
-		    row.add(labelSendToMessage);
-		    row.add(timeLabel);
-			*/
+			
 			var leftBalloonImage = Ti.UI.createView({
 				left: 70,
 				right: 75,
@@ -250,21 +139,10 @@ function publicRoomWindow() {
 				textAlign: "left",
 				verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
 		       	color:_white,
-		       	//backgroundColor: 'red',
 		       	left: 18,
 		       	right: 5,
-		       	height: 13,//Ti.UI.SIZE,//"auto",
-		       	center: 0,//top:10,
-		    	/*
-		    	font:{fontFamily: _font, fontSize:13}, 
-		    	textAlign:'left',
-		    	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
-		    	color:_darkBlue,
-		    	top:25, 
-		    	right:80, 
-		    	left: 80, 
-		        height:20,
-		        */
+		       	height: 13,
+		       	center: 0,
 		        text: json[i].sendfrom_message
 		    });
 		
@@ -273,21 +151,10 @@ function publicRoomWindow() {
 				textAlign: "right",
 				verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
 		       	color:_white,
-		       	//backgroundColor: 'red',
 		       	left: 5,
 		       	right: 18,
-		       	height: 13,//Ti.UI.SIZE,//"auto",
-		       	center: 0,//top:10,
-		    	/*
-		        font:{fontFamily: _font, fontSize:13}, 
-		        textAlign:'left',
-		        verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
-		        color:_vividPink,
-		        bottom:5, 
-		        right:80, 
-		        left: 80, 
-		        height:20,
-		        */
+		       	height: 13,
+		       	center: 0,
 		        text: json[i].sendto_message
 			});
 		    
@@ -297,8 +164,15 @@ function publicRoomWindow() {
 			   	width: 60,
 			   	height: 60,
 			   	borderRadius: 6,
+			   	borderWidth: 2,
+			   	borderColor: _white,
 			   	image: json[i].sendfrom_image
 			});
+			if(json[i].sendfrom_gender == 'male'){
+				sendFromImage.borderColor = _darkBlue;
+			}else if(json[i].sendfrom_gender == 'female'){
+				sendFromImage.borderColor = _vividPink;
+			}
 		   
 			var sendToImage = Titanium.UI.createImageView({
 			   	top: 20,
@@ -306,8 +180,15 @@ function publicRoomWindow() {
 			   	width: 60,
 			   	height: 60,
 			   	borderRadius: 6,
+			   	borderWidth: 2,
+			   	borderColor: _white,
 			   	image: json[i].sendto_image
 			});
+			if(json[i].sendto_gender == 'male'){
+				sendToImage.borderColor = _darkBlue;
+			}else if(json[i].sendto_gender == 'female'){
+				sendToImage.borderColor = _vividPink;
+			}
 			    
 			var timeLabel = Titanium.UI.createLabel({
 			    font:{fontFamily: _font, fontSize:10}, 

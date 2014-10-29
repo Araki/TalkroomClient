@@ -49,7 +49,7 @@ function normalRegistWindow(){
 	self.add(scrollView);//0
 	
 	var view = Titanium.UI.createView({
-		height: 800,
+		height: 700,
 		backgroundColor: _whiteBlue
 	});
 	scrollView.add(view);//0-0
@@ -90,6 +90,9 @@ function normalRegistWindow(){
 	
 	var nicknameTextField = Titanium.UI.createTextField({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+		appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
+	    keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
+	    returnKeyType:Titanium.UI.RETURNKEY_DONE,
 		top: 65 + 145,
 		right: 40,
 		left: 40,
@@ -102,7 +105,18 @@ function normalRegistWindow(){
 		keyboardToolbar: false
 	});
 	view.add(nicknameTextField);//0-0-1
-	
+	var blackView = Titanium.UI.createView({
+		height:'100%',
+		width:'100%',
+		backgroundColor:'black',
+		opacity: 0.3,
+	});
+	nicknameTextField.addEventListener('focus', function(){
+		self.add(blackView);
+	});
+	nicknameTextField.addEventListener('return', function(){
+		self.remove(blackView);
+	});
 	//性別
 	var genderLabel = Titanium.UI.createLabel({
 		text: '性別',
@@ -114,7 +128,7 @@ function normalRegistWindow(){
 	});
 	view.add(genderLabel);//0-0-2
 
-	var genderButtonBar = Titanium.UI.createTabbedBar({
+	var genderButtonBar = Titanium.UI.iOS.createTabbedBar({
 		labels:['男性', '女性'], 
 		backgroundColor:_darkBlue,
 	    color: _darkBlue,
@@ -251,7 +265,7 @@ function normalRegistWindow(){
 		borderRadius:10
 	});
 	view.add( submitButton );//0-0-8
-	
+	/*
 	var cancelButton = Ti.UI.createButton({
 		title: 'キャンセル',
 		font:{fontFamily: _font, fontSize: 19},
@@ -264,16 +278,39 @@ function normalRegistWindow(){
 		borderRadius:10
 	});
 	view.add( cancelButton );//0-0-8
-	
+	*/
 	submitButton.addEventListener('click', function() {
+		/*
+		Ti.UI.createAlertDialog({
+		  	message: "UUID: " + iOSUniqueID.getUUID +
+		  			 "\nIDFV" + iOSUniqueID.getIdentifierForVendor +
+					 "\nIDFA" + iOSUniqueID.getAdvertisingIdentifier +
+		  			 "\nchannel: " + "normal" +
+		  			 "\nfb_uid: " + "" +
+		  			 "\nemail: " + "" +
+		  			 "\nprofileImage: " + profileImage.image + 
+		  			 "\nnickname: " + nicknameTextField.value +
+		  			 "\ngender: " + gender +
+		  			 "\nage: " + ageTextField.customItem +
+		  			 "\narea: " + areaTextField.customItem +
+		  			 "\nprofile: " + profileTextField.value +
+		  			 "\naccess_token: " + Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(iOSUniqueID.getUUID))
+		}).show();
+		*/
 		var errorMessage = "";
+		if ( profileImage.image == "/images/no_image_camera.png"){
+			errorMessage = errorMessage + "プロフィール画像を登録してください。\n";
+		}
 		if ( nicknameTextField.value == "" ){
 			errorMessage = errorMessage + "ニックネームを入力してください。\n";
 		}
-		if ( ageTextField.customItem == "" ){
+		if ( genderButtonBar.index == null ){
+			errorMessage = errorMessage + "性別を選択してください。\n";
+		}
+		if ( ageTextField.customItem == null ){
 			errorMessage = errorMessage + "年齢を入力してください。\n";
 		}
-		if ( areaTextField.customItem == "" ){
+		if ( areaTextField.customItem == null ){
 			errorMessage = errorMessage + "居住地を入力してください。\n";
 		}
 		/*
@@ -289,27 +326,13 @@ function normalRegistWindow(){
 			  	message: errorMessage
 			}).show();
 		}else{
+			Flurry.logEvent('SignUp Try');
 			var gender;
 			if ( genderButtonBar.index == 0 ){
 				gender = "male";
 			}else if ( genderButtonBar.index = 1){
 				gender = "female";
 			}
-			Ti.UI.createAlertDialog({
-			  	message: "UUID: " + iOSUniqueID.getUUID +
-			  			 "\nIDFV" + iOSUniqueID.getIdentifierForVendor +
-						 "\nIDFA" + iOSUniqueID.getAdvertisingIdentifier +
-			  			 "\nchannel: " + "normal" +
-			  			 "\nfb_uid: " + "" +
-			  			 "\nemail: " + "" +
-			  			 "\nprofileImage: " + profileImage.image + 
-			  			 "\nnickname: " + nicknameTextField.value +
-			  			 "\ngender: " + gender +
-			  			 "\nage: " + ageTextField.customItem +
-			  			 "\narea: " + areaTextField.customItem +
-			  			 "\nprofile: " + profileTextField.value +
-			  			 "\naccess_token: " + Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(iOSUniqueID.getUUID))
-			}).show();
 			
 			actInd.show();
 			var url = Ti.App.domain + "create_account.json";
@@ -348,8 +371,8 @@ function normalRegistWindow(){
 			        Ti.App.Properties.setString('channel', obj.channel);
           
 					//イントロダクションウィンドウを開く
-					introductionWindow.open();
-					
+					//introductionWindow.open();
+					createTabGroup();
 					facebookWindow.close();
 					
 					//登録に成功したらウィンドウを閉じる
@@ -359,6 +382,7 @@ function normalRegistWindow(){
 					
 				} else{
 					//通信に失敗したら行う処理
+					Flurry.logEvent('SignUp Failure');
 					Ti.UI.createAlertDialog({
 						title: '登録に失敗しました',
 					  	//message: data.data

@@ -3,12 +3,13 @@
 //imageURL = イメージのパス
 //chatViewHeight = このビューを設置する高さの位置
 
-function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whatTime, chatViewHeight ) {
+function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whichGender, whatTime, chatViewHeight ) {
 	
 	var sendfromID = userID;
 	var side = whichSide;
 	var message = whatMessage;
 	var imageURL = whatImageURL;
+	var gender = whichGender;
 	var time = whatTime;
 	var viewHeight = chatViewHeight;
 	
@@ -32,8 +33,16 @@ function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whatTime,
 	    	bottom: 10,
 	    	width: 30,
 	    	height: 30,
+	    	borderWidth:1,
+	    	borderColor: _white,
 	    	borderRadius:3
 	});
+	
+	if(gender == 'male'){
+		iconImage.borderColor = _darkBlue;
+	}else if(gender == 'female'){
+		iconImage.borderColor = _vividPink;
+	}
 	
 	var balloonImage = Ti.UI.createView({
     	bottom: 10,

@@ -6,7 +6,7 @@ function talkWindow() {
 	var statusID = 0;
 	
 	
-	var statusButtonBar = Titanium.UI.createTabbedBar({
+	var statusButtonBar = Titanium.UI.iOS.createTabbedBar({
 		labels:['新規トーク', 'トーク中', '訪問者'], 
 		backgroundColor:"#fff",
 		index:0 
@@ -14,7 +14,6 @@ function talkWindow() {
 	
 	statusButtonBar.addEventListener('click', function(e){
 		//Ti.API.info("押されたボタンID：" + e.index);
-		
 		statusID = e.index;
 		
 		switch (statusID){
@@ -49,13 +48,25 @@ function talkWindow() {
 	//loadAttackData(tableView);
 	
 	tableView.addEventListener('click', function(e) {
-		//Ti.API.info(e.row.id);
-		//Ti.API.info("クリック");
+	
 		if (statusID == 0 || statusID == 1){
 			Flurry.logEvent('TalkWindow Go To ChatWindow From New and Mutual');	
 			var cWindow = require('chatWindow');
 			var chatWindow = new cWindow(e.row.sendfrom, e.row.sendto, true);
 			tabGroup.activeTab.open(chatWindow);
+			
+			if (e.row.unread_messages > 0){
+				e.row.unread_messages = 0;
+				
+				//リストのバッジを削除
+				e.row.remove(e.row.children[0]);			
+				
+				var tabs = tabGroup.tabs;
+				var badge = tabs[2].getBadge();
+				
+				addBadgeToTab(badge - 1);
+				Ti.UI.iPhone.appBadge = badge - 1;
+			}
 		}else{
 			Flurry.logEvent('TalkWindow Go To UserProfile From FootStamp');	
 			createUserProfileWindow(e.row.id);
@@ -86,7 +97,6 @@ module.exports = talkWindow;
 //############################################################
 //############################################################
 
-
 //===================
 //アタック中のデータをテーブルにロードするファンクション
 //===================
@@ -99,23 +109,45 @@ function loadAttackData( tableView ){
 		if (data.success) {
 			// 通信に成功したら行う処理
 			var json = data.data;
-			//Ti.API.info("アタック中テーブル");
-			for (var i=0; i<json.length; i++){
-				var row = createNewTalkTableRow(
-					json[i].user_id,
-					Ti.App.Properties.getString('my_id'),
-					json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）",
-					json[i].profile,
-					json[i].profile_image,
-					json[i].room_updated,
-					json[i].room_public,
-					json[i].type, 
-					i
-				);
+			if (json.length == 0){
+				var row = Ti.UI.createTableViewRow({
+			    	hasChild: false,
+			        height:'100%',
+			        backgroundColor: _white
+			    });
+			    
+			    var label = Ti.UI.createLabel({
+			    	font:{fontFamily: _font, fontSize:13},
+			    	textAlign: 'center',
+			    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			    	color: _darkGray,
+			        text: "まだトークした人がいません。\nユーザータブからお相手を見つけて\nトークしてみましょう！"
+			    });
+				row.add(label);
 				tableViewRowData.push(row);
+			}else{
+				for (var i=0; i<json.length; i++){
+					var row = createNewTalkTableRow(
+						json[i].user_id,
+						Ti.App.Properties.getString('my_id'),
+						json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）",
+						json[i].profile,
+						json[i].profile_image,
+						json[i].gender,
+						json[i].room_updated,
+						json[i].room_public,
+						json[i].type,
+						json[i].unread_messages,
+						i
+					);
+					tableViewRowData.push(row);
+				}
 			}
 		} else{
 			// 通信に失敗したら行う処理
+			Ti.UI.createAlertDialog({
+				title: '通信に失敗しました'
+			}).show();
 		}
 		tableView.data = tableViewRowData;
 		actInd.hide();
@@ -123,7 +155,7 @@ function loadAttackData( tableView ){
 	
 }
 
-function createNewTalkTableRow(sendto, sendfrom, name, profile, profile_image, time, room_public, type, backgroundType) {
+function createNewTalkTableRow(sendto, sendfrom, name, profile, profile_image, gender, time, room_public, type, unread_messages, backgroundType) {
 	var nameLabel = Titanium.UI.createLabel({
 		font:{fontFamily: _font, fontSize:13, fontWeight:"bold"},
 		textAlign: 'left',
@@ -144,7 +176,7 @@ function createNewTalkTableRow(sendto, sendfrom, name, profile, profile_image, t
 		top: 25, 
 		bottom: 20,
 		left: 85, 
-		right: 0,
+		right: 16,
 		text: profile
 	});
 	
@@ -154,8 +186,18 @@ function createNewTalkTableRow(sendto, sendfrom, name, profile, profile_image, t
 		width: 70,
 		height: 70,
 		borderRadius:7,
+		borderWidth:2,
+		borderColor: _white,
 		image: profile_image
 	});
+	
+	if(gender =='male'){
+    	nameLabel.color = _darkBlue;
+    	profileImage.borderColor = _darkBlue;
+    }else if(gender == 'female'){
+    	nameLabel.color = _vividPink;
+    	profileImage.borderColor = _vividPink;
+    }
 	    
 	var timeLabel = Titanium.UI.createLabel({
 		font:{fontFamily: _font, fontSize:10}, 
@@ -208,7 +250,7 @@ function createNewTalkTableRow(sendto, sendfrom, name, profile, profile_image, t
 		typeLabel.backgroundColor = _vividPink;
 		typeLabel.color = _white;
 	}
-	    
+    
 	var row = Ti.UI.createTableViewRow({
 		hasChild: true,
 		height:80,
@@ -222,6 +264,23 @@ function createNewTalkTableRow(sendto, sendfrom, name, profile, profile_image, t
 		row.backgroundColor = _whiteGray;
 	}
 	
+	if(unread_messages > 0){
+		row.unread_messages = unread_messages;
+		
+		var unreadLabel = Titanium.UI.createLabel({
+			font:{fontFamily: _font, fontSize:10},
+			textAlign: 'center',
+			verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			color: _white,
+			center: 0, 
+			right: 0,
+			height: 16,
+			width: 16,
+	    	backgroundImage: "images/circle_green.png",
+			text: unread_messages
+		});
+		row.add(unreadLabel);
+	}
 	row.add(profileImage);
 	row.add(profileMessage);
 	row.add(timeLabel);
@@ -247,28 +306,50 @@ function loadTalkData( tableView ){
 		if (data.success) {
 			// 通信に成功したら行う処理
 			var json = data.data;
-			//Ti.API.info("トーク中テーブル");
-			for (var i=0; i<json.length; i++){
-				var row = createTalkTableRow(
-					json[i].sendto_id,
-					Ti.App.Properties.getString('my_id'),
-					json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）",
-					json[i].profile_image,
-					json[i].profile,
-					json[i].room_updated,
-					json[i].room_public,
-					i
-				);
+			if (json.length == 0){
+				var row = Ti.UI.createTableViewRow({
+			    	hasChild: false,
+			        height:'100%',
+			        backgroundColor: _white
+			    });
+			    
+			    var label = Ti.UI.createLabel({
+			    	font:{fontFamily: _font, fontSize:13},
+			    	textAlign: 'center',
+			    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			    	color: _darkGray,
+			        text: "まだ相互にトークしている人がいません。"
+			    });
+				row.add(label);
 				tableViewRowData.push(row);
+			}else{
+				for (var i=0; i<json.length; i++){
+					var row = createTalkTableRow(
+						json[i].sendto_id,
+						Ti.App.Properties.getString('my_id'),
+						json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）",
+						json[i].profile_image,
+						json[i].profile,
+						json[i].gender,
+						json[i].room_updated,
+						json[i].room_public,
+						json[i].unread_messages,
+						i
+					);
+					tableViewRowData.push(row);
+				}
 			}
 		} else{
 			// 通信に失敗したら行う処理
+			Ti.UI.createAlertDialog({
+				title: '通信に失敗しました'
+			}).show();
 		}
 		tableView.data = tableViewRowData;
 		actInd.hide();
 	});
 }
-function createTalkTableRow(sendto, sendfrom, name, profile_image, profile, time, room_public, backgroundType) {
+function createTalkTableRow(sendto, sendfrom, name, profile_image, profile, gender, time, room_public, unread_messages, backgroundType) {
 
 	var nameLabel = Titanium.UI.createLabel({
 		font:{fontFamily: _font, fontSize:13, fontWeight:"bold"},
@@ -300,8 +381,18 @@ function createTalkTableRow(sendto, sendfrom, name, profile_image, profile, time
     	width: 70,
     	height: 70,
     	borderRadius:7,
+    	borderWidth:2,
+    	borderColor: _white,
 		image: profile_image
 	});
+	
+	if(gender =='male'){
+    	nameLabel.color = _darkBlue;
+    	profileImage.borderColor = _darkBlue;
+    }else if(gender == 'female'){
+    	nameLabel.color = _vividPink;
+    	profileImage.borderColor = _vividPink;
+    }
 	
 	var timeLabel = Titanium.UI.createLabel({
 	    font:{fontFamily: _font, fontSize:10}, 
@@ -346,6 +437,24 @@ function createTalkTableRow(sendto, sendfrom, name, profile_image, profile, time
 	}else{
 		row.backgroundColor = _whiteGray;
 	}
+	
+	if(unread_messages > 0){
+		row.unread_messages = unread_messages;
+		
+		var unreadLabel = Titanium.UI.createLabel({
+			font:{fontFamily: _font, fontSize:10},
+			textAlign: 'center',
+			verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			color: _white,
+			center: 0, 
+			right: 0,
+			height: 16,
+			width: 16,
+	    	backgroundImage: "images/circle_green.png",
+			text: unread_messages
+		});
+		row.add(unreadLabel);
+	}
 
 	row.add(profileImage);
 	row.add(profileMessage);
@@ -370,27 +479,49 @@ function loadFootprintData( tableView ){
 		if (data.success) {
 			// 通信に成功したら行う処理
 			var json = data.data;
-			for (var i=0; i<json.length; i++){
-				var row = createFootprintTableRow(
-					json[i].id,
-					json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）",
-					json[i].profile_image1,
-					json[i].profile,
-					json[i].area,
-					json[i].purpose,
-					json[i].updated_at,
-					i
-				);
+			if (json.length == 0){
+				var row = Ti.UI.createTableViewRow({
+			    	hasChild: false,
+			        height:'100%',
+			        backgroundColor: _white
+			    });
+			    
+			    var label = Ti.UI.createLabel({
+			    	font:{fontFamily: _font, fontSize:13},
+			    	textAlign: 'center',
+			    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			    	color: _darkGray,
+			        text: "まだあなたのプロフィールページ\nに訪問した人はいません。"
+			    });
+				row.add(label);
 				tableViewRowData.push(row);
+			}else{
+				for (var i=0; i<json.length; i++){
+					var row = createFootprintTableRow(
+						json[i].id,
+						json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）",
+						json[i].profile_image1,
+						json[i].profile,
+						json[i].gender,
+						json[i].area,
+						json[i].purpose,
+						json[i].updated_at,
+						i
+					);
+					tableViewRowData.push(row);
+				}
 			}
 		} else{
 			// 通信に失敗したら行う処理
+			Ti.UI.createAlertDialog({
+				title: '通信に失敗しました'
+			}).show();
 		}
 		tableView.data = tableViewRowData;
 		actInd.hide();
 	});
 }
-function createFootprintTableRow(id, name, profile_image, profile, area, purpose, time, backgroundType) {
+function createFootprintTableRow(id, name, profile_image, profile, gender, area, purpose, time, backgroundType) {
 
 	var nickNameLabel = Titanium.UI.createLabel({
     	font:{fontFamily: _font, fontSize:13, fontWeight:"bold"},
@@ -410,8 +541,18 @@ function createFootprintTableRow(id, name, profile_image, profile, area, purpose
     	width: 70,
     	height: 70,
     	borderRadius:7,
+    	borderWidth:2,
+    	borderColor: _white,
     	image: profile_image
     });
+    
+    if(gender =='male'){
+    	nickNameLabel.color = _darkBlue;
+    	profileImage.borderColor = _darkBlue;
+    }else if(gender == 'female'){
+    	nickNameLabel.color = _vividPink;
+    	profileImage.borderColor = _vividPink;
+    }
     
     var profileLabel = Titanium.UI.createLabel({
     	font:{fontFamily: _font, fontSize:12}, 

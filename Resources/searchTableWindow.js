@@ -81,22 +81,43 @@ function loadTableView(){
 		if (data.success) {
 			// 通信に成功したら行う処理
 			var json = data.data;
-			
-			for (var i=0; i<json.length; i++){
-				var row = createRow(
-					json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）", 
-					json[i].profile_image1, 
-					json[i].profile, 
-					exchangeFromNumber( json[i].area, "area" ) + 
-					//" | " + exchangeFromNumber( json[i].purpose, "purpose" ) + 
-					" | " + json[i].last_logined, 
-					json[i].id,
-					i
-				);
-			   tableViewRowData.push(row);
-			}	
+			if (json.length == 0){
+				var row = Ti.UI.createTableViewRow({
+			    	hasChild: false,
+			        height:'100%',
+			        backgroundColor: _white
+			    });
+			    
+			    var label = Ti.UI.createLabel({
+			    	font:{fontFamily: _font, fontSize:13},
+			    	textAlign: 'center',
+			    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			    	color: _darkGray,
+			        text: "1件も見つかりませんでした"
+			    });
+				row.add(label);
+				tableViewRowData.push(row);
+			}else{
+				for (var i=0; i<json.length; i++){
+					var row = createRow(
+						json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）", 
+						json[i].profile_image1, 
+						json[i].profile, 
+						json[i].gender,
+						exchangeFromNumber( json[i].area, "area" ) + 
+						//" | " + exchangeFromNumber( json[i].purpose, "purpose" ) + 
+						" | " + json[i].last_logined, 
+						json[i].id,
+						i
+					);
+				   tableViewRowData.push(row);
+				}
+			}
 		} else{
 			// 通信に失敗したら行う処理
+			Ti.UI.createAlertDialog({
+				title: '通信に失敗しました'
+			}).show();
 		}
 		tableView.data = tableViewRowData;
 		
@@ -105,13 +126,12 @@ function loadTableView(){
 	});
 }
 
-function createRow(nickName, iconImage, profile, info, userID, backgroundType){
+function createRow(nickName, iconImage, profile, gender, info, userID, backgroundType){
 	
 	var nickNameLabel = Titanium.UI.createLabel({
     	font:{fontFamily: _font, fontSize:13, fontWeight:"bold"},
     	textAlign: 'left',
     	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
-    	color: _vividPink,
     	top: 5, 
     	left: 85, 
     	right: 0,
@@ -125,10 +145,18 @@ function createRow(nickName, iconImage, profile, info, userID, backgroundType){
     	width: 70,
     	height: 70,
     	borderRadius:7,
-    	//borderColor:_darkBlue,
-    	//borderWidth:1,
+    	borderWidth:2,
+    	borderColor: _white,
     	image: iconImage
     });
+    
+    if(gender =='male'){
+    	nickNameLabel.color = _darkBlue;
+    	profileImage.borderColor = _darkBlue;
+    }else if(gender == 'female'){
+    	nickNameLabel.color = _vividPink;
+    	profileImage.borderColor = _vividPink;
+    }
     
     var profileLabel = Titanium.UI.createLabel({
     	font:{fontFamily: _font, fontSize:12}, 
@@ -225,7 +253,7 @@ function createSearchView( win ){
 		font:{fontFamily: _font, fontSize: 17 }
 	});
 	
-	var genderButtonBar = Titanium.UI.createTabbedBar({
+	var genderButtonBar = Titanium.UI.iOS.createTabbedBar({
 		labels:['両方', '男性のみ', '女性のみ'], 
 		backgroundColor:_darkBlue,
 	    color: _darkBlue,

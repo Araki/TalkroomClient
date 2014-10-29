@@ -2,7 +2,7 @@
 <ti:app xmlns:ti="http://ti.appcelerator.org">
     <id>jp.shiftage.talkroom</id>
     <name>talkroom</name>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
     <publisher>Shiftage Inc.</publisher>
     <url>http://shiftage.myinstapage.com/</url>
     <description>not specified</description>
@@ -59,5 +59,5 @@
         <target device="mobileweb">false</target>
         <target device="tizen">false</target>
     </deployment-targets>
-    <sdk-version>3.2.2.GA</sdk-version>
+    <sdk-version>3.4.0.v20140916181713</sdk-version>
 </ti:app>

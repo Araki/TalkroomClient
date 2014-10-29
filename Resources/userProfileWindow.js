@@ -36,9 +36,26 @@ function userProfileWindow( userID, type ) {
 			var json = data.data;
 			self.id = userID;
 			self.titleControl.text = json[0].nickname;
-			if(json[0].profile_image1 != null){profileImage1.image = json[0].profile_image1;}
-			if(json[0].profile_image2 != null){profileImage2.image = json[0].profile_image2;}
-			if(json[0].profile_image3 != null){profileImage3.image = json[0].profile_image3;}
+			if(json[0].profile_image1 != null){
+				profileImage1.image = json[0].profile_image1;
+			}
+			if(json[0].profile_image2 != null){
+				profileImage2.image = json[0].profile_image2;
+			}
+			if(json[0].profile_image3 != null){
+				profileImage3.image = json[0].profile_image3;
+			}
+			
+			if(json[0].gender == 'male'){
+				profileImage1.borderColor = _darkBlue;
+				profileImage2.borderColor = _darkBlue;
+				profileImage3.borderColor = _darkBlue;
+			}else if(json[0].gender == 'female'){
+				profileImage1.borderColor = _vividPink;
+				profileImage2.borderColor = _vividPink;
+				profileImage3.borderColor = _vividPink;
+			}
+			
 			tableViewRowData[0] = createTableRow("年代", exchangeFromNumber(json[0].age, "age"), 0);
 			tableViewRowData[1] = createTableRow("エリア", exchangeFromNumber(json[0].area, "area"), 1);
 			//tableViewRowData[2] = createTableRow("目的", exchangeFromNumber(json[0].purpose, "purpose"), 0);
@@ -94,34 +111,40 @@ function userProfileWindow( userID, type ) {
 	});
 	
 	reportButtonOnReport.addEventListener('click', function() {
-		actInd.show();
-		Flurry.logEvent('UserProfile Send Report');
-		var url = Ti.App.domain + "send_report.json";
-		var message = {
-				app_token: Ti.App.Properties.getString('app_token'),
-				reported_id: userID,
-				platform: Ti.Platform.name,
-				version: Ti.Platform.version,
-				manufacturer: Ti.Platform.manufacturer,
-				model: Ti.Platform.model,
-				body: reportView.children[1].value
-		};
-		sendData( url, message, function( data ){
-			if (data.success) {
-				reportView.hide();
-				reportBGView.hide();
-				Ti.UI.createAlertDialog({
-					title: '通報を送信しました'
-				}).show();
-				actInd.hide();
-			} else{
-				// 通信に失敗したら行う処理
-				Ti.UI.createAlertDialog({
-					title: '通報の送信に失敗しました'
-				}).show();
-				actInd.hide();
-			}
-		});
+		if( reportView.children[1].value == ""){
+			Ti.UI.createAlertDialog({
+				title: '通報理由を記入してください',
+			}).show();
+		}else{
+			actInd.show();
+			Flurry.logEvent('UserProfile Send Report');
+			var url = Ti.App.domain + "send_report.json";
+			var message = {
+					app_token: Ti.App.Properties.getString('app_token'),
+					reported_id: userID,
+					platform: Ti.Platform.name,
+					version: Ti.Platform.version,
+					manufacturer: Ti.Platform.manufacturer,
+					model: Ti.Platform.model,
+					body: reportView.children[1].value
+			};
+			sendData( url, message, function( data ){
+				if (data.success) {
+					reportView.hide();
+					reportBGView.hide();
+					Ti.UI.createAlertDialog({
+						title: '通報を送信しました'
+					}).show();
+					actInd.hide();
+				} else{
+					// 通信に失敗したら行う処理
+					Ti.UI.createAlertDialog({
+						title: '通報の送信に失敗しました'
+					}).show();
+					actInd.hide();
+				}
+			});
+		}
 	});
 	
 	profileBgView.add(profileImage1);
@@ -182,6 +205,8 @@ function createProfileImage1(){
 		width: 90,
 		height: 90,
 		image: '/images/no_image.png',
+		borderWidth: 2,
+		borderColor: _white,
 		borderRadius:9,
 	});
 	return view;
@@ -194,6 +219,8 @@ function createProfileImage2(){
 		width: 90,
 		height: 90,
 		image: '/images/no_image.png',
+		borderWidth: 2,
+		borderColor: _white,
 		borderRadius:9,
 	});
 	return view;
@@ -206,6 +233,8 @@ function createProfileImage3(){
 		width: 90,
 		height: 90,
 		image: '/images/no_image.png',
+		borderWidth: 2,
+		borderColor: _white,
 		borderRadius:9,
 	});
 	return view;
@@ -344,8 +373,9 @@ function createReportView(){
 		left: 10,
 		bottom: 50,
 		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
-		keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
-		returnKeyType:Titanium.UI.RETURNKEY_DONE,
+		appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
+	    keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
+	    returnKeyType:Titanium.UI.RETURNKEY_DONE,
 		autocapitalization: false,
 		autocorrect:false,
 	    borderColor:_darkBlue,

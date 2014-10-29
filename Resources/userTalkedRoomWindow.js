@@ -17,6 +17,8 @@ function userTalkedRoomWindow( user_id ) {
 					json[i].room_id, 
 					json[i].sendfrom_image, 
 					json[i].sendto_image, 
+					json[i].sendfrom_gender, 
+					json[i].sendto_gender,
 					json[i].sendfrom_message, 
 					json[i].sendto_message, 
 					json[i].updated_at,
@@ -66,7 +68,7 @@ module.exports = userTalkedRoomWindow;
 //############################################################
 //############################################################
 
-function createRow(room_id, sendfrom_image, sendto_image, sendfrom_message, sendto_message, time, sendfrom_id, sendto_id, backgroundType){
+function createRow(room_id, sendfrom_image, sendto_image, sendfrom_gender, sendto_gender, sendfrom_message, sendto_message, time, sendfrom_id, sendto_id, backgroundType){
 	
 	var leftBalloonImage = Ti.UI.createView({
 		left: 70,
@@ -97,21 +99,10 @@ function createRow(room_id, sendfrom_image, sendto_image, sendfrom_message, send
 		textAlign: "left",
 		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
        	color:_white,
-       	//backgroundColor: 'red',
        	left: 18,
        	right: 5,
-       	height: 13,//Ti.UI.SIZE,//"auto",
-       	center: 0,//top:10,
-    	/*
-    	font:{fontFamily: _font, fontSize:13}, 
-    	textAlign:'left',
-    	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
-    	color:_darkBlue,
-    	top:25, 
-    	right:80, 
-    	left: 80, 
-        height:20,
-        */
+       	height: 13,
+       	center: 0,
         text: sendfrom_message
     });
 
@@ -120,21 +111,10 @@ function createRow(room_id, sendfrom_image, sendto_image, sendfrom_message, send
 		textAlign: "right",
 		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
        	color:_white,
-       	//backgroundColor: 'red',
        	left: 5,
        	right: 18,
-       	height: 13,//Ti.UI.SIZE,//"auto",
-       	center: 0,//top:10,
-    	/*
-        font:{fontFamily: _font, fontSize:13}, 
-        textAlign:'left',
-        verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
-        color:_vividPink,
-        bottom:5, 
-        right:80, 
-        left: 80, 
-        height:20,
-        */
+       	height: 13,
+       	center: 0,
         text: sendto_message
 	});
     
@@ -144,8 +124,16 @@ function createRow(room_id, sendfrom_image, sendto_image, sendfrom_message, send
 	   	width: 60,
 	   	height: 60,
 	   	borderRadius: 6,
+	   	borderWidth: 2,
+	   	borderColor: _white,
 	   	image: sendfrom_image
 	});
+	
+	if(sendfrom_gender == 'male'){
+		sendFromImage.borderColor = _darkBlue;
+	}else if(sendfrom_gender == 'female'){
+		sendFromImage.borderColor = _vividPink;
+	}
    
 	var sendToImage = Titanium.UI.createImageView({
 	   	top: 20,
@@ -153,8 +141,16 @@ function createRow(room_id, sendfrom_image, sendto_image, sendfrom_message, send
 	   	width: 60,
 	   	height: 60,
 	   	borderRadius: 6,
+	   	borderWidth: 2,
+	   	borderColor: _white,
 	   	image: sendto_image
 	});
+	
+	if(sendto_gender == 'male'){
+		sendToImage.borderColor = _darkBlue;
+	}else if(sendto_gender == 'female'){
+		sendToImage.borderColor = _vividPink;
+	}
 	    
 	var timeLabel = Titanium.UI.createLabel({
 	    font:{fontFamily: _font, fontSize:10}, 

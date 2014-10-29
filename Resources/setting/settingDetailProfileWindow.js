@@ -401,6 +401,9 @@ function createRow( labelText ) {
     var textField = Titanium.UI.createTextField({
 		font:{fontSize: 13},
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
+		appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
+	    keyboardType:Titanium.UI.KEYBOARD_DEFAULT,
+	    returnKeyType:Titanium.UI.RETURNKEY_DONE,
 		color: _darkBlue,
 		backgroundColor: _white,
 		borderRadius: 10,
