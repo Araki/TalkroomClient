@@ -1,7 +1,10 @@
 function settingWindow() {
+	
 	var previousPoint;
 	var listenerFunction;
 	var self = createWindow("その他");
+	Ti.API.info("previousPoint:" + previousPoint);
+	Ti.API.info("_point:" + _point);
 	
 	var tableView = Titanium.UI.createTableView();
 		
@@ -197,18 +200,19 @@ function settingWindow() {
 		tableView.addEventListener('click', listenerFunction);
 	}
 	
-	self.addEventListener('focus', function(e){
-		if(previousPoint != _point){
-			if(previousPoint != null){
-				//alert("Listener削除");
-				tableView.removeEventListener('click', listenerFunction);
+	tabGroup.addEventListener('focus', function(e){
+		if(e.index == 3){//その他タブがタップされたとき
+			if(previousPoint != _point){//ポイントが変更されていたとき
+				if(previousPoint != null){//2回目以降の「focus」のときListenerが重複するので削除
+					tableView.removeEventListener('click', listenerFunction);
+				}
+				previousPoint = _point;
+				loadTableViewView();
 			}
-			//alert("ポイント：" + _point);
-			previousPoint = _point;
-			loadTableViewView();
 		}
+		
 	});
-	
+		
 	self.add(tableView);
 	return self;
 }

@@ -123,6 +123,25 @@ Titanium.UI.setBackgroundColor('#000');
 var tabGroup;
 
 Ti.App.addEventListener('resumed',function(){
+	//var actInd = createActInd();
+	//actInd.show();
+	var url = Ti.App.domain + "check_login.json";
+	var message = {channel: "normal",
+				   uid: iOSUniqueID.getUUID, 
+				   version: Ti.App.version,
+				   access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(iOSUniqueID.getUUID))};
+	sendData( url, message, function( data ){
+		if (data.success){
+			//actInd.hide();
+		}else{
+			//通信に失敗したら行う処理
+			Ti.UI.createAlertDialog({
+				title: '通信に失敗しました'
+			}).show();
+			//actInd.hide();
+		}
+	});
+	
 	var number = Ti.UI.iPhone.getAppBadge();
 	if(tabGroup != null){
 		addBadgeToTab( number );
@@ -172,6 +191,7 @@ if (Ti.App.Properties.getString('channel') == 'normal'){
 }
 
 function normalLogin(){
+	//Ti.API.info("0###############################");
 	var actInd = createActInd();
 	facebookWindow.add(actInd);
 	actInd.show();
@@ -181,13 +201,12 @@ function normalLogin(){
 				   version: Ti.App.version,
 				   access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(iOSUniqueID.getUUID))};
 	sendData( url, message, function( data ){
-		
-		var obj = JSON.parse(data.data);
-        rewardFlag = obj.reward_flag;
-        
 		if (data.success){
 			//通信に成功したら行う処理
 			//alert(Ti.App.version);
+			var obj = JSON.parse(data.data);
+        	rewardFlag = obj.reward_flag;
+			//Ti.API.info("1###############################");
             if(obj.version == "development"){
             	
             	alert("ステージング環境");
@@ -200,7 +219,7 @@ function normalLogin(){
 						   uid: iOSUniqueID.getUUID, 
 						   version: Ti.App.version,
 						   access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(iOSUniqueID.getUUID))};
-				
+				//Ti.API.info("2###############################");
 				sendData( url, message, function( data ){
 					if (data.success){
 						obj = JSON.parse(data.data);
@@ -209,6 +228,12 @@ function normalLogin(){
 				        if(obj.result == "true"){//既に登録済みのユーザーの処理
 							Flurry.logEvent('App Login');
 			              　loginProcess(obj);
+							actInd.hide();
+						}else if(obj.result == "deleted"){
+							//alert("削除");
+							Ti.UI.createAlertDialog({
+								message: "お客様のアカウントは運営により\n削除されました。\n心当たりのない方は恐れ入りますが\nこちらのメールアドレス（info@shiftage.jp）まで「" + Ti.App.Properties.getString('my_id') + "」を\n記載のうえお問い合わせください。"
+							}).show();
 							actInd.hide();
 						}else{
 							//Ti.App.Properties.setString('app_token', "");
@@ -230,7 +255,7 @@ function normalLogin(){
 				});           	
             	
             }else if(obj.version == "update"){
-            	
+            	//Ti.API.info("3###############################");
             	var alertDialog = Ti.UI.createAlertDialog({
 					//title: '',
 				  	message: 'アプリを最新版にアップデートしてください',
@@ -245,13 +270,21 @@ function normalLogin(){
 				});
 				
 				alertDialog.show();
-				
+			
             }else{
+            	//Ti.API.info("4###############################");
             	if(obj.result == "true"){//既に登録済みのユーザーの処理
 					Flurry.logEvent('App Login');
 	              　loginProcess(obj);
 					actInd.hide();
+				}else if(obj.result == "deleted"){
+					//alert("削除");
+					Ti.UI.createAlertDialog({
+						message: "お客様のアカウントは運営により削除されました。\n心当たりのない方は恐れ入りますがこちらのメールアドレス（info@shiftage.jp）まで「" + Ti.App.Properties.getString('my_id') + "」を記載のうえお問い合わせください。"
+					}).show();
+					actInd.hide();
 				}else{
+					//alert("新規");
 					//Ti.App.Properties.setString('app_token', "");
 					//Ti.App.Properties.setString('my_id', "");
 					//Ti.App.Properties.setString('channel', "");
@@ -376,13 +409,10 @@ function getUserDataList() {
 							   version: Ti.App.version,
 							   access_token: Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(uid))};
 				sendData( url, message, function( data ){
-					
-					var obj = JSON.parse(data.data);
-			        rewardFlag = obj.reward_flag;
-			        
 					if (data.success){
 						//通信に成功したら行う処理
-			            
+			            var obj = JSON.parse(data.data);
+			        	rewardFlag = obj.reward_flag;
 						if(obj.result == "true"){//既に登録済みのユーザーの処理
 							Flurry.logEvent('App Login Facebook');
 							/*
@@ -398,13 +428,13 @@ function getUserDataList() {
 							}
 							Ti.UI.createAlertDialog({
 								title: '既にログイン済みのユーザー',
-							  	message: data.data
+							  	//message: data.data
 							}).show();
 							*/
             
 			              　loginProcess(obj);
 							actInd.hide();
-							
+						
 						}else{//まだ未登録のユーザーの処理
 							Flurry.logEvent('App SignUp Facebook');
 							
@@ -435,10 +465,10 @@ function getUserDataList() {
 							registrationWindow.uid = uid;
 							registrationWindow.gender = gender;
 							registrationWindow.email = email;
-							Ti.API.info("Name:" + name);
+							//Ti.API.info("Name:" + name);
 							
-							Ti.API.info("ageText:" + ageText + "(" + current.getFullYear() + current.getMonth() + current.getDate() + ")(" + birth[0] + birth[1] + birth[2] + ")");
-							Ti.API.info("ageNum:" + ageNum);
+							//Ti.API.info("ageText:" + ageText + "(" + current.getFullYear() + current.getMonth() + current.getDate() + ")(" + birth[0] + birth[1] + birth[2] + ")");
+							//Ti.API.info("ageNum:" + ageNum);
 							registrationWindow.open();
 							//self.close();
 							actInd.hide();
@@ -462,6 +492,9 @@ function loginProcess(obj){
     Ti.App.Properties.setString('app_token', obj.app_token);
 	Ti.App.Properties.setString('my_id', obj.user_id);
 	Ti.App.Properties.setString('channel', obj.channel);
+	
+	//ポイントの読み込み
+	readPoint();
 	//tabGroupを開く
 	createTabGroup();
 	addBadgeToTab();
@@ -484,7 +517,7 @@ function getFbFriendsList(){
 	         if (e.success) {
 	            friends_list = e.result;
 	            registrationWindow.friends_list = friends_list;
-				Ti.API.info("####FRIENDS LIST: " + friends_list);
+				//Ti.API.info("####FRIENDS LIST: " + friends_list);
 	        }
 	    }
 	);
@@ -569,13 +602,69 @@ function calculateAge(cY, cM, cD, bY, bM, bD){
 }
 
 
+var nendAdWindow = require('nendInterstitialWindow');
+var nendInterstitialWindow = new nendAdWindow();
+var roadflag = false;//imobileAdが読込が完了したらtrue
+var imobileAdWindow = require('imobileInterstitialWindow');
+var imobileInterstitialWindow = new imobileAdWindow();
 function createTabGroup(){
-	
-	//ポイントの読み込み
-	readPoint();
 	
 	var tGroup = require('tabGroup');
 	tabGroup = new tGroup();
+	
+	//==================================================================
+	// 「探す」ウィンドウ
+	//==================================================================
+	var searchTableWindow = require('searchTableWindow');
+	var win1 = new searchTableWindow("","","");
+	
+	var tab1 = Titanium.UI.createTab({ 
+	    icon:'/images/tabbar_icon_user.png',
+	    title:'ユーザー',
+	    window:win1
+	});
+
+	//==================================================================
+	// 「のぞく」ウィンドウ
+	//==================================================================
+	var publicRoomWindow = require('publicRoomWindow');
+	var win2 = new publicRoomWindow();
+	
+	var tab2 = Titanium.UI.createTab({ 
+	    icon:'/images/tabbar_icon_room.png',
+	    title:'ルーム',
+	    window:win2
+	});
+	
+	//==================================================================
+	// 「トーク」ウィンドウ
+	//==================================================================
+	var talkWindow = require('talkWindow');
+	var win3 = new talkWindow();
+	
+	var tab3 = Titanium.UI.createTab({  
+	    icon:'/images/tabbar_icon_talk.png',
+	    title:'トーク',
+	    window:win3
+	});	
+	
+	
+	//==================================================================
+	// 「設定」ウィンドウ
+	//==================================================================
+	var settingWindow = require('settingWindow');
+	var win4 = new settingWindow();
+	
+	var tab4 = Titanium.UI.createTab({  
+	    icon:'/images/tabbar_icon_another.png',
+	    title:'その他',
+	    window:win4
+	});
+	
+	tabGroup.addTab(tab1);  
+	tabGroup.addTab(tab2);  
+	tabGroup.addTab(tab3);
+	tabGroup.addTab(tab4);
 	
 	tabGroup.addEventListener('open', function(){
 		//レシート処理
@@ -586,6 +675,9 @@ function createTabGroup(){
 	});
 	
 	tabGroup.open();
+	
+	nendInterstitialWindow.open();
+	imobileInterstitialWindow.open();
 }
 
 //############################################################
@@ -816,13 +908,13 @@ function registFBProfileImage( win ){
 		ind.hide();
 		if(xhr.responseText == "success"){
 			reloadImage(currentWindow, "profile_image1");
-			//alert("アップロード成功");
+			
 			Ti.UI.createAlertDialog({
 				title: '写真を更新しました',
 			  	//message: data.data
 			}).show();
 		}else{
-			//alert("アップロードに失敗しました");
+			
 			Ti.UI.createAlertDialog({
 				title: '写真の更新に失敗しました',
 			  	//message: data.data
@@ -831,7 +923,7 @@ function registFBProfileImage( win ){
 	};
 	xhr.onerror = function(){
 		ind.hide();
-		//alert("アップロードに失敗しました");
+		
 		Ti.UI.createAlertDialog({
 			title: '写真の更新に失敗しました',
 		  	//message: data.data
@@ -1067,6 +1159,7 @@ function readPoint(){
 		if (data.success) {
 			// 通信に成功したら行う処理
 			_point = parseInt(data.data);
+			//Ti.API.info("$$$$$$$$$$$$$$$$$$:" + _point);
 		} else{
 			// 通信に失敗したら行う処理
 		}
@@ -1080,7 +1173,7 @@ function readPoint(){
 //val: URLを指定
 //callback: 呼び出し側で指定するcallback関数
 
-function　getData(val ,callback) {
+function getData(val ,callback) {
 	
 	var url = val;
 		
@@ -1185,7 +1278,7 @@ function createPickerView( data, tf, win ){
 	var spacer = Titanium.UI.createButton({
 		systemButton: Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE
 	});
-
+	
 	var toolbar = Titanium.UI.iOS.createToolbar({
 		top: 0,
 		items: [spacer, doneButton]
@@ -1460,7 +1553,4 @@ function createBannerAdView(){
 	}
     return adview;
 }
-
-
-
 

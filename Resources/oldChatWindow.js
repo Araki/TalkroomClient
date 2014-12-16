@@ -21,25 +21,24 @@ function chatWindow(sendfrom, sendto, textField) {
 	var scrollViewHeight = 0;
 	var chatArray = new Array();
 	var actInd = createActInd();
-	var tableViewRowData = [];
 	actInd.show();
 	
 	var baseView = Titanium.UI.createScrollView({
 		contentWidth: "auto",
 		contentHeight: "auto",
 		top: 0,
-		bottom:0,
-		backgroundColor: _whiteBlue,
-		showVerticalScrollIndicator: false
-	});
-	
-	var tableView = Titanium.UI.createTableView({
-		top: 0,
 		bottom:50,
 		backgroundColor: _whiteBlue,
-		separatorStyle:'NONE',
+		showVerticalScrollIndicator: true
 	});
-
+	
+	var scrollView = Titanium.UI.createScrollView({
+		contentWidth: "auto",
+		contentHeight: "auto",
+		top: 0,
+		showVerticalScrollIndicator: true
+	});
+	
 	var adView = createBannerAdView();
 	
 	var toolbarView = Titanium.UI.createView({
@@ -86,6 +85,8 @@ function chatWindow(sendfrom, sendto, textField) {
 	});
 	
 	var sendButton = Titanium.UI.createButton({
+		//backgroundImage:'send.png',
+		//backgroundSelectedImage:'send_selected.png',
 		title: "送信",
 		font:{fontFamily: _font, fontSize:14},
 		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
@@ -97,17 +98,6 @@ function chatWindow(sendfrom, sendto, textField) {
 		right:5
 	});
 	
-	tableView.addEventListener('click', function(e) {
-		actInd.show();
-		if(e.row.id == "addRow"){
-			//tableViewRowData.pop();
-			tableViewRowData.shift();
-			createTalkRow(e.row.data, e.row.startNum, e.row.endNum);
-		}
-		else{}
-		actInd.hide();
-	});	
-	
 	var url = Ti.App.domain + "get_room_message.json?sendfrom=" + sendfrom + "&sendto=" + sendto + "&tf_flag=" + visibleTextField + "&app_token=" + Ti.App.Properties.getString('app_token');
 	getData(url, function( data ){
 		if (data.success) {
@@ -116,18 +106,47 @@ function chatWindow(sendfrom, sendto, textField) {
 			var json = data.data;
 			roomID = json.room_id;
 			roomPublic = json.public;
+			//Ti.API.info("######PUBLIC:" + roomPublic);
 			roomMessageCount = json.message_count;
-			if (json.messages.length >= 10){
-				//Ti.API.info("1########################" + json.messages.length);
-				createTalkRow(json, 0, 10);
-				tableView.scrollToIndex(tableViewRowData.length - 1, {animated:true});
-			}else{
-				//Ti.API.info("2########################" + json.messages.length);
-				createTalkRow(json, 0, json.messages.length);
-				tableView.scrollToIndex(tableViewRowData.length - 1, {animated:true});
-			}
+			
+			for (var i=json.messages.length-1; i>=0; i--){
+				chatArray[i] = new Array();
+				if(json.messages[i].sendfrom_list_id != Ti.App.Properties.getString('my_id') && json.messages[i].sendto_list_id != Ti.App.Properties.getString('my_id')){
+					if(json.messages[i].sendfrom_list_id == sendto){
+						chatArray[i]["side"] = "right";
+					}else{
+						chatArray[i]["side"] = "left";
+					}
+				}else{
+					if(json.messages[i].sendfrom_list_id == Ti.App.Properties.getString('my_id')){
+						chatArray[i]["side"] = "right";
+					}else{
+						chatArray[i]["side"] = "left";
+					}
+				}
+				chatArray[i]["id"] = json.messages[i].sendfrom_list_id;
+				chatArray[i]["message"] = json.messages[i].body;
+				chatArray[i]["image"] = json.messages[i].sendfrom_image;
+				chatArray[i]["gender"] = json.messages[i].sendfrom_gender;
+				chatArray[i]["time"] = json.messages[i].year + "/" + json.messages[i].month + "/" + json.messages[i].day + " " + json.messages[i].hour + ":" + json.messages[i].min;
+				
+				var cbView = require('chatBalloonView');
+				var chatView = new cbView(chatArray[i]["id"], chatArray[i]["side"], chatArray[i]["message"], chatArray[i]["image"], chatArray[i]["gender"], chatArray[i]["time"], scrollViewHeight);
+				scrollView.add(chatView);
+				scrollViewHeight = scrollViewHeight + chatView.height;
+				//Ti.API.info("chatView.height:" + chatView.height);
+				//Ti.API.info("SCROLLVIEWHEIGHT:" + scrollViewHeight);
+			}		
 		} else{
 			// 通信に失敗したら行う処理
+		}
+		
+		//スクロールの初期表示位置を指定
+		//chatができるときは420
+		//chatができないときは455
+		//マルチデバイス対応するために420や455を変数としたい
+		if(scrollViewHeight > 420){
+			scrollView.setContentOffset({x:0, y:scrollViewHeight - 420}, {animated:false});
 		}
 		
 		if(visibleTextField){//自分がチャットできるルームである場合
@@ -146,74 +165,12 @@ function chatWindow(sendfrom, sendto, textField) {
 			}
 		}
 		
-		
+		baseView.add(scrollView);
 		actInd.hide();
 		
 	});
 	
-	function createTalkRow(dataList, startNum, endNum){
-		for (var i=startNum; i<endNum; i++){
-			//Ti.API.info("i:" + i);
-			chatArray[i] = new Array();
-			if(dataList.messages[i].sendfrom_list_id != Ti.App.Properties.getString('my_id') && dataList.messages[i].sendto_list_id != Ti.App.Properties.getString('my_id')){
-				if(dataList.messages[i].sendfrom_list_id == sendto){
-					chatArray[i]["side"] = "right";
-				}else{
-					chatArray[i]["side"] = "left";
-				}
-			}else{
-				if(dataList.messages[i].sendfrom_list_id == Ti.App.Properties.getString('my_id')){
-					chatArray[i]["side"] = "right";
-				}else{
-					chatArray[i]["side"] = "left";
-				}
-			}
-			chatArray[i]["id"] = dataList.messages[i].sendfrom_list_id;
-			chatArray[i]["message"] = dataList.messages[i].body;
-			chatArray[i]["image"] = dataList.messages[i].sendfrom_image;
-			chatArray[i]["gender"] = dataList.messages[i].sendfrom_gender;
-			chatArray[i]["time"] = dataList.messages[i].year + "/" + dataList.messages[i].month + "/" + dataList.messages[i].day + " " + dataList.messages[i].hour + ":" + dataList.messages[i].min;
-			
-			var cbView = require('chatBalloonView');
-			var chatRow = new cbView(chatArray[i]["id"], chatArray[i]["side"], chatArray[i]["message"], chatArray[i]["image"], chatArray[i]["gender"], chatArray[i]["time"], scrollViewHeight);
-			//Ti.API.info("length:" + tableViewRowData.length);
-			//tableViewRowData.push(chatRow);
-			tableViewRowData.unshift(chatRow);
-		}
-		
-		//追加読込Rowの追加判定
-		var nextEndNum;
-		if(endNum == dataList.messages.length){
-			//次に読み込むRowがない場合はaddRowは追加しない 
-		}else{
-			if(endNum + 10 <= dataList.messages.length){
-				nextEndNum = endNum + 10;
-			}else{
-				nextEndNum = dataList.messages.length;
-			}
-			var addRow = Ti.UI.createTableViewRow({
-				hasChild: false,
-				height:25,
-				backgroundColor: _mossGreen,
-				id: "addRow",
-				data: dataList,
-				startNum: endNum,
-				endNum: nextEndNum,
-			});
-			addRowLabel = Ti.UI.createLabel({
-				text: "過去のトークを読み込む",
-				color: _white,//_darkGray,
-				font:{fontFamily: _font, fontSize:13},
-			});
-			addRow.add(addRowLabel);
-			//tableViewRowData.push(addRow);
-			tableViewRowData.unshift(addRow);
-			
-		}
-		//Ti.API.info("LENGTH:" + tableViewRowData.length);
-		tableView.data = tableViewRowData;
-		//tableView.scrollToIndex(endNum - startNum, {animated:true});
-	}
+	
 	
 	
 	sendButton.addEventListener('click', function(){
@@ -246,18 +203,42 @@ function chatWindow(sendfrom, sendto, textField) {
 					if (data.success){
 						//通信に成功したら行う処理
 						Flurry.logEvent('ChatWindow Sent Chat');
+						//Ti.API.info("戻り値:" + data.data);
 						
 						var json = JSON.parse(data.data);
 						var time = json[0].year + "/" + json[0].month + "/" + json[0].day + " " + json[0].hour + ":" + json[0].min;
 						
+						
+						//Ti.API.info("json[0].body:" + json[0].body);
+						//Ti.API.info("json[0].sendfrom_image:" + json[0].sendfrom_image);
+						//Ti.API.info("％％％ScrollViewHeight:" + scrollViewHeight);
+						//Ti.API.info("％％％Time:" + time);
 						var cbView = require('chatBalloonView');
-						var chatRow = new cbView(json[0].sendfrom_list_id, "right", json[0].body, json[0].sendfrom_image,　json[0].sendfrom_gender, time, scrollViewHeight);
-						tableViewRowData.push(chatRow);
-						tableView.data = tableViewRowData;
-						tableView.scrollToIndex(tableViewRowData.length - 1, {animated:true});
+						var chatView = new cbView(json[0].sendfrom_list_id, "right", json[0].body, json[0].sendfrom_image,　json[0].sendfrom_gender, time, scrollViewHeight);
+						scrollView.add(chatView);
+						scrollViewHeight = scrollViewHeight + chatView.height;
+						
+						//Ti.API.info("scrollViewHeight:" + scrollView.toImage().height);
+						//Ti.API.info("scrollViewHeight:" + scrollViewHeight);
+						
+						//scrollViewHeight = scrollViewHeight + chatView.height;
+						//Ti.API.info("chatView.height:" + chatView.height);
+						bottomPosition = bottomPosition + chatView.height;
+						
+						//スクロールして表示する
+						if(scrollViewHeight > 420){
+							scrollView.setContentOffset({x:0, y:scrollViewHeight - 420}, {animated:true});
+							//Ti.API.info("++++ScrollViewHeight:" + scrollViewHeight);
+						}
+						//scrollView.setContentOffset({x:0, y:bottomPosition}, {animated:true});
 						textField.value ="";
 						textLengthLabel.text = 0;
-						
+						/*
+						Ti.UI.createAlertDialog({
+							title: 'データ送信成功',
+						  	message: data.data
+						}).show();
+						*/
 						//sendButtonを有効に
 						sendButton.enabled = true;
 						
@@ -283,12 +264,16 @@ function chatWindow(sendfrom, sendto, textField) {
 		}
 	});
 
+	var bottomPosition = scrollView.toImage().height - 455;
+		scrollView.addEventListener("scroll",function(e){
+        //Ti.API.info("scroll y=" + e.y);
+    });
+    
 	//visibleTextFieldがTRUEならテキストフィールドを表示
 	if(visibleTextField){
-		tableView.bottom = 85;
-		adView.bottom = 35;
+		scrollView.bottom = 35;
 		//Ti.API.info("bottomPosition:" + bottomPosition);
-		//bottomPosition = bottomPosition + 35;
+		bottomPosition = bottomPosition + 35;
 		//Ti.API.info("bottomPosition:" + bottomPosition);
 		toolbarView.add(textLengthLabel);
 		toolbarView.add(textField);
@@ -345,11 +330,12 @@ function chatWindow(sendfrom, sendto, textField) {
 				});
 			}
 		});
+	}else{
+		scrollView.bottom = 0;
 	}
 	
-	baseView.add(tableView);
-	baseView.add(adView);
 	self.add(baseView);
+	self.add(adView);
 	self.add(actInd);
 	return self;
 }

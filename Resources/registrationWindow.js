@@ -246,6 +246,7 @@ function registrationWindow(){
 	view.add( submitButton );//0-0-8
 	
 	submitButton.addEventListener('click', function() {
+		
 		var errorMessage = "";
 		if ( nicknameTextField.value == "" ){
 			errorMessage = errorMessage + "ニックネームを入力してください。\n";

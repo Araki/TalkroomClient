@@ -16,8 +16,10 @@ function chatBalloonView(userID, whichSide, whatMessage, whatImageURL, whichGend
 	var labelHeight;//テキストラベルの高さ
 	var limitLabelWidth = 196;//テキストラベルの横幅制限。このサイズを超える場合は複数行の処理。
 
-	var self = Titanium.UI.createView({
-		top: viewHeight,
+	//var self = Titanium.UI.createView({
+	var self = Titanium.UI.createTableViewRow({
+		//top: viewHeight,
+		selectionStyle : Titanium.UI.iPhone.TableViewCellSelectionStyle.NONE,
 		backgroundColor: _whiteBlue
 		//backgroundColor: "blue"
 	});

@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title> </title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+	</head>
+	<body>
+		<!-- i-mobile for SmartPhone client script -->
+		<script type="text/javascript">
+		    imobile_tag_ver = "0.2"; 
+		    imobile_pid = "32593"; 
+		    imobile_asid = "333286"; 
+		    imobile_type = "inline";
+		    
+		    document.addEventListener('touchmove', function(ev) {
+			  ev.preventDefault();
+			}, false);
+			/*
+			document.addEventListener('click', function(ev){
+				alert("click");
+				url = ev;
+				alert(url);
+				//Titanium.App.fireEvent("linkClick", { url: url });
+			});
+			function targetClicked(e){
+				alert("Click");
+			    url = e.target.href;
+			    Titanium.App.fireEvent("linkClick", { url: url });
+			    e.preventDefault();
+			}
+			var as = document.getElementsByTagName("a");
+			for (var i=0; i<as.length;i++) {
+			    as.item(i).addEventListener("click", targetClicked, false);
+			}
+			*/
+		</script>
+		<script type="text/javascript" src="https://spad.i-mobile.co.jp/script/adssp.js?20110215"></script>
+
+	</body>
+</html>

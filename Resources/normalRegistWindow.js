@@ -79,7 +79,7 @@ function normalRegistWindow(){
 	
 	//ニックネーム
 	var nicknameLabel = Titanium.UI.createLabel({
-		text: 'ニックネーム',
+		text: 'ニックネーム（10文字まで）',
 		top: 40 + 145,
 		left: 40,
 		right: 40,
@@ -223,7 +223,7 @@ function normalRegistWindow(){
 	
 	//自己紹介
 	var profileLabel = Titanium.UI.createLabel({
-		text: '一言',
+		text: '一言(50文字まで)',
 		top: 245 + 215,
 		left: 40,
 		right: 40,
@@ -265,38 +265,63 @@ function normalRegistWindow(){
 		borderRadius:10
 	});
 	view.add( submitButton );//0-0-8
-	/*
-	var cancelButton = Ti.UI.createButton({
-		title: 'キャンセル',
-		font:{fontFamily: _font, fontSize: 19},
-		top: 460 + 215,
+	
+	var nicknameTextLengthLabel = Titanium.UI.createLabel({
+		text: 0,
+		top: 40 + 145,
 		right: 40,
-		left: 40,
-		height: 40,
-		color: _white,
-		backgroundColor: _gray,
-		borderRadius:10
+		width: 40,
+		textAlign: Ti.UI.TEXT_ALIGNMENT_RIGHT,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 15 }
 	});
-	view.add( cancelButton );//0-0-8
-	*/
+	view.add(nicknameTextLengthLabel);//0-0-9
+	
+	nicknameTextField.addEventListener('change',function(e){
+  		nicknameTextLengthLabel.text = nicknameTextField.value.length;
+  		if(nicknameTextField.value.length > 10 ){
+  			nicknameTextLengthLabel.color = _vividPink;
+  		}else{
+  			nicknameTextLengthLabel.color = _darkBlue;
+  		}
+	});
+	
+	var profileTextLengthLabel = Titanium.UI.createLabel({
+		text: 0,
+		top: 245 + 215,
+		right: 40,
+		width: 40,
+		textAlign: Ti.UI.TEXT_ALIGNMENT_RIGHT,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 15 }
+	});
+	view.add(profileTextLengthLabel);//0-0-10
+	
+	profileTextField.addEventListener('change',function(e){
+  		profileTextLengthLabel.text = profileTextField.value.length;
+  		if(profileTextField.value.length > 50 ){
+  			profileTextLengthLabel.color = _vividPink;
+  		}else{
+  			profileTextLengthLabel.color = _darkBlue;
+  		}
+	});
+	
+	var profileImageDescription = Titanium.UI.createLabel({
+		text: "顔写真を登録するとマッチング率が大幅にUPします\n\n卑猥な画像、著作権違反画像、連絡先情報画像の登録は禁止されております",
+		top: 70,
+		left: 150,
+		right: 40,
+		height: 100,
+		verticalAlign: Ti.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+		textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 10 }
+	});
+	view.add(profileImageDescription);//0-0-11
+	
 	submitButton.addEventListener('click', function() {
-		/*
-		Ti.UI.createAlertDialog({
-		  	message: "UUID: " + iOSUniqueID.getUUID +
-		  			 "\nIDFV" + iOSUniqueID.getIdentifierForVendor +
-					 "\nIDFA" + iOSUniqueID.getAdvertisingIdentifier +
-		  			 "\nchannel: " + "normal" +
-		  			 "\nfb_uid: " + "" +
-		  			 "\nemail: " + "" +
-		  			 "\nprofileImage: " + profileImage.image + 
-		  			 "\nnickname: " + nicknameTextField.value +
-		  			 "\ngender: " + gender +
-		  			 "\nage: " + ageTextField.customItem +
-		  			 "\narea: " + areaTextField.customItem +
-		  			 "\nprofile: " + profileTextField.value +
-		  			 "\naccess_token: " + Ti.Utils.md5HexDigest(Ti.Utils.md5HexDigest(iOSUniqueID.getUUID))
-		}).show();
-		*/
+		//alert("age: " + ageTextField.customItem + "\narea: " + areaTextField.customItem);
+
 		var errorMessage = "";
 		if ( profileImage.image == "/images/no_image_camera.png"){
 			errorMessage = errorMessage + "プロフィール画像を登録してください。\n";
@@ -307,17 +332,18 @@ function normalRegistWindow(){
 		if ( genderButtonBar.index == null ){
 			errorMessage = errorMessage + "性別を選択してください。\n";
 		}
-		if ( ageTextField.customItem == null ){
+		if ( ageTextField.customItem == null　|| ageTextField.customItem == "" ){
 			errorMessage = errorMessage + "年齢を入力してください。\n";
 		}
-		if ( areaTextField.customItem == null ){
+		if ( areaTextField.customItem == null || areaTextField.customItem == "" ){
 			errorMessage = errorMessage + "居住地を入力してください。\n";
 		}
-		/*
-		if ( purposeTextField.customItem == "" ){
-			errorMessage = errorMessage + "目的を入力してください。\n";
+		if ( nicknameTextField.value.length > 10 ){
+			errorMessage = errorMessage + "ニックネームが10文字を超えています。\n";
 		}
-		*/
+		if ( profileTextField.value.length > 50 ){
+			errorMessage = errorMessage + "一言が50文字を超えています。\n";
+		}
 		
 		if ( errorMessage != "" ){
 			//alert(errorMessage);

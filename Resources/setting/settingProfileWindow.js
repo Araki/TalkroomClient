@@ -9,7 +9,10 @@ function settingProfileWindow() {
 		if (data.success) {
 			// 通信に成功したら行う処理
 			var json = data.data;
-			textArea.value = json[0].profile;
+			if(json.length > 0){
+				textArea.value = json[0].profile;
+				textLengthLabel.text = textArea.value.length;
+			}
 		} else{
 			// 通信に失敗したら行う処理
 		}
@@ -30,38 +33,45 @@ function settingProfileWindow() {
 	self.rightNavButton = saveButton;
 	
 	saveButton.addEventListener('click', function(){
-		Flurry.logEvent('SettingProfileWindow Push SaveButton');
-		actInd.show();
-		var url = Ti.App.domain + "update_profile.json";
-		var message = {
-				//user_id: Ti.App.Properties.getString('my_id'),
-				app_token: Ti.App.Properties.getString('app_token'),
-				profile: textArea.value
-		};
-		
-		sendData( url, message, function( data ){
-			if (data.success){
-				Flurry.logEvent('SettingProfileWindow Saved');
-				//通信に成功したら行う処理
-				//Ti.API.info("戻り値:" + data.data);
-				
-				Ti.UI.createAlertDialog({
-					title: '一言を更新しました',
-				  	//message: data.data
-				}).show();
-				
-				
-				
-			} else{
-				//通信に失敗したら行う処理
-				Ti.UI.createAlertDialog({
-					title: '一言の更新に失敗しました',
-				  	message: data.data
-				}).show();
-				
-			}
-			actInd.hide();
-		});		
+		if ( textArea.value.length <= 50 ){
+			Flurry.logEvent('SettingProfileWindow Push SaveButton');
+			actInd.show();
+			var url = Ti.App.domain + "update_profile.json";
+			var message = {
+					//user_id: Ti.App.Properties.getString('my_id'),
+					app_token: Ti.App.Properties.getString('app_token'),
+					profile: textArea.value
+			};
+			
+			sendData( url, message, function( data ){
+				if (data.success){
+					Flurry.logEvent('SettingProfileWindow Saved');
+					//通信に成功したら行う処理
+					//Ti.API.info("戻り値:" + data.data);
+					
+					Ti.UI.createAlertDialog({
+						title: '一言を更新しました',
+					  	//message: data.data
+					}).show();
+					
+					self.close();
+					
+				} else{
+					//通信に失敗したら行う処理
+					Ti.UI.createAlertDialog({
+						title: '一言の更新に失敗しました',
+					  	//message: data.data
+					}).show();
+					
+				}
+				actInd.hide();
+			});
+		}else{
+			Ti.UI.createAlertDialog({
+				title: '50文字を超えており、保存できませんでした。',
+			  	//message: data.data
+			}).show();
+		}		
 	});
 		
 	
@@ -84,10 +94,41 @@ function settingProfileWindow() {
 	        keyboardToolbar: true
 	});
 	
+	var textDescription = Titanium.UI.createLabel({
+		text: "50文字まで",
+		top: 25,
+		right: 70,
+		left: 20,
+		textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 15 }
+	});
+	
+	var textLengthLabel = Titanium.UI.createLabel({
+		text: 0,
+		top: 25,
+		right: 20,
+		width: 40,
+		textAlign: Ti.UI.TEXT_ALIGNMENT_RIGHT,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 15 }
+	});
+	
+	textArea.addEventListener('change',function(e){
+  		textLengthLabel.text = textArea.value.length;
+  		if(textArea.value.length > 50 ){
+  			textLengthLabel.color = _vividPink;
+  		}else{
+  			textLengthLabel.color = _darkBlue;
+  		}
+	});
+	
 	self.addEventListener("open", function(){
 		textArea.focus();
 	});
 	
+	self.add(textDescription);
+	self.add(textLengthLabel);
 	self.add(textArea);
 	self.add(actInd);
 	return self;

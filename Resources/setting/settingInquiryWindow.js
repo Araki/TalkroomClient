@@ -16,7 +16,7 @@ function settingInquiryWindow() {
 			color: _white
 	});
 	self.rightNavButton = submitButton;
-	
+	/*
 	var mailLabel = Titanium.UI.createLabel({
 		text: 'メールアドレス',
 		top: 10,
@@ -44,24 +44,34 @@ function settingInquiryWindow() {
 	    borderRadius:5,
 	    font: { fontFamily: _font, fontSize: 18 }
 	});
-	
+	*/
 	var bodyLabel = Titanium.UI.createLabel({
-		text: 'お問い合わせ内容',
-		top: 70,
+		text: 'お問い合わせ内容(500文字まで)',
+		top: 15,
 		left: 20,
 		right: 20,
 		height: 15,
 		color: _darkBlue,
-		font:{fontFamily: _font, fontSize: 12 }
+		font:{fontFamily: _font, fontSize: 15 }
+	});
+	
+	var textLengthLabel = Titanium.UI.createLabel({
+		text: 0,
+		top: 15,
+		right: 20,
+		width: 40,
+		textAlign: Ti.UI.TEXT_ALIGNMENT_RIGHT,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 15 }
 	});
 	
 	var textArea = Titanium.UI.createTextArea({
 	        value:'',
-	        top:90,
+	        top:40,
 	        bottom:210,
 	        left:20,
 	        right:20,
-	        font:{fontSize:18, fontFamily: _font },
+	        font:{fontSize:15, fontFamily: _font },
 	        color:_darkGray,
 	        backgroundColor:_white,
 	        textAlign:'left',
@@ -75,59 +85,77 @@ function settingInquiryWindow() {
 	        borderRadius:5
 	});
 	
+	textArea.addEventListener('change',function(e){
+  		textLengthLabel.text = textArea.value.length;
+  		if(textArea.value.length > 500 ){
+  			textLengthLabel.color = _vividPink;
+  		}else{
+  			textLengthLabel.color = _darkBlue;
+  		}
+	});
+	
 	submitButton.addEventListener('click', function(){
 		if(textArea.value == ""){
 			Ti.UI.createAlertDialog({
 				title: 'お問い合わせ内容を\nご記入ください',
 			}).show();
 		}else{
-			actInd.show();
-			Flurry.logEvent('SettingInquiryWindow Push SubmitButton');
-			var url = Ti.App.domain + "send_mail.json";
-			var message = {
-					app_token: Ti.App.Properties.getString('app_token'),
-					platform: Ti.Platform.name,
-					version: Ti.Platform.version,
-					manufacturer: Ti.Platform.manufacturer,
-					model: Ti.Platform.model,
-					mail: mailTextField.value,
-					body: textArea.value
-			};
-			
-			sendData( url, message, function( data ){
-				if (data.success){
-					Flurry.logEvent('SettingInquiryWindow Sent Inquiry');
-					//通信に成功したら行う処理
-					//Ti.API.info("戻り値:" + data.data);
-					Ti.UI.createAlertDialog({
-						title: 'お問い合わせを送信致しました',
-					  	//message: data.data
-					}).show();
-					
-					actInd.hide();
-				} else{
-					//通信に失敗したら行う処理
-					Ti.UI.createAlertDialog({
-						title: 'お問い合わせが正常に完了しませんでした',
-					  	//message: data.data
-					}).show();
-					actInd.hide();
-				}
-			});
+			if (textArea.value.length <= 500 ){
+				actInd.show();
+				Flurry.logEvent('SettingInquiryWindow Push SubmitButton');
+				var url = Ti.App.domain + "send_mail.json";
+				var message = {
+						app_token: Ti.App.Properties.getString('app_token'),
+						platform: Ti.Platform.name,
+						version: Ti.Platform.version,
+						manufacturer: Ti.Platform.manufacturer,
+						model: Ti.Platform.model,
+						mail: "",//mailTextField.value,
+						body: textArea.value
+				};
+				
+				sendData( url, message, function( data ){
+					if (data.success){
+						Flurry.logEvent('SettingInquiryWindow Sent Inquiry');
+						//通信に成功したら行う処理
+						//Ti.API.info("戻り値:" + data.data);
+						Ti.UI.createAlertDialog({
+							title: 'お問い合わせを送信しました',
+						  	//message: data.data
+						}).show();
+						
+						actInd.hide();
+						
+						self.close();
+					} else{
+						//通信に失敗したら行う処理
+						Ti.UI.createAlertDialog({
+							title: 'お問い合わせが正常に完了しませんでした',
+						  	//message: data.data
+						}).show();
+						actInd.hide();
+					}
+				});
+			}else{
+				Ti.UI.createAlertDialog({
+					title: '500文字を超えており送信できません',
+				}).show();
+			}
 		}		
 	});
 	
 	self.addEventListener("open", function(){
-		mailTextField.focus();
+		textArea.focus();
 	});
-	
+	/*
 	mailTextField.addEventListener('return', function() {
 	    textArea.focus();
 	});
-	
-	self.add(mailLabel);
-	self.add(mailTextField);
+	*/
+	//self.add(mailLabel);
+	//self.add(mailTextField);
 	self.add(bodyLabel);
+	self.add(textLengthLabel);
 	self.add(textArea);
 	self.add(actInd);
 	

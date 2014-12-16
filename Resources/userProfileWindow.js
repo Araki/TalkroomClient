@@ -13,17 +13,6 @@ function userProfileWindow( userID, type ) {
 	var readPastTalkButton = createReadPastTalkButton();
 	var reportBGView = createReportBGView();
 	var reportView = createReportView();
-	var reportButton = Titanium.UI.createLabel({
-		font:{fontFamily: _font, fontSize:12},
-		text:'通報する',
-		textAlign: 'center',
-		verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
-		borderRadius: 4,
-		height: 25,
-		width: 75,
-		backgroundColor: _mossGreen,
-		color: _white
-	});
 	var cancelButtonOnReport = reportView.children[2];
 	var reportButtonOnReport = reportView.children[3];
 	
@@ -77,16 +66,23 @@ function userProfileWindow( userID, type ) {
 	readPastTalkButton.addEventListener('click', function() {
 		Flurry.logEvent('UserProfileWindow Push ReadPastButton');	
 		actInd.show();
-		consumePointDialog("peep", userID, function(data){
-			if (data.success){
-				var utWindow = require('userTalkedRoomWindow');
-				var userTalkedRoomWindow = new utWindow( self.id );
-				tabGroup.activeTab.open(userTalkedRoomWindow);
-				actInd.hide();
-			}else{
-				actInd.hide();
-			}
-		});
+		if (type == "myProfile"){
+			var utWindow = require('userTalkedRoomWindow');
+			var userTalkedRoomWindow = new utWindow( self.id );
+			tabGroup.activeTab.open(userTalkedRoomWindow);
+			actInd.hide();
+		}else{
+			consumePointDialog("peep", userID, function(data){
+				if (data.success){
+					var utWindow = require('userTalkedRoomWindow');
+					var userTalkedRoomWindow = new utWindow( self.id );
+					tabGroup.activeTab.open(userTalkedRoomWindow);
+					actInd.hide();
+				}else{
+					actInd.hide();
+				}
+			});
+		}
 	});
 	
 	if( type != "myProfile"){
@@ -98,12 +94,23 @@ function userProfileWindow( userID, type ) {
 			var chatWindow = new cWindow(Ti.App.Properties.getString('my_id'), self.id, true);
 			tabGroup.activeTab.open(chatWindow);
 		});
+		var reportButton = Titanium.UI.createLabel({
+			font:{fontFamily: _font, fontSize:12},
+			text:'通報する',
+			textAlign: 'center',
+			verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+			borderRadius: 4,
+			height: 25,
+			width: 75,
+			backgroundColor: _mossGreen,
+			color: _white
+		});
+		reportButton.addEventListener('click', function() {
+			reportView.show();
+			reportBGView.show();
+		});
+		self.setRightNavButton(reportButton);	
 	}
-	
-	reportButton.addEventListener('click', function() {
-		reportView.show();
-		reportBGView.show();
-	});
 	
 	cancelButtonOnReport.addEventListener('click', function() {
 		reportView.hide();
@@ -116,34 +123,40 @@ function userProfileWindow( userID, type ) {
 				title: '通報理由を記入してください',
 			}).show();
 		}else{
-			actInd.show();
-			Flurry.logEvent('UserProfile Send Report');
-			var url = Ti.App.domain + "send_report.json";
-			var message = {
-					app_token: Ti.App.Properties.getString('app_token'),
-					reported_id: userID,
-					platform: Ti.Platform.name,
-					version: Ti.Platform.version,
-					manufacturer: Ti.Platform.manufacturer,
-					model: Ti.Platform.model,
-					body: reportView.children[1].value
-			};
-			sendData( url, message, function( data ){
-				if (data.success) {
-					reportView.hide();
-					reportBGView.hide();
-					Ti.UI.createAlertDialog({
-						title: '通報を送信しました'
-					}).show();
-					actInd.hide();
-				} else{
-					// 通信に失敗したら行う処理
-					Ti.UI.createAlertDialog({
-						title: '通報の送信に失敗しました'
-					}).show();
-					actInd.hide();
-				}
-			});
+			if( reportView.children[1].value.length > 300 ){
+				Ti.UI.createAlertDialog({
+					title: '300文字を超えており送信できません',
+				}).show();
+			}else{
+				actInd.show();
+				Flurry.logEvent('UserProfile Send Report');
+				var url = Ti.App.domain + "send_report.json";
+				var message = {
+						app_token: Ti.App.Properties.getString('app_token'),
+						reported_id: userID,
+						platform: Ti.Platform.name,
+						version: Ti.Platform.version,
+						manufacturer: Ti.Platform.manufacturer,
+						model: Ti.Platform.model,
+						body: reportView.children[1].value
+				};
+				sendData( url, message, function( data ){
+					if (data.success) {
+						reportView.hide();
+						reportBGView.hide();
+						Ti.UI.createAlertDialog({
+							title: '通報を送信しました'
+						}).show();
+						actInd.hide();
+					} else{
+						// 通信に失敗したら行う処理
+						Ti.UI.createAlertDialog({
+							title: '通報の送信に失敗しました'
+						}).show();
+						actInd.hide();
+					}
+				});
+			}
 		}
 	});
 	
@@ -151,7 +164,6 @@ function userProfileWindow( userID, type ) {
 	profileBgView.add(profileImage2);
 	profileBgView.add(profileImage3);
 	buttonBgView.add(readPastTalkButton);
-	self.setRightNavButton(reportButton);	
 	self.add(tableView);
 	self.add(profileBgView);
 	self.add(buttonBgView);
@@ -331,8 +343,6 @@ function createTalkButton(){
 
 function createReportBGView(){
 	
-	Ti.API.info("!!!!!!!!!!!!!!!!!!");
-	
 	var view = Titanium.UI.createView({
 		bottom: 0,
 		left: 0,
@@ -357,16 +367,26 @@ function createReportView(){
 	});
 	
 	var title = Titanium.UI.createLabel({
-		top: 10,
-		right: 10,
+		top: 15,
+		right: 60,
 		left: 10,
-		text: '通報内容を具体的にご記入ください',
+		text: '通報内容（300文字まで）',
 		textAlign:'center',
-		font:{fontFamily: _font, fontSize:14},
-		color: _vividPink
+		font:{fontFamily: _font, fontSize:15},
+		color: _darkBlue
 	});
 	
-	var textField = Titanium.UI.createTextField({
+	var textLengthLabel = Titanium.UI.createLabel({
+		text: 0,
+		top: 15,
+		right: 10,
+		width: 40,
+		textAlign: Ti.UI.TEXT_ALIGNMENT_RIGHT,
+		color: _darkBlue,
+		font:{fontFamily: _font, fontSize: 15 }
+	});
+	
+	var textField = Titanium.UI.createTextArea({
 		borderStyle: Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 		top: 40,
 		right: 10,
@@ -382,7 +402,16 @@ function createReportView(){
 	    color: _darkGray,
 	    backgroundColor: _white,
 	    borderRadius:5,
-	    font: {fontFamily: _font, fontSize: 14 }
+	    font: {fontFamily: _font, fontSize: 15 }
+	});
+	
+	textField.addEventListener('change',function(e){
+  		textLengthLabel.text = textField.value.length;
+  		if(textField.value.length > 300 ){
+  			textLengthLabel.color = _vividPink;
+  		}else{
+  			textLengthLabel.color = _darkBlue;
+  		}
 	});
 	
 	cancelButton = Ti.UI.createButton({
@@ -413,6 +442,7 @@ function createReportView(){
 	view.add(textField);
 	view.add(cancelButton);
 	view.add(reportButton);
+	view.add(textLengthLabel);
 		
 	return view;
 }

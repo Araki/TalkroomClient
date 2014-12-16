@@ -89,11 +89,11 @@ function settingDetailProfileWindow() {
 		if( ageRow.children[1].customItem == ''){
 			alertMessage = alertMessage + "年代を入力してください。\n";
 		}
-		//if( purposeRow.children[1].customItem == ''){
-		//	alertMessage = alertMessage + "目的を入力してください。\n";
-		//}
 		if( areaRow.children[1].customItem == ''){
 			alertMessage = alertMessage + "エリアを入力してください。\n";
+		}
+		if( nicknameRow.children[1].value.length > 10 ){
+			alertMessage = alertMessage + "ニックネームが10文字を超えています。\n";
 		}
 		
 		if( alertMessage != "" ){
@@ -103,45 +103,47 @@ function settingDetailProfileWindow() {
 			  	message: alertMessage
 			}).show();
 			return;
-		}
-		
-		var url = Ti.App.domain + "update_detail_profile.json";
-		var message = {
-				//user_id: Ti.App.Properties.getString('my_id'),
-				app_token: Ti.App.Properties.getString('app_token'),
-				nickname: nicknameRow.children[1].value,
-			    age: ageRow.children[1].customItem,
-			    //purpose: purposeRow.children[1].customItem,
-			    area: areaRow.children[1].customItem,
-			    tall: tallRow.children[1].customItem,
-			    blood: bloodRow.children[1].customItem,
-			    style: styleRow.children[1].customItem,
-			    holiday: holidayRow.children[1].customItem,
-			    alcohol: alcoholRow.children[1].customItem,
-			    cigarette: cigaretteRow.children[1].customItem,
-			    salary: salaryRow.children[1].customItem
-		};
-		
-		sendData( url, message, function( data ){
+		}else{
+			var url = Ti.App.domain + "update_detail_profile.json";
+			var message = {
+					//user_id: Ti.App.Properties.getString('my_id'),
+					app_token: Ti.App.Properties.getString('app_token'),
+					nickname: nicknameRow.children[1].value,
+				    age: ageRow.children[1].customItem,
+				    //purpose: purposeRow.children[1].customItem,
+				    area: areaRow.children[1].customItem,
+				    tall: tallRow.children[1].customItem,
+				    blood: bloodRow.children[1].customItem,
+				    style: styleRow.children[1].customItem,
+				    holiday: holidayRow.children[1].customItem,
+				    alcohol: alcoholRow.children[1].customItem,
+				    cigarette: cigaretteRow.children[1].customItem,
+				    salary: salaryRow.children[1].customItem
+			};
 			
-			if (data.success){
-				//通信に成功したら行う処理
-				Flurry.logEvent('SettingDetailProfileWindow Saved');
-				//Ti.API.info("戻り値:" + data.data);
-				Ti.UI.createAlertDialog({
-					title: 'プロフィールを更新しました',
-				  	//message: data.data
-				}).show();
+			sendData( url, message, function( data ){
 				
-			} else{
-				//通信に失敗したら行う処理
-				Ti.UI.createAlertDialog({
-					title: 'エラー',
-				  	message: data.data
-				}).show();	
-			}
-			actInd.hide();
-		});	
+				if (data.success){
+					//通信に成功したら行う処理
+					Flurry.logEvent('SettingDetailProfileWindow Saved');
+					//Ti.API.info("戻り値:" + data.data);
+					Ti.UI.createAlertDialog({
+						title: 'プロフィールを更新しました',
+					  	//message: data.data
+					}).show();
+					
+					self.close();
+					
+				} else{
+					//通信に失敗したら行う処理
+					Ti.UI.createAlertDialog({
+						title: 'エラー',
+					  	//message: data.data
+					}).show();	
+				}
+				actInd.hide();
+			});
+		}	
 	});
 
 	//==================================================
@@ -234,7 +236,7 @@ function settingDetailProfileWindow() {
 
    	tableViewRowData.push(imageRow);
    	
-   	var nicknameRow = createRow("ニックネーム");
+   	var nicknameRow = createRow("ニックネーム\n(10文字まで)");
    	tableViewRowData.push(nicknameRow);   
    	
    	var ageRow = createRow("年代");
@@ -390,9 +392,10 @@ function createRow( labelText ) {
     	font:{fontFamily: _font, fontSize: 13}, 
     	text: labelText,
     	textAlign: 'right',
+    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
     	color: _darkBlue,
-    	top: 10, 
-    	bottom: 10,
+    	top: 0, 
+    	bottom: 0,
     	left: 20, 
     	width: 80
     });

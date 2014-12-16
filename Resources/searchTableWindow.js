@@ -1,5 +1,8 @@
 var tableView;
-var actInd; 
+var dataList = [];
+var talkedList = [];
+var tableViewRowData = [];
+var actInd = createActInd(); 
 
 function searchTableWindow() {
 	var self = createWindow("ユーザー");
@@ -9,14 +12,58 @@ function searchTableWindow() {
 	tableView = Titanium.UI.createTableView({top:0, bottom:50, separatorStyle:'NONE'});
 	
 	tableView.addEventListener('click', function(e) {
-		Flurry.logEvent('SearchTableWindow Go To UserProfile');
-		var userID = e.row.id;
-		var upWindow = require('userProfileWindow');
-		var userProfileWindow = new upWindow(userID);
-		tabGroup.activeTab.open( userProfileWindow );
+		actInd.show();
+		if(e.source.id == "row_button") {
+			
+			var alertDialog = Ti.UI.createAlertDialog({
+			  	message: e.row.nickname + 'さんに\n「こんにちは」と\nトークを送りますか？',
+			  	buttonNames: ['はい', 'いいえ'],
+			  	cancel: 1
+			});
+			
+			alertDialog.addEventListener('click',function(s){
+				if(s.index == 0){
+					
+					var message = {
+						app_token: Ti.App.Properties.getString('app_token'),
+						sendto_list_id: e.source.getParent().id,
+						body: "こんにちは"
+					};
+					
+					url = Ti.App.domain + "create_message.json";
+					sendData( url, message, function( data ){
+						if (data.success){
+							//通信に成功したら行う処理
+							Ti.UI.createAlertDialog({
+								title: 'トークを送信しました'
+							}).show();
+							
+							e.row.children[4].enabled = false;
+							e.row.children[4].backgroundImage = 'images/hi_disable.png';
+						} else{
+							//通信に失敗したら行う処理
+							Ti.UI.createAlertDialog({
+								title: 'トークが送信できませんでした'
+							}).show();							
+						}
+						
+					});
+				}
+			});
+			
+			alertDialog.show();
+		}else if(e.row.id == "addRow"){
+			tableViewRowData.pop();
+			createView(e.row.startNum, e.row.endNum);
+		}else{
+			Flurry.logEvent('SearchTableWindow Go To UserProfile');
+			var userID = e.row.id;
+			var upWindow = require('userProfileWindow');
+			var userProfileWindow = new upWindow(userID);
+			tabGroup.activeTab.open( userProfileWindow );
+		}
+		actInd.hide();
 	});	
-	
-	actInd = createActInd();
 	
 	var showSearchViewButton = Titanium.UI.createLabel({
 			font:{fontFamily: _font, fontSize:16},
@@ -58,14 +105,9 @@ module.exports = searchTableWindow;
 //############################################################
 //############################################################
 
-function loadTableView(){
-	
+function loadTableView(){	
 	actInd.show();
-	var tableViewRowData = [];
-	
-	//Ti.API.info("searchGender" + Ti.App.Properties.getString('searchGender'));
-	
-	var url = Ti.App.domain + "get_search_users.json?age=" + 
+	var url = Ti.App.domain + "get_users_list.json?age=" + 
 				  Ti.App.Properties.getString('searchAge') +
 				  "&area=" +
 				  Ti.App.Properties.getString('searchArea') +
@@ -75,13 +117,13 @@ function loadTableView(){
 				  //Ti.App.Properties.getString('searchPurpose')  +
 				  "&app_token=" +
 				  Ti.App.Properties.getString('app_token');
-	//Ti.API.info("###URL:" + url);			  
+			  
 	getData(url, function( data ){
 		
 		if (data.success) {
 			// 通信に成功したら行う処理
-			var json = data.data;
-			if (json.length == 0){
+			dataList = data.data;
+			if (dataList.length == 0){
 				var row = Ti.UI.createTableViewRow({
 			    	hasChild: false,
 			        height:'100%',
@@ -98,19 +140,10 @@ function loadTableView(){
 				row.add(label);
 				tableViewRowData.push(row);
 			}else{
-				for (var i=0; i<json.length; i++){
-					var row = createRow(
-						json[i].nickname + "（" + exchangeFromNumber( json[i].age, "age" ) + "）", 
-						json[i].profile_image1, 
-						json[i].profile, 
-						json[i].gender,
-						exchangeFromNumber( json[i].area, "area" ) + 
-						//" | " + exchangeFromNumber( json[i].purpose, "purpose" ) + 
-						" | " + json[i].last_logined, 
-						json[i].id,
-						i
-					);
-				   tableViewRowData.push(row);
+				if (dataList.length >= 10){
+					createView(0, 10);
+				}else{
+					createView(0, dataList.length);
 				}
 			}
 		} else{
@@ -126,7 +159,167 @@ function loadTableView(){
 	});
 }
 
-function createRow(nickName, iconImage, profile, gender, info, userID, backgroundType){
+function createView(startNum, endNum){
+	actInd.show();
+	//Ti.API.info("####addRow###");
+	var url = Ti.App.domain + "get_talked_users.json?app_token=" + Ti.App.Properties.getString('app_token') + "&ids=";
+	for (var i=startNum; i<endNum; i++){
+		if (i == 0){
+			url = url + dataList[i].id;
+		}else{
+			//Ti.API.info("#####i:" + i);
+			url = url + "," + dataList[i].id;
+		}
+	}
+	getData(url, function( data ){
+		if (data.success) {
+			talkedList = data.data;
+			//Ti.API.info("talkedList.length: " + talkedList.length);
+			pushTableView();
+			actInd.hide();
+		}else{
+			
+		}
+	});
+	
+	function pushTableView(){
+		for (var i=startNum; i<endNum; i++){
+			var nickNameLabel = Titanium.UI.createLabel({
+		    	font:{fontFamily: _font, fontSize:13, fontWeight:"bold"},
+		    	textAlign: 'left',
+		    	verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP,
+		    	top: 5, 
+		    	left: 85, 
+		    	right: 0,
+		        height: "auto",
+		        text: dataList[i].nickname + "（" + exchangeFromNumber( dataList[i].age, "age" ) + "）", 
+		    });
+		    
+		    var profileImage = Titanium.UI.createImageView({
+		    	top: 5,
+		    	left: 5,
+		    	width: 70,
+		    	height: 70,
+		    	borderRadius:7,
+		    	borderWidth:2,
+		    	borderColor: _white,
+		    	image: dataList[i].profile_image1
+		    });
+		    
+		    if(dataList[i].gender =='male'){
+		    	nickNameLabel.color = _darkBlue;
+		    	profileImage.borderColor = _darkBlue;
+		    }else if(dataList[i].gender == 'female'){
+		    	nickNameLabel.color = _vividPink;
+		    	profileImage.borderColor = _vividPink;
+		    }
+		    
+		    var profileLabel = Titanium.UI.createLabel({
+		    	font:{fontFamily: _font, fontSize:12}, 
+		    	textAlign:'left',
+		    	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+		    	color: _darkGray,
+		    	top: 25, 
+		    	bottom: 20,
+		    	left: 85, 
+		    	right: 45,
+		        text: dataList[i].profile
+		    });
+		    
+		    var infoLabel = Titanium.UI.createLabel({
+		    	font:{fontFamily: _font, fontSize:10}, 
+		    	textAlign:'right',
+		    	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
+		    	color:_darkGray,
+		    	bottom: 5, 
+		    	right: 5, 
+		    	left: 85, 
+		        height: "auto",
+		        text: exchangeFromNumber( dataList[i].area, "area" ) +  " | " + dataList[i].last_logined
+		    }); 
+		    
+		    var talkButton = Titanium.UI.createButton({
+		    	center:{y:40},
+		    	right: 5,
+		    	width: 35,
+		    	height: 35,
+		    	id: "row_button"
+		    });
+		    //Ti.API.info("dataList[i].id: " + dataList[i].id);
+		    //Ti.API.info("talkedList.length: " + talkedList.length);
+
+		    var flag = false;
+		    for(var j=0; j<talkedList.length; j++){
+		    	//Ti.API.info("talkedList.id: " + talkedList[j].id);
+		    	//Ti.API.info("dataList[i]: " + dataList[i].id);
+		    	if(talkedList[j].id == dataList[i].id){
+		    		flag = true;
+		    	}
+		    }
+		    if ( flag == true){
+		    	talkButton.enabled = false;
+				talkButton.backgroundImage = 'images/hi_disable.png';
+			}else{
+				talkButton.enabled = true;
+				talkButton.backgroundImage = 'images/hi_enable.png';
+			}
+		    
+		    var row = Ti.UI.createTableViewRow({
+		    	//hasChild: true,
+		        height:80,
+		        id:dataList[i].id,
+		        nickname: dataList[i].nickname
+		    });
+		    
+		    if(i%2 == 0){
+		   		row.backgroundColor = _white;
+		   	}else{
+		   		row.backgroundColor = _whiteGray;
+		   	}
+			
+			row.add(nickNameLabel);
+			row.add(profileImage);
+			row.add(profileLabel);
+			row.add(infoLabel);
+			row.add(talkButton);
+			tableViewRowData.push(row);
+		}
+		
+		//追加読込Rowの追加判定
+		var nextEndNum;
+		if(endNum == dataList.length){
+			//次に読み込むRowがない場合はaddRowは追加しない 
+		}else{
+			if(endNum + 10 <= dataList.length){
+				nextEndNum = endNum + 10;
+			}else{
+				nextEndNum = dataList.length;
+			}
+			var addRow = Ti.UI.createTableViewRow({
+				hasChild: false,
+				height:25,
+				backgroundColor: _mossGreen,
+				id: "addRow",
+				data: dataList,
+				startNum: endNum,
+				endNum: nextEndNum,
+			});
+			addRowLabel = Ti.UI.createLabel({
+				text: "次の結果を読み込む",
+				color: _white,//_darkGray,
+				font:{fontFamily: _font, fontSize:13},
+			});
+			addRow.add(addRowLabel);
+			tableViewRowData.push(addRow);
+		}
+		
+		tableView.data = tableViewRowData;
+		
+	}
+	
+}
+
+function createRow(nickName, age, iconImage, profile, gender, info, userID, backgroundType, talked){
 	
 	var nickNameLabel = Titanium.UI.createLabel({
     	font:{fontFamily: _font, fontSize:13, fontWeight:"bold"},
@@ -136,7 +329,7 @@ function createRow(nickName, iconImage, profile, gender, info, userID, backgroun
     	left: 85, 
     	right: 0,
         height: "auto",
-        text: nickName
+        text: nickName + "（" + age + "）", 
     });
     
     var profileImage = Titanium.UI.createImageView({
@@ -166,7 +359,7 @@ function createRow(nickName, iconImage, profile, gender, info, userID, backgroun
     	top: 25, 
     	bottom: 20,
     	left: 85, 
-    	right: 0,
+    	right: 45,
         text: profile
     });
     
@@ -176,16 +369,32 @@ function createRow(nickName, iconImage, profile, gender, info, userID, backgroun
     	verticalAlign:Titanium.UI.TEXT_VERTICAL_ALIGNMENT_BOTTOM,
     	color:_darkGray,
     	bottom: 5, 
-    	right: 0, 
+    	right: 5, 
     	left: 85, 
         height: "auto",
         text: info
     }); 
     
+    var talkButton = Titanium.UI.createButton({
+    	center:{y:40},
+    	right: 5,
+    	width: 35,
+    	height: 35,
+    	id: "row_button"
+    });
+    if (talked == false){
+    	talkButton.enabled = true;
+		talkButton.backgroundImage = 'images/hi_enable.png';
+	}else{
+		talkButton.enabled = false;
+		talkButton.backgroundImage = 'images/hi_disable.png';
+	}
+    
     var row = Ti.UI.createTableViewRow({
-    	hasChild: true,
+    	//hasChild: true,
         height:80,
-        id:userID
+        id:userID,
+        nickname: nickName
     });
     
     if(backgroundType%2 == 0){
@@ -198,6 +407,7 @@ function createRow(nickName, iconImage, profile, gender, info, userID, backgroun
 	row.add(profileImage);
 	row.add(profileLabel);
 	row.add(infoLabel);
+	row.add(talkButton);
 	
 	return row;
 }
@@ -447,22 +657,13 @@ function createSearchView( win ){
 	
 	searchButton.addEventListener('click', function(){
 		Flurry.logEvent('SearchTableWindow Search Users');
-		/*
-		var stWindow = require('searchTableWindow');
-		var searchTableWindow = new stWindow(
-			ageTextField.customItem,
-			areaTextField.customItem,
-			purposeTextField.customItem
-		);
-		*/
 		Ti.App.Properties.setString('searchAge', ageTextField.customItem);
 		Ti.App.Properties.setString('searchArea', areaTextField.customItem);
 		//Ti.App.Properties.setString('searchPurpose', purposeTextField.customItem);
 		Ti.App.Properties.setString('searchGender', genderValue);
-		//Ti.API.info("gender:" + genderValue);
-		//Ti.API.info("age:" + ageTextField.customItem);
-		//Ti.API.info("area:" + areaTextField.customItem);
+		tableViewRowData = [];
 		loadTableView();
+		tableView.scrollToTop(0, true);
 		
 		win.remove(view);
 		
